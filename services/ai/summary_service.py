@@ -1,7 +1,7 @@
 import logging
 from pydantic import ValidationError
 
-from genai.llm_client import generate_response
+from services.ai.llm.llm_client import generate_response
 from validators.response_schemas import SummaryResponse
 from exceptions import ResponseValidationError
 

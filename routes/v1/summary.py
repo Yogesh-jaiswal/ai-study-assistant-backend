@@ -2,7 +2,7 @@ import logging
 from flask import g, jsonify
 from flask_openapi3 import APIBlueprint
 
-from services.summary_service import generate_summary
+from services.ai.summary_service import generate_summary
 from validators.request_schemas import SummaryRequest
 from validators.response_schemas import SummaryResponse
 from validators.error_response_schemas import (

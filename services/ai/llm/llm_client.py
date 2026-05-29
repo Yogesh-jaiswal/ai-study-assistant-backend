@@ -6,8 +6,8 @@ from .prompt_builder import (
     create_summary_prompt, 
     create_quiz_prompt
 )
-from .models.fake_response import create_fake_response
-from .models.gemini_response import create_gemini_response
+from .providers.fake_response import create_fake_response
+from .providers.gemini_response import create_gemini_response
 
 from exceptions import LLMError
 from configs.settings import settings
