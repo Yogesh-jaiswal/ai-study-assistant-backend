@@ -9,3 +9,11 @@ class ResponseValidationError(Exception):
 # Custom empty request JSON error
 class RequestJSONError(Exception):
     pass
+
+# Custom resource not found error
+class ResourceNotFoundError(Exception):
+    pass
+
+# Custom database error
+class DatabaseError(Exception):
+    pass

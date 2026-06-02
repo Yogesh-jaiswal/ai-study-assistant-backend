@@ -14,7 +14,7 @@ class SummaryRequest(BaseModel):
         value = value.strip()
 
         if not value:
-            raise ValueError("feild cannot be empty")
+            raise ValueError("field cannot be empty")
         
         return value
     

@@ -29,6 +29,13 @@ class Settings(BaseSettings):
     RATELIMIT_HEADERS_ENABLED: bool = Field(default=True)
     SUMMARY_RATE_LIMIT: str = Field(default="10/minute")
     QUIZ_RATE_LIMIT: str = Field(default="5/minute")
+
+    # Database Settings
+    DATABASE_URL: str = Field(default="sqlite:///study_assistant.db")
+    SQLALCHEMY_TRACK_MODIFICATIONS: bool = Field(default=False)
+
+    # Upload Settings
+    MAX_CONTENT_LENGTH: int = Field(default=500000)
     
     model_config = SettingsConfigDict(
         env_file=".env",

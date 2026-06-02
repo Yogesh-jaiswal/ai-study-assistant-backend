@@ -4,9 +4,11 @@ from pydantic import ValidationError
 from flask_limiter.errors import RateLimitExceeded
 
 from exceptions import (
+    DatabaseError,
     LLMError,
     ResponseValidationError,
-    RequestJSONError
+    RequestJSONError,
+    ResourceNotFoundError
 )
 
 # Set up logging
@@ -72,6 +74,15 @@ def register_error_handlers(app):
             400
         )
     
+    @app.errorhandler(ResourceNotFoundError)
+    def handle_resource_not_found_errors(e):
+        """Handle resource not found errors and return a structured error response."""
+        return create_error_msg(
+            "resource_not_found",
+            str(e),
+            404
+        )
+    
     @app.errorhandler(RateLimitExceeded)
     def handle_rate_limit_errors(e):
         """Handle rate limit errors and return a structured error response."""
@@ -81,6 +92,16 @@ def register_error_handlers(app):
             "rate_limit_error",
             "Too many requests",
             429
+        )
+    
+    @app.errorhandler(DatabaseError)
+    def handle_database_errors(e):
+        """Handle database errors and return a structured error response."""
+
+        return create_error_msg(
+            "database_error",
+            "A database error occurred",
+            500
         )
     
     """

@@ -2,7 +2,7 @@ import logging
 from flask import g, jsonify
 from flask_openapi3 import APIBlueprint
 
-from services.ai.quiz_service import generate_quiz
+from services.legacy.quiz_service import generate_quiz
 from validators.request_schemas import QuizRequest
 from validators.response_schemas import QuizResponse
 from validators.error_response_schemas import (

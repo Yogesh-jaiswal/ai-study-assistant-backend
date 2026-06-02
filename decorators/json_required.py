@@ -16,7 +16,7 @@ def json_required(func):
         data = request.get_json(silent = True)
 
         if data is None:
-            logger.error(f"[{request_id}] request rejected: body is not valid JSON")
+            logger.warning(f"[{request_id}] request rejected: body is not valid JSON")
 
             raise RequestJSONError(
                 "Request body must contain valid JSON"
