@@ -5,3 +5,6 @@ __pycache__/
 logs/
 instance/
 .pytest_cache/
+*.db
+keys/
+*.pem

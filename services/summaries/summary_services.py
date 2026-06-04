@@ -1,4 +1,5 @@
 import logging
+from pydantic import ValidationError
 
 from app.extensions import db
 from models import (
@@ -8,7 +9,8 @@ from models import (
     UploadSummaryRelationship
 )
 from validators.request_schemas import SummaryRequest
-from exceptions import DatabaseError, ResourceNotFoundError
+from exceptions import DatabaseError, ResourceNotFoundError, ResponseValidationError
+from validators.response_schemas import SummaryResponse
 from services.ai.llm_client import generate_response
 
 # Set up logging
@@ -40,7 +42,16 @@ def generate_summary(notebook_id, payload):
 
     summary_payload = SummaryRequest(topic=title, notes=content)
 
-    summary_data = generate_response(summary_payload, task="summary")
+    # Validate the response against the SummaryResponse schema
+    try:
+        ai_output = generate_response(summary_payload, task="summary")
+        summary_data = SummaryResponse(**ai_output)
+    except ValidationError as e:
+        logger.error(f"response validation failed: {e}")
+
+        raise ResponseValidationError(
+            "model response failed"
+        )
 
     try:
         summary = Summary(
@@ -79,14 +90,14 @@ def get_all_summaries(notebook_id):
     """Retrieves all summaries for a notebook."""
     notebook = (
         db.session.query(Notebook)
-        .options(db.selectinload(Notebook.summary))
+        .options(db.selectinload(Notebook.summaries))
         .filter(Notebook.id == notebook_id)
         .first()
     )
     if not notebook:
         raise ResourceNotFoundError(f"notebook with id {notebook_id} not found")
 
-    summaries = notebook.summary
+    summaries = notebook.summaries
     
     return [
         {

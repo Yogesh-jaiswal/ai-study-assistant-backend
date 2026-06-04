@@ -12,11 +12,10 @@ def json_required(func):
     
     @wraps(func)
     def wrapper(*args, **kwargs):
-        request_id = getattr(g, "request_id", "unknown")
         data = request.get_json(silent = True)
 
         if data is None:
-            logger.warning(f"[{request_id}] request rejected: body is not valid JSON")
+            logger.warning("request rejected: body is not valid JSON")
 
             raise RequestJSONError(
                 "Request body must contain valid JSON"

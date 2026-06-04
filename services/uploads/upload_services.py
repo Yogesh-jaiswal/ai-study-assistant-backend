@@ -2,7 +2,7 @@ import logging
 
 from app.extensions import db
 from models import Notebook, Upload
-from models.uploads import ProcessingStatus
+from models.enums import ProcessingStatus
 
 from exceptions import ResourceNotFoundError, DatabaseError
 
@@ -37,14 +37,14 @@ def get_all_uploads(notebook_id):
     """Retrieves all uploads for a notebook."""
     notebook = (
         db.session.query(Notebook)
-        .options(db.selectinload(Notebook.upload))
+        .options(db.selectinload(Notebook.uploads))
         .filter(Notebook.id == notebook_id)
         .first()
     )
     if not notebook:
         raise ResourceNotFoundError(f"notebook with id {notebook_id} not found")
 
-    uploads = notebook.upload
+    uploads = notebook.uploads
     
     return [
         {

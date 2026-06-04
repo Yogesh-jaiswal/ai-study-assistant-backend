@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field
+from pydantic import Field, computed_field
 from typing import Literal, List
+from pathlib import Path
 
 class Settings(BaseSettings):
     """Application settings object."""
@@ -36,6 +37,25 @@ class Settings(BaseSettings):
 
     # Upload Settings
     MAX_CONTENT_LENGTH: int = Field(default=500000)
+
+    # JWT Settings
+    JWT_PRIVATE_KEY_PATH: Path = Field(default="keys/private.pem")
+    JWT_PUBLIC_KEY_PATH: Path = Field(default="keys/public.pem")
+    JWT_ALGORITHM: str = Field(default="RS256")
+    ACCESS_TOKEN_MINUTES: int = Field(default=15)
+
+    @computed_field
+    @property
+    def jwt_private_key(self) -> str:
+        return self.JWT_PRIVATE_KEY_PATH.read_text()
+
+    @computed_field
+    @property
+    def jwt_public_key(self) -> str:
+        return self.JWT_PUBLIC_KEY_PATH.read_text()
+    
+    # Login Settings
+    DUMMY_HASH: str
     
     model_config = SettingsConfigDict(
         env_file=".env",

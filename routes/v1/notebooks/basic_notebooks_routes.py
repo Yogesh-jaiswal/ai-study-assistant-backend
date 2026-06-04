@@ -23,18 +23,16 @@ from validators.error_response_schemas import (
     ServerErrorResponse
 )
 from decorators.json_required import json_required
+from . import notebook_bp
 
 # Set up logging
 logger = logging.getLogger(__name__)
-
-# Custom base blueprint to extend notebook blueprint
-base_bp = APIBlueprint("base", __name__)
 
 # Notebook path parameters model
 class NotebookPath(BaseModel):
     id: int
 
-@base_bp.post(
+@notebook_bp.post(
     "",
     summary = "Endpoint to create a new notebook",
     responses = {
@@ -62,7 +60,7 @@ def create_notebook_endpoint():
         ).model_dump()
     ), 201
 
-@base_bp.get(
+@notebook_bp.get(
     "",
     summary = "Endpoint to retrieve all notebooks",
     responses = {
@@ -80,7 +78,7 @@ def get_all_notebooks_endpoint():
 
     return jsonify(GetAllNotebooksResponse(data=notebooks).model_dump()), 200
 
-@base_bp.get(
+@notebook_bp.get(
     "/<int:id>",
     summary = "Endpoint to retrieve a specific notebook",
     responses = {
@@ -95,7 +93,7 @@ def get_notebook_endpoint(path: NotebookPath):
 
     return jsonify(GetNotebook(**notebook).model_dump()), 200
 
-@base_bp.delete(
+@notebook_bp.delete(
     "/<int:id>",
     summary = "Endpoint to delete a specific notebook",
     responses = {

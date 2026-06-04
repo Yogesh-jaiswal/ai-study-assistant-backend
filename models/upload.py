@@ -2,29 +2,14 @@ from datetime import datetime
 from typing import List
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column
-from enum import Enum
 
 from app.extensions import db
+from .enums import FileTypes, ProcessingStatus
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .notebook import Notebook
     from .upload_summary_relationship import UploadSummaryRelationship
-
-class ProcessingStatus(str, Enum):
-    PENDING = "pending"
-    PROCESSING = "processing"
-    COMPLETED = "completed"
-    FAILED = "failed"
-
-class FileTypes(str, Enum):
-    PDF = "pdf"
-    DOCX = "docx"
-    TXT = "txt"
-    CSV = "csv"
-    XLSX = "xlsx"
-    PPTX = "pptx"
-    MARKDOWN = "md"
 
 class Upload(db.Model):
     __tablename__ = "uploads"
@@ -72,8 +57,8 @@ class Upload(db.Model):
         nullable=False
     )
 
-    notebook: Mapped["Notebook"] = db.relationship("Notebook", back_populates="upload", lazy="raise_on_sql")
-    upload_summary_relationship: Mapped[List["UploadSummaryRelationship"]] = db.relationship(
+    notebook: Mapped["Notebook"] = db.relationship("Notebook", back_populates="uploads", lazy="raise_on_sql")
+    upload_summary_relationships: Mapped[List["UploadSummaryRelationship"]] = db.relationship(
         back_populates="upload",
         cascade="all, delete-orphan",
         lazy="raise_on_sql"

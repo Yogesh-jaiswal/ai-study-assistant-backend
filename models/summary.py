@@ -38,8 +38,8 @@ class Summary(db.Model):
         nullable=False
     )
 
-    notebook: Mapped["Notebook"] = db.relationship("Notebook", back_populates="summary", lazy="raise_on_sql")
-    upload_summary_relationship: Mapped[List["UploadSummaryRelationship"]] = db.relationship(
+    notebook: Mapped["Notebook"] = db.relationship("Notebook", back_populates="summaries", lazy="raise_on_sql")
+    upload_summary_relationships: Mapped[List["UploadSummaryRelationship"]] = db.relationship(
         back_populates="summary",
         cascade="all, delete-orphan",
         lazy="raise_on_sql"

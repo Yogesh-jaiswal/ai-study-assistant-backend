@@ -1,9 +1,9 @@
-from models.uploads import FileTypes
 from pydantic import BaseModel, Field, field_validator
 from typing import List
 from datetime import datetime
 
 from configs.settings import settings
+from models.enums import FileTypes, ProcessingStatus
 
 class FileUploadRequest(BaseModel):
     filename: str = Field(..., description="Name of the file being uploaded", min_length=1, max_length=255)
@@ -28,7 +28,7 @@ class FileMetadataResponse(BaseModel):
     id: int = Field(..., description="Unique identifier for the uploaded file")
     filename: str = Field(..., description="Name of the uploaded file")
     source_type: FileTypes = Field(..., description="type of the uploaded file")
-    processing_status: str = Field(..., description="Current processing status of the uploaded file")
+    processing_status: ProcessingStatus = Field(..., description="Current processing status of the uploaded file")
     uploaded_at: datetime = Field(..., description="Timestamp of when the file was uploaded")
 
 class GetUploadResponse(FileMetadataResponse):

@@ -6,8 +6,9 @@ from app.extensions import db
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from .user import User
     from .summary import Summary
-    from .uploads import Upload
+    from .upload import Upload
 
 class Notebook(db.Model):
     __tablename__ = "notebooks"
@@ -15,6 +16,12 @@ class Notebook(db.Model):
     id: Mapped[int] = mapped_column(
         primary_key=True,
         autoincrement=True
+    )
+
+    user_id: Mapped[int] = mapped_column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=False
     )
 
     title: Mapped[str] = mapped_column(
@@ -28,5 +35,6 @@ class Notebook(db.Model):
         nullable=False
     )
 
-    upload: Mapped[list["Upload"]] = db.relationship("Upload", back_populates="notebook", cascade="all, delete-orphan", lazy="raise_on_sql")
-    summary: Mapped[list["Summary"]] = db.relationship("Summary", back_populates="notebook", cascade="all, delete-orphan", lazy="raise_on_sql")
+    user: Mapped["User"] = db.relationship("User", back_populates="notebooks", lazy="raise_on_sql")
+    uploads: Mapped[list["Upload"]] = db.relationship("Upload", back_populates="notebook", cascade="all, delete-orphan", lazy="raise_on_sql")
+    summaries: Mapped[list["Summary"]] = db.relationship("Summary", back_populates="notebook", cascade="all, delete-orphan", lazy="raise_on_sql")

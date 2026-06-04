@@ -17,3 +17,6 @@ class ResourceNotFoundError(Exception):
 # Custom database error
 class DatabaseError(Exception):
     pass
+
+class AuthenticationError(Exception):
+    pass

@@ -35,6 +35,10 @@ class ResourceNotFoundResponse(BaseErrorResponse):
     """Schema for notebook not found error responses, extending the base error response."""
     pass
 
+class UnauthorizedResponse(BaseErrorResponse):
+    """Schema for unauthorized error responses, extending the base error response."""
+    pass
+
 class ServerErrorResponse(BaseErrorResponse):
     """Schema for server error responses with status code of 500, extending the base error response."""
     pass

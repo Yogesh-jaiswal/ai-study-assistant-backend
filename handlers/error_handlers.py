@@ -8,7 +8,8 @@ from exceptions import (
     LLMError,
     ResponseValidationError,
     RequestJSONError,
-    ResourceNotFoundError
+    ResourceNotFoundError,
+    AuthenticationError
 )
 
 # Set up logging
@@ -77,9 +78,10 @@ def register_error_handlers(app):
     @app.errorhandler(ResourceNotFoundError)
     def handle_resource_not_found_errors(e):
         """Handle resource not found errors and return a structured error response."""
+        logger.warning(str(e)) # Log the resource not found error for monitoring purposes
         return create_error_msg(
             "resource_not_found",
-            str(e),
+            "Requested resource not found",
             404
         )
     
@@ -94,6 +96,16 @@ def register_error_handlers(app):
             429
         )
     
+    @app.errorhandler(AuthenticationError)
+    def handle_authentication_errors(e):
+        """Handle authentication errors and return a structured error response."""
+        logger.warning(str(e))
+        return create_error_msg(
+            "authentication_error",
+            str(e),
+            401
+        )
+
     @app.errorhandler(DatabaseError)
     def handle_database_errors(e):
         """Handle database errors and return a structured error response."""
@@ -107,6 +119,7 @@ def register_error_handlers(app):
     """
     @app.errorhandler(Exception)
     def handle_unexpected_errors(e):
+        logger.error(f"Unexpected error: {str(e)}", exc_info=True) # Log the unexpected error with stack trace for debugging purposes
         return create_error_msg(
             "internal_server_error",
             "unexpected server error",
