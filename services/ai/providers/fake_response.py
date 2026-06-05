@@ -1,6 +1,8 @@
+from typing import Any
+
 from exceptions import LLMError
 
-def create_fake_response(task="summary", n=5):
+def create_fake_response(task: str="summary", n: int=5) -> dict[str, Any] | list[dict[str, Any]]:
     """Create a fake response for testing purposes."""
     match task:
         # Fake response for summarization task

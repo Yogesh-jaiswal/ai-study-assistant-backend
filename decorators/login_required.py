@@ -27,9 +27,10 @@ def login_required(func):
                 raise AuthenticationError("Authentication failed")
 
             g.user_id = int(user_id)
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationError("Authentication failed")
-        except jwt.InvalidTokenError:
+        except (
+            jwt.ExpiredSignatureError, 
+            jwt.InvalidTokenError
+        ):
             raise AuthenticationError("Authentication failed")
         
         return func(*args, **kwargs)

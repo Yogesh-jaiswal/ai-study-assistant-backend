@@ -2,6 +2,8 @@ import json
 import re
 import logging
 
+from typing import Any
+
 from .prompt_builder import (
     create_summary_prompt, 
     create_quiz_prompt
@@ -15,7 +17,7 @@ from configs.settings import settings
 # Set up logging
 logger = logging.getLogger(__name__)
 
-def extract_json(text):
+def extract_json(text: str) -> dict[str, Any]:
     """Extracts the first JSON object found in the given text."""
     try:
         match = re.search(r'\{[\s\S]*\}', text, re.DOTALL)
@@ -29,7 +31,7 @@ def extract_json(text):
         logger.error(f"failed to deocde model JSON: {e}")
         raise LLMError("failed to extract valid JSON from model response")
 
-def build_prompt_for_task(payload, task):
+def build_prompt_for_task(payload: object, task: str) -> str:
     """Builds the appropriate prompt based on the specified task."""
     match task:
         case "summary":
@@ -41,7 +43,7 @@ def build_prompt_for_task(payload, task):
 
     return prompt
 
-def generate_response(payload, task = "summary"):
+def generate_response(payload: object, task: str = "summary") -> dict[str, Any]:
     """Generates a response from the LLM based on the given payload and task."""
     task = task.lower()
     

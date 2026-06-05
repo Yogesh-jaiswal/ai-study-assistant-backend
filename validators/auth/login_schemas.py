@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr
+from validators import UpdatedBaseModel
 
-class LoginRequest(BaseModel):
+class LoginRequest(UpdatedBaseModel):
     email: EmailStr = Field(..., description="User's email address")
     password: str = Field(..., min_length=8, description="User's password")
     

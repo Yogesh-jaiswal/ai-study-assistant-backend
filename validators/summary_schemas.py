@@ -2,9 +2,9 @@ from pydantic import BaseModel, Field, field_validator
 from typing import List
 from datetime import datetime
 
-from configs.settings import settings
+from . import UpdatedBaseModel
 
-class GenerateSummaryRequest(BaseModel):
+class GenerateSummaryRequest(UpdatedBaseModel):
     upload_ids: List[int] = Field(..., description="Uploads to fetch uploaded files", min_length=1)
 
     @field_validator("upload_ids")

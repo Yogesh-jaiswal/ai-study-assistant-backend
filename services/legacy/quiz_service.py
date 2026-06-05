@@ -1,5 +1,8 @@
 import logging
 from pydantic import ValidationError
+from typing import Any
+
+from validators.request_schemas import QuizRequest
 
 from services.ai.llm_client import generate_response
 from validators.response_schemas import QuizResponse
@@ -8,7 +11,7 @@ from exceptions import ResponseValidationError
 # Set up logging
 logger = logging.getLogger(__name__)
 
-def generate_quiz(payload):
+def generate_quiz(payload: QuizRequest) -> dict[str: Any]:
     """Generates a quiz based on the provided payload."""
 
     logger.info("calling quiz generation service")
@@ -21,8 +24,8 @@ def generate_quiz(payload):
             ai_output,
             context={"n": payload.n}
         )
-    except ValidationError as e:
-        logger.error(f"response validation failed: {e}")
+    except ValidationError:
+        logger.exception(f"response validation failed")
 
         raise ResponseValidationError(
             "model response failed"

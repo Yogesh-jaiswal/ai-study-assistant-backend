@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 from pydantic import ValidationError
 
 from app.extensions import db
@@ -8,31 +9,35 @@ from models import (
     Summary,
     UploadSummaryRelationship
 )
+from validators.summary_schemas import GenerateSummaryRequest
 from validators.request_schemas import SummaryRequest
 from exceptions import DatabaseError, ResourceNotFoundError, ResponseValidationError
 from validators.response_schemas import SummaryResponse
 from services.ai.llm_client import generate_response
+from repositories.notebook_repository import notebook_owned_by_user_query
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
-def generate_summary(notebook_id, payload):
+def generate_summary(notebook_id: int, user_id: int, payload: GenerateSummaryRequest) -> int:
     """Generates a summary for the specified notebook based on the provided upload IDs and saves it."""
-    notebook = db.session.get(Notebook, notebook_id)
+    notebook = db.session.scalar(
+        notebook_owned_by_user_query(notebook_id, user_id)
+    )
     if not notebook:
         raise ResourceNotFoundError("Notebook not found")
 
     upload_ids = payload.upload_ids
 
-    uploads = (
-        Upload.query
+    uploads = db.session.scalars(
+        db.select(Upload)
         .options(db.load_only(Upload.id, Upload.raw_text))
-        .filter(
+        .where(
             Upload.notebook_id == notebook_id,
             Upload.id.in_(upload_ids)
         )
-        .all()
-    )
+    ).all()
+
     
     if len(uploads) != len(upload_ids):
         raise ResourceNotFoundError("One or more uploads not found")
@@ -46,8 +51,8 @@ def generate_summary(notebook_id, payload):
     try:
         ai_output = generate_response(summary_payload, task="summary")
         summary_data = SummaryResponse(**ai_output)
-    except ValidationError as e:
-        logger.error(f"response validation failed: {e}")
+    except ValidationError:
+        logger.exception("response validation failed")
 
         raise ResponseValidationError(
             "model response failed"
@@ -56,7 +61,7 @@ def generate_summary(notebook_id, payload):
     try:
         summary = Summary(
             notebook_id=notebook_id,
-            summary_data=summary_data,
+            summary_data=summary_data.model_dump(),
             upload_count=len(uploads)
         )
 
@@ -75,24 +80,22 @@ def generate_summary(notebook_id, payload):
 
         db.session.commit()
 
-    except Exception as e:
-        logger.error(
-            f"Failed creating summary for notebook {notebook_id}: {str(e)}"
+    except Exception:
+        logger.exception(
+            f"Failed creating summary for notebook {notebook_id}"
         )
         db.session.rollback()
         raise DatabaseError(
             "Failed to create summary and relationships"
-        ) from e
+        )
     
     return summary.id
 
-def get_all_summaries(notebook_id):
+def get_all_summaries(notebook_id: int, user_id: int) -> list[dict[str, Any]]:
     """Retrieves all summaries for a notebook."""
-    notebook = (
-        db.session.query(Notebook)
+    notebook = db.session.scalar(
+        notebook_owned_by_user_query(notebook_id, user_id)
         .options(db.selectinload(Notebook.summaries))
-        .filter(Notebook.id == notebook_id)
-        .first()
     )
     if not notebook:
         raise ResourceNotFoundError(f"notebook with id {notebook_id} not found")
@@ -107,15 +110,16 @@ def get_all_summaries(notebook_id):
         } for summary in summaries
     ]
 
-def get_summary(notebook_id, summary_id):
+def get_summary(notebook_id: int, user_id: int, summary_id: int) -> dict[str, Any]:
     """Retrieves a specific summary for a notebook."""
-    summary = (
-        db.session.query(Summary)
-        .filter(
+    summary = db.session.scalar(
+        db.select(Summary)
+        .join(Notebook)
+        .where(
             Summary.id == summary_id,
-            Summary.notebook_id == notebook_id
+            Summary.notebook_id == notebook_id,
+            Notebook.user_id == user_id
         )
-        .first()
     )
     if not summary:
         raise ResourceNotFoundError(f"Summary with id {summary_id} not found in notebook {notebook_id}")
@@ -127,15 +131,16 @@ def get_summary(notebook_id, summary_id):
         "generated_at": summary.generated_at.isoformat()
     }
 
-def delete_summary(notebook_id, summary_id):
+def delete_summary(notebook_id: int, user_id: int, summary_id: int) -> None:
     """Deletes a specific summary for a notebook."""
-    summary = (
-        db.session.query(Summary)
-        .filter(
+    summary = db.session.scalar(
+        db.select(Summary)
+        .join(Notebook)
+        .where(
             Summary.id == summary_id,
-            Summary.notebook_id == notebook_id
+            Summary.notebook_id == notebook_id,
+            Notebook.user_id == user_id
         )
-        .first()
     )
     if not summary:
         raise ResourceNotFoundError(f"Summary with id {summary_id} not found in notebook {notebook_id}")
@@ -143,7 +148,7 @@ def delete_summary(notebook_id, summary_id):
     db.session.delete(summary)
     try:
         db.session.commit()
-    except Exception as e:
-        logger.error(f"Error deleting summary {summary_id} for notebook {notebook_id}: {str(e)}")
+    except Exception:
+        logger.exception(f"Error deleting summary {summary_id} for notebook {notebook_id}")
         db.session.rollback()
         raise DatabaseError(f"Failed to delete summary with id {summary_id}")

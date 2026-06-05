@@ -2,9 +2,9 @@ from pydantic import BaseModel, Field, field_validator
 from typing import List
 from datetime import datetime
 
-from configs.settings import settings
+from . import UpdatedBaseModel
 
-class CreateNotebookRequest(BaseModel):
+class CreateNotebookRequest(UpdatedBaseModel):
     """Schema for creating a notebook."""
     title: str = Field(..., min_length=1, max_length=100)
 

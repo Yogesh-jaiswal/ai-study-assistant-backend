@@ -24,6 +24,7 @@ from validators.error_response_schemas import (
 )
 from app.extensions import limiter
 from decorators.json_required import json_required
+from decorators.login_required import login_required
 from configs.settings import settings
 
 # Set up logging
@@ -39,6 +40,7 @@ class NotebookIDPathParams(BaseModel):
 class SummaryIDPathParams(NotebookIDPathParams):
     summary_id: int
 
+# Generate a new summary route
 @summary_bp.post(
     "",
     summary = "Endpoint to generate a based on selected uploads from a notebook",
@@ -53,6 +55,7 @@ class SummaryIDPathParams(NotebookIDPathParams):
 )
 @limiter.limit(settings.SUMMARY_RATE_LIMIT, override_defaults=False)
 @json_required
+@login_required
 def generate_summary_endpoint(path: NotebookIDPathParams):
     """
     Endpoint to generate a based on selected uploads from a notebook.
@@ -60,7 +63,7 @@ def generate_summary_endpoint(path: NotebookIDPathParams):
     """
     payload = GenerateSummaryRequest(**g.json_data)
 
-    summary_id = generate_summary(path.notebook_id, payload)
+    summary_id = generate_summary(path.notebook_id, g.user_id, payload)
 
     return jsonify(
         GenerateSummaryResponse(
@@ -69,6 +72,7 @@ def generate_summary_endpoint(path: NotebookIDPathParams):
         ).model_dump()
     ), 201
 
+# Retreive all summaries from a notebook route
 @summary_bp.get(
     "",
     summary = "Endpoint to retrieve all summaries from a notebook",
@@ -79,14 +83,17 @@ def generate_summary_endpoint(path: NotebookIDPathParams):
         500: ServerErrorResponse
     }
 )
+@login_required
 def get_all_summaries_endpoint(path: NotebookIDPathParams):
     """
     Endpoint to retrieve all summaries from a notebook.
     """
-    summaries = get_all_summaries(path.notebook_id)
+    summaries = get_all_summaries(path.notebook_id, g.user_id)
 
     return jsonify(GetAllSummariesResponse(summaries=summaries).model_dump())
 
+
+# Retreive a specific summary route
 @summary_bp.get(
     "/<int:summary_id>",
     summary = "Endpoint to retreive a specific summary",
@@ -97,14 +104,17 @@ def get_all_summaries_endpoint(path: NotebookIDPathParams):
         500: ServerErrorResponse
     }
 )
+@login_required
 def get_summary_endpoint(path: SummaryIDPathParams):
     """
     Endpoint to retrieve a specific summary
     """
-    summary = get_summary(path.notebook_id, path.summary_id)
+    summary = get_summary(path.notebook_id, g.user_id, path.summary_id)
 
     return jsonify(GetSummaryResponse(**summary).model_dump())
 
+
+# Delete a summary route
 @summary_bp.delete(
     "/<int:summary_id>",
     summary = "Endpoint to delete a specific summary",
@@ -115,11 +125,12 @@ def get_summary_endpoint(path: SummaryIDPathParams):
         500: ServerErrorResponse
     }
 )
+@login_required
 def delete_summary_endpoint(path: SummaryIDPathParams):
     """
     Endpoint to delete a specific summary.
     """
 
-    delete_summary(path.notebook_id, path.summary_id)
+    delete_summary(path.notebook_id, g.user_id, path.summary_id)
 
     return "", 204

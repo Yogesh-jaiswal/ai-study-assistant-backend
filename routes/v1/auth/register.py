@@ -16,6 +16,7 @@ from decorators.json_required import json_required
 
 from . import auth_bp
 
+# Register a user route
 @auth_bp.post(
     "/register",
     summary="Register a new user",

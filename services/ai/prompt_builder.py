@@ -1,4 +1,4 @@
-def create_summary_prompt(topic, notes):
+def create_summary_prompt(topic: str, notes: str) -> str:
     """Creates a prompt for generating a summary of the given topic and notes."""
     return f"""
         You are a study-focused tutor.
@@ -29,7 +29,7 @@ def create_summary_prompt(topic, notes):
         }}
     """
 
-def create_quiz_prompt(topic, notes, n, level):
+def create_quiz_prompt(topic: str, notes: str, n: int, level: str) -> str:
     """Creates a prompt for generating quiz questions based on the given topic, notes, number of questions, and difficulty level."""
     return f"""
         You are a quiz designer

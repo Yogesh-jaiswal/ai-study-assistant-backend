@@ -7,7 +7,7 @@ from exceptions import LLMError
 # Set up logging
 logger = logging.getLogger(__name__)
 
-def create_gemini_response(prompt):
+def create_gemini_response(prompt: str) -> str:
     """Creates a response from the Gemini model based on the given prompt."""
 
     API_KEY = settings.MODEL_API_KEY # Ensure that the API key is set in the settings

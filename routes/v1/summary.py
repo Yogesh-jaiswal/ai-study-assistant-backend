@@ -12,16 +12,15 @@ from validators.error_response_schemas import (
     ServerErrorResponse
 )
 from decorators.json_required import json_required
+from decorators.login_required import login_required
 from configs.settings import settings
 from app.extensions import limiter
-
-# Blueprint for summary routes
-summary_bp = APIBlueprint("summary", __name__)
+from . import v1_bp
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
-@summary_bp.post(
+@v1_bp.post(
         "/summarize",
         summary = "Endpoint to summarize provided content",
         responses = {
@@ -34,6 +33,7 @@ logger = logging.getLogger(__name__)
 )
 @limiter.limit(settings.SUMMARY_RATE_LIMIT, override_defaults=False)
 @json_required
+@login_required
 def summarize():
     """Endpoint to summarize provided content."""
     payload  = SummaryRequest(**g.json_data)

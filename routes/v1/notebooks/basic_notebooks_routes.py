@@ -23,6 +23,7 @@ from validators.error_response_schemas import (
     ServerErrorResponse
 )
 from decorators.json_required import json_required
+from decorators.login_required import login_required
 from . import notebook_bp
 
 # Set up logging
@@ -32,6 +33,7 @@ logger = logging.getLogger(__name__)
 class NotebookPath(BaseModel):
     id: int
 
+# Create new notebook route
 @notebook_bp.post(
     "",
     summary = "Endpoint to create a new notebook",
@@ -44,6 +46,7 @@ class NotebookPath(BaseModel):
     }
 )
 @json_required
+@login_required
 def create_notebook_endpoint():
     """
     Endpoint to create a new notebook.
@@ -51,7 +54,7 @@ def create_notebook_endpoint():
     """
     payload = CreateNotebookRequest(**g.json_data)
 
-    notebook_id = create_notebook(payload)
+    notebook_id = create_notebook(g.user_id, payload)
 
     return jsonify(
         NotebookCreatedResponse(
@@ -60,6 +63,7 @@ def create_notebook_endpoint():
         ).model_dump()
     ), 201
 
+# Get all notebooks route
 @notebook_bp.get(
     "",
     summary = "Endpoint to retrieve all notebooks",
@@ -69,15 +73,18 @@ def create_notebook_endpoint():
         500: ServerErrorResponse
     }
 )
+@login_required
 def get_all_notebooks_endpoint():
     """
     Endpoint to retrieve all notebooks.
     Expects a JSON payload with pagination and filtering options.
     """
-    notebooks = get_all_notebooks()
+    notebooks = get_all_notebooks(g.user_id)
 
     return jsonify(GetAllNotebooksResponse(data=notebooks).model_dump()), 200
 
+
+# Retrieve specific notebook route
 @notebook_bp.get(
     "/<int:id>",
     summary = "Endpoint to retrieve a specific notebook",
@@ -88,11 +95,14 @@ def get_all_notebooks_endpoint():
         500: ServerErrorResponse
     }
 )
+@login_required
 def get_notebook_endpoint(path: NotebookPath):
-    notebook = get_notebook(path.id)
+    notebook = get_notebook(path.id, g.user_id)
 
     return jsonify(GetNotebook(**notebook).model_dump()), 200
 
+
+# Notebook deletion route
 @notebook_bp.delete(
     "/<int:id>",
     summary = "Endpoint to delete a specific notebook",
@@ -103,10 +113,11 @@ def get_notebook_endpoint(path: NotebookPath):
         500: ServerErrorResponse
     }
 )
+@login_required
 def delete_notebook_endpoint(path: NotebookPath):
     """
     Endpoint to delete a specific notebook.
     """
-    delete_notebook(path.id)
+    delete_notebook(path.id, g.user_id)
 
     return "", 204

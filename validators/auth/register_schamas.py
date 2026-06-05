@@ -1,7 +1,8 @@
 import re
 from pydantic import BaseModel, Field, field_validator, EmailStr
+from validators import UpdatedBaseModel
 
-class RegistrationRequest(BaseModel):
+class RegistrationRequest(UpdatedBaseModel):
     email: EmailStr = Field(..., description="User's email address")
     username: str = Field(..., min_length=3, max_length=50, description="User's username")
     password: str = Field(..., min_length=8, description="User's password")

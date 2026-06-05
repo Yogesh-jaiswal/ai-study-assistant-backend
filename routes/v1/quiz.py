@@ -12,16 +12,15 @@ from validators.error_response_schemas import (
     ServerErrorResponse
 )
 from decorators.json_required import json_required
+from decorators.login_required import login_required
 from configs.settings import settings
 from app.extensions import limiter
-
-# Blueprint for quiz routes
-quiz_bp = APIBlueprint("quiz", __name__)
+from . import v1_bp
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
-@quiz_bp.post(
+@v1_bp.post(
         "/quiz",
         summary = "Endpoint to generate a quiz based on provided content",
         responses = {
@@ -34,6 +33,7 @@ logger = logging.getLogger(__name__)
 )
 @limiter.limit(settings.QUIZ_RATE_LIMIT, override_defaults=False)
 @json_required
+@login_required
 def quiz():
     """Endpoint to generate a quiz based on provided content."""
     payload = QuizRequest(**g.json_data)

@@ -1,0 +1,6 @@
+from pydantic import BaseModel, Field, EmailStr
+
+class GetMeResponse(BaseModel):
+    id: int = Field(..., description="Unique identifier for user")
+    email: EmailStr = Field(..., description="User's email address")
+    user_name: str = Field(..., description="User's username")

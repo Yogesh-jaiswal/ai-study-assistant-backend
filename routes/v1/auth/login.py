@@ -17,6 +17,7 @@ from configs.settings import settings
 
 from . import auth_bp
 
+# Login a user route
 @auth_bp.post(
     "/login",
     summary="Logs in a user and generates an access token",

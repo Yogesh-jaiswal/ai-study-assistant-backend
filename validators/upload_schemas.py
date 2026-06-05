@@ -5,7 +5,9 @@ from datetime import datetime
 from configs.settings import settings
 from models.enums import FileTypes, ProcessingStatus
 
-class FileUploadRequest(BaseModel):
+from . import UpdatedBaseModel
+
+class FileUploadRequest(UpdatedBaseModel):
     filename: str = Field(..., description="Name of the file being uploaded", min_length=1, max_length=255)
     source_type: FileTypes = Field(..., description="type of the file")
     raw_text: str = Field(..., description="Content of the file", max_length=settings.MAX_CONTENT_LENGTH)

@@ -3,7 +3,9 @@ from typing import Literal
 
 from configs.settings import settings
 
-class SummaryRequest(BaseModel):
+from . import UpdatedBaseModel
+
+class SummaryRequest(UpdatedBaseModel):
     """Request schema for summary generation."""
     topic: str = Field(..., min_length=1, max_length=100)
     notes: str = Field(..., min_length=10, max_length=settings.MAX_NOTES_LENGTH)

@@ -1,11 +1,12 @@
 import uuid
 import jwt
+from typing import Any
 
 from datetime import datetime, timedelta, timezone
 
 from configs.settings import settings
 
-def create_access_token(user_id):
+def create_access_token(user_id: int) -> str:
     """
     Function to generate a new JWT access token
     """
@@ -25,7 +26,7 @@ def create_access_token(user_id):
         algorithm=settings.JWT_ALGORITHM
     )
 
-def decode_access_token(token):
+def decode_access_token(token: str) -> dict[str, Any]:
     """
     Function to decode the existing JWT token
     """
