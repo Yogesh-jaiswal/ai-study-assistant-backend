@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .notebook import Notebook
+    from .refresh_token import RefreshToken
 
 class User(db.Model):
     __tablename__ = "users"
@@ -35,4 +36,5 @@ class User(db.Model):
         nullable=False
     )
 
+    refresh_tokens: Mapped[list["RefreshToken"]] = db.relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan", lazy="raise_on_sql")
     notebooks: Mapped[list["Notebook"]] = db.relationship("Notebook", back_populates="user", cascade="all, delete-orphan", lazy="raise_on_sql")

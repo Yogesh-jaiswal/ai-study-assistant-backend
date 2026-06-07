@@ -9,7 +9,7 @@ from app.extensions import (
     limiter,
     migrate
 )
-from configs.settings import settings
+from configs import settings
 import models
 
 def create_app():

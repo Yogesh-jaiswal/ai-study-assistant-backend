@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field, field_validator, EmailStr
 from validators import UpdatedBaseModel
 
 class RegistrationRequest(UpdatedBaseModel):
+    """Schema for registring a new user"""
     email: EmailStr = Field(..., description="User's email address")
     username: str = Field(..., min_length=3, max_length=50, description="User's username")
     password: str = Field(..., min_length=8, description="User's password")
@@ -25,6 +26,7 @@ class RegistrationRequest(UpdatedBaseModel):
         return value
     
 class RegistrationResponse(BaseModel):
+    """Schema for the response when registring a new user"""
     id: int = Field(..., description="User's unique identifier")
     email: EmailStr = Field(..., description="User's email address")
     message: str = Field(..., description="Success message for registration")

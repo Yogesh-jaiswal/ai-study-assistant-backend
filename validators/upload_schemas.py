@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, field_validator
 from typing import List
 from datetime import datetime
 
-from configs.settings import settings
+from configs import settings
 from models.enums import FileTypes, ProcessingStatus
 
 from . import UpdatedBaseModel

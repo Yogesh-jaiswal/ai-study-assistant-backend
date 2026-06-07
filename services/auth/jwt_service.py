@@ -4,7 +4,7 @@ from typing import Any
 
 from datetime import datetime, timedelta, timezone
 
-from configs.settings import settings
+from configs import settings
 
 def create_access_token(user_id: int) -> str:
     """

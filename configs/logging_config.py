@@ -4,7 +4,7 @@ import os
 from flask import has_request_context, g
 from logging.handlers import RotatingFileHandler
 
-from configs.settings import settings
+from configs import settings
 
 class RequestIDFilter(logging.Filter):
     """Logging filter to add request ID to log records."""

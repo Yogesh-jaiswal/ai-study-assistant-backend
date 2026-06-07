@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, field_validator
 from typing import Literal
 
-from configs.settings import settings
+from configs import settings
 
 from . import UpdatedBaseModel
 

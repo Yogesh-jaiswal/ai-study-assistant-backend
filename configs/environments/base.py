@@ -3,11 +3,12 @@ from pydantic import Field, computed_field
 from typing import Literal, List
 from pathlib import Path
 
-class Settings(BaseSettings):
+class BaseAppSettings(BaseSettings):
     """Application settings object."""
     # App Settings
     DEBUG: bool = Field(default=True)
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = Field(default="INFO")
+    ENVIROMENT: Literal["development", "testing", "production"] = Field(default="development")
 
     # Model Settings
     AI_MODEL: Literal["FAKE", "GEMINI"] = Field(default="FAKE")
@@ -61,5 +62,3 @@ class Settings(BaseSettings):
         env_file=".env",
         extra="ignore"
     )
-
-settings = Settings()

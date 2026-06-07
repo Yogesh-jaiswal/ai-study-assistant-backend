@@ -1,7 +1,7 @@
 import logging
 import google.generativeai as genai
 
-from configs.settings import settings
+from configs import settings
 from exceptions import LLMError
 
 # Set up logging

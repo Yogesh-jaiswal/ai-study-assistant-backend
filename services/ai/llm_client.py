@@ -12,7 +12,7 @@ from .providers.fake_response import create_fake_response
 from .providers.gemini_response import create_gemini_response
 
 from exceptions import LLMError
-from configs.settings import settings
+from configs import settings
 
 # Set up logging
 logger = logging.getLogger(__name__)

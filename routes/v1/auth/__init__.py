@@ -6,3 +6,5 @@ auth_bp = APIBlueprint('auth', __name__, url_prefix="/auth")
 from . import register
 from . import login
 from . import me
+from . import refresh
+from . import logout
