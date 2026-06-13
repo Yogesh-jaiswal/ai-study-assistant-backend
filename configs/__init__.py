@@ -1,20 +1,24 @@
-from functools import lru_cache
+import os
+from functools import cache
 
 from .environments.base import BaseAppSettings
-from .environments.development import DevelopmentSettings
-from .environments.production import ProductionSettings
-from .environments.testing import TestingSettings
+from .environments.development import get_development_overrides
+from .environments.production import get_production_overrides
+from .environments.testing import get_testing_overrides
 
-@lru_cache
-def get_settings():
-    env = BaseAppSettings().ENVIROMENT
+@cache
+def get_settings() -> BaseAppSettings:
+    """Return the app settings based on the app enviroment"""
     
-    if env == "production":
-        return ProductionSettings()
+    base = BaseAppSettings()
     
-    elif env == "testing":
-        return TestingSettings()
+    if base.ENVIRONMENT == "production":
+        overrides =  get_production_overrides()
     
-    return DevelopmentSettings()
+    elif base.ENVIRONMENT == "testing":
+        overrides = get_testing_overrides()
+    
+    else:
+        overrides = get_development_overrides()
 
-settings = get_settings()
+    return base.model_copy(update=overrides)

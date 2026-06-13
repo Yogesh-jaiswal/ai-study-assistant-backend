@@ -31,6 +31,6 @@ def get_me():
         GetMeResponse(
             id=user.id,
             email=user.email,
-            user_name=user.username
+            username=user.username
         ).model_dump()
     )

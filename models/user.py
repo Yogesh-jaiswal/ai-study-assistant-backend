@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column
@@ -12,24 +13,28 @@ if TYPE_CHECKING:
 class User(db.Model):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(
+    id: Mapped[str] = mapped_column(
+        db.String(36),
         primary_key=True,
-        autoincrement=True
+        default=lambda: str(uuid.uuid4())
     )
 
     username: Mapped[str] = mapped_column(
         db.String(50), 
         nullable=False
     )
+    
     email: Mapped[str] = mapped_column(
         db.String(100),
         unique=True, 
         nullable=False
     )
+
     password_hash: Mapped[str] = mapped_column(
         db.String(255),
         nullable=False
     )
+
     created_at: Mapped[datetime] = mapped_column(
         db.DateTime(timezone=True),
         server_default=func.now(),

@@ -7,3 +7,4 @@ __all__ = ["limiter"]
 
 db = SQLAlchemy()
 migrate = Migrate()
+redis_client = None

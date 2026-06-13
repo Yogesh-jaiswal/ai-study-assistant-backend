@@ -1,25 +1,30 @@
 from pydantic import BaseModel, Field, field_validator
 from typing import List
 from datetime import datetime
+from uuid import UUID
 
 from . import UpdatedBaseModel
 
 class GenerateSummaryRequest(UpdatedBaseModel):
-    upload_ids: List[int] = Field(..., description="Uploads to fetch uploaded files", min_length=1)
+    upload_ids: List[str] = Field(..., description="Uploads to fetch uploaded files", min_length=1)
 
     @field_validator("upload_ids")
     @classmethod
     def unique_ids(cls, v):
         if len(v) != len(set(v)):
             raise ValueError("upload_ids must be unique")
+        
+        for x in v:
+            UUID(x)
+            
         return v
 
 class GenerateSummaryResponse(BaseModel):
-    id: int = Field(..., description="Unique identifier for the generated summary")
+    id: str = Field(..., description="Unique identifier for the generated summary")
     message: str = Field(..., description="Success message confirming summary generation")
 
 class SummaryMetadataResponse(BaseModel):
-    id: int = Field(..., description="Unique identifier for the generated summary")
+    id: str = Field(..., description="Unique identifier for the generated summary")
     upload_count: int = Field(..., description="Number of uploads used to generate the summary")
     generated_at: datetime = Field(..., description="Timestamp of when the summary was generated")
 

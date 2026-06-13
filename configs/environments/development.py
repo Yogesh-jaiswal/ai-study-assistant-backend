@@ -1,17 +1,14 @@
-from typing import Literal
+from typing import Any
 
-from .base import BaseAppSettings
+def get_development_overrides() -> dict[str, Any]:
+    """function to get the development environment config changes"""
+    overrides = {
+        "DEBUG": True,
+        "LOG_LEVEL": "DEBUG",
+        "AI_MODEL": "FAKE",
+        "DATABASE_URL": "sqlite:///study_assistant.db",
+        "LIMITER_STORAGE_URI": "memory://",
+        "ACCESS_TOKEN_MINUTES": 15
+    }
 
-class DevelopmentSettings(BaseAppSettings):
-    """Development settings object."""
-    DEBUG: bool = True
-    
-    LOG_LEVEL: Literal["DEBUG"] = "DEBUG"
-
-    AI_MODEL: Literal["FAKE"] = "FAKE"
-
-    DATABASE_URL: str = "sqlite:///study_assistant.db"
-
-    LIMITER_STORAGE_URI: str = "memory://"
-
-    ACCESS_TOKEN_MINUTES: int = 15
+    return overrides

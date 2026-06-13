@@ -1,4 +1,5 @@
 import logging
+from uuid import UUID
 from flask import g, jsonify
 from flask_openapi3 import APIBlueprint
 from pydantic import BaseModel
@@ -31,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 # Notebook path parameters model
 class NotebookPath(BaseModel):
-    id: int
+    id: UUID
 
 # Create new notebook route
 @notebook_bp.post(
@@ -86,7 +87,7 @@ def get_all_notebooks_endpoint():
 
 # Retrieve specific notebook route
 @notebook_bp.get(
-    "/<int:id>",
+    "/<string:id>",
     summary = "Endpoint to retrieve a specific notebook",
     responses = {
         200: GetNotebook,
@@ -97,14 +98,14 @@ def get_all_notebooks_endpoint():
 )
 @login_required
 def get_notebook_endpoint(path: NotebookPath):
-    notebook = get_notebook(path.id, g.user_id)
+    notebook = get_notebook(str(path.id), g.user_id)
 
     return jsonify(GetNotebook(**notebook).model_dump()), 200
 
 
 # Notebook deletion route
 @notebook_bp.delete(
-    "/<int:id>",
+    "/<string:id>",
     summary = "Endpoint to delete a specific notebook",
     responses = {
         204: None,
@@ -118,6 +119,6 @@ def delete_notebook_endpoint(path: NotebookPath):
     """
     Endpoint to delete a specific notebook.
     """
-    delete_notebook(path.id, g.user_id)
+    delete_notebook(str(path.id), g.user_id)
 
     return "", 204

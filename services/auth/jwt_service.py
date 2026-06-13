@@ -4,9 +4,12 @@ from typing import Any
 
 from datetime import datetime, timedelta, timezone
 
-from configs import settings
+from configs import get_settings
 
-def create_access_token(user_id: int) -> str:
+# Get the settings object
+settings = get_settings()
+
+def create_access_token(user_id: str) -> str:
     """
     Function to generate a new JWT access token
     """

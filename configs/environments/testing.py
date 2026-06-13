@@ -1,15 +1,13 @@
-from typing import Literal
+from typing import Any
 
-from .base import BaseAppSettings
+def get_testing_overrides() -> dict[str, Any]:
+    """function to get the testing environment config changes"""
+    overrides = {
+        "DEBUG": False,
+        "LOG_LEVEL": "ERROR",
+        "DATABASE_URL": "sqlite://",
+        "RATELIMIT_ENABLED": False,
+        "AI_MODEL": "FAKE"
+    }
 
-class TestingSettings(BaseAppSettings):
-    """Testing settings object."""
-    DEBUG: bool = False
-
-    LOG_LEVEL: Literal["ERROR"] = "ERROR"
-
-    DATABASE_URL: str = "sqlite:///:memory:"
-
-    RATELIMIT_ENABLED: bool = False
-
-    AI_MODEL: Literal["FAKE"] = "FAKE"
+    return overrides

@@ -1,17 +1,14 @@
-from typing import Literal
+from typing import Any
 
-from .base import BaseAppSettings
+def get_production_overrides() -> dict[str, Any]:
+    """function to get the production environment config changes"""
+    overrides = {
+        "DEBUG": False,
+        "LOG_LEVEL": "INFO",
+        "AI_MODEL": "GEMINI",
+        "RATELIMIT_ENABLED": True,
+        # "LIMITER_STORAGE_URI": "redis://...",
+        "ACCESS_TOKEN_MINUTES": 15
+    }
 
-class ProductionSettings(BaseAppSettings):
-    """Production settings object."""
-    DEBUG: bool = False
-
-    LOG_LEVEL: Literal["INFO"] = "INFO"
-
-    AI_MODEL: Literal["GEMINI"] = "GEMINI"
-
-    RATELIMIT_ENABLED: bool = True
-
-    # LIMITER_STORAGE_URI: str = "redis://..."
-
-    ACCESS_TOKEN_MINUTES: int = 15
+    return overrides

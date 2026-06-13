@@ -1,11 +1,14 @@
 import logging
 
-from app.extensions import db
 from models import User
+from repositories.user_repository import (
+    get_user_by_email,
+    save_user
+)
 
 from validators.auth.register_schamas import RegistrationRequest
 
-from exceptions import DatabaseError, AuthenticationError
+from exceptions import AuthenticationError
 
 from services.auth.password_service import hash_password
 
@@ -14,10 +17,7 @@ logger = logging.getLogger(__name__)
 
 def register_user(payload: RegistrationRequest) -> User:
     """Registers a new user"""
-    if db.session.scalar(
-        db.select(User)
-        .where(User.email == payload.email.lower())
-    ):
+    if get_user_by_email(payload.email):
         logger.warning(f"Registration attempt with existing email: {payload.email.lower()}")
         raise AuthenticationError("Registration failed")
 
@@ -28,11 +28,6 @@ def register_user(payload: RegistrationRequest) -> User:
         password_hash=password_hash
     )
 
-    db.session.add(user)
-    try:
-        db.session.commit()
-    except Exception:
-        logger.exception(f"Registration failed for {payload.email.lower()}")
-        db.session.rollback()
-        raise DatabaseError(f"Failed to register user")
+    save_user(user)
+
     return user

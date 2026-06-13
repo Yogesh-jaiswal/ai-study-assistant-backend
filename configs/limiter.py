@@ -1,7 +1,9 @@
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-from configs import settings
+from configs import get_settings
+
+settings = get_settings()
 
 # Initialize the Limiter with the appropriate configuration
 limiter = Limiter(

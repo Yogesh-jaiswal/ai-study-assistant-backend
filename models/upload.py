@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from typing import List
 from sqlalchemy import func
@@ -14,12 +15,13 @@ if TYPE_CHECKING:
 class Upload(db.Model):
     __tablename__ = "uploads"
 
-    id: Mapped[int] = mapped_column(
+    id: Mapped[str] = mapped_column(
+        db.String(36),
         primary_key=True,
-        autoincrement=True
+        default=lambda: str(uuid.uuid4())
     )
 
-    notebook_id: Mapped[int] = mapped_column(
+    notebook_id: Mapped[str] = mapped_column(
         db.ForeignKey("notebooks.id"),
         nullable=False
     )

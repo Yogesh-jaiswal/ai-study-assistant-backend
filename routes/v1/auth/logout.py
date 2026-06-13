@@ -12,9 +12,12 @@ from validators.error_response_schemas import (
     ServerErrorResponse
 )
 from decorators.login_required import login_required
-from configs import settings
+from configs import get_settings
 
 from . import auth_bp
+
+# Get the settings object
+settings = get_settings()
 
 # Logout a user route
 @auth_bp.get(

@@ -1,3 +1,4 @@
+from uuid import UUID
 from functools import wraps
 from flask import g, request
 import jwt
@@ -26,8 +27,9 @@ def login_required(func):
             if not user_id:
                 raise AuthenticationError("Authentication failed")
 
-            g.user_id = int(user_id)
+            g.user_id = str(UUID(user_id))
         except (
+            ValueError,
             jwt.ExpiredSignatureError, 
             jwt.InvalidTokenError
         ):

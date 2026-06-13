@@ -1,4 +1,5 @@
 import logging
+from uuid import UUID
 from flask import g, jsonify
 from flask_openapi3 import APIBlueprint
 from pydantic import BaseModel
@@ -29,14 +30,14 @@ from decorators.login_required import login_required
 logger = logging.getLogger(__name__)
 
 # Custom uploads blueprint for notebook file uploads
-upload_bp = APIBlueprint("uploads", __name__, url_prefix="<int:notebook_id>/uploads")
+upload_bp = APIBlueprint("uploads", __name__, url_prefix="<string:notebook_id>/uploads")
 
 # Path parameter schemas
 class NotebookIDPathParams(BaseModel):
-    notebook_id: int
+    notebook_id: UUID
 
 class UploadIDPathParams(NotebookIDPathParams):
-    upload_id: int
+    upload_id: UUID
 
 
 # Upload a new file route
@@ -61,7 +62,7 @@ def upload_file_endpoint(path: NotebookIDPathParams):
     """
     payload = FileUploadRequest(**g.json_data)
 
-    upload_id = create_upload(path.notebook_id, g.user_id, payload)
+    upload_id = create_upload(str(path.notebook_id), g.user_id, payload)
 
     return jsonify(
         FileUploadedResponse(
@@ -87,14 +88,14 @@ def get_all_uploads_endpoint(path: NotebookIDPathParams):
     """
     Endpoint to retrieve all uploads for a notebook.
     """
-    uploads = get_all_uploads(path.notebook_id, g.user_id)
+    uploads = get_all_uploads(str(path.notebook_id), g.user_id)
 
     return jsonify(GetAllUploadsResponse(uploads=uploads).model_dump()), 200
 
 
 # Retrieve a specific uploaded file route
 @upload_bp.get(
-    "/<int:upload_id>",
+    "/<string:upload_id>",
     summary = "Endpoint to retrieve a specific upload",
     responses = {
         200: GetUploadResponse,
@@ -108,14 +109,14 @@ def get_upload_endpoint(path: UploadIDPathParams):
     """
     Endpoint to retrieve a specific upload.
     """
-    upload = get_upload(path.notebook_id, g.user_id, path.upload_id)
+    upload = get_upload(str(path.notebook_id), g.user_id, str(path.upload_id))
 
     return jsonify(GetUploadResponse(**upload).model_dump()), 200
 
 
 # Delete a specific file upload route
 @upload_bp.delete(
-    "/<int:upload_id>",
+    "/<string:upload_id>",
     summary = "Endpoint to delete a specific upload",
     responses = {
         204: None,
@@ -129,6 +130,6 @@ def delete_upload_endpoint(path: UploadIDPathParams):
     """
     Endpoint to delete a specific upload.
     """
-    delete_upload(path.notebook_id, g.user_id, path.upload_id)
+    delete_upload(str(path.notebook_id), g.user_id, str(path.upload_id))
 
     return "", 204

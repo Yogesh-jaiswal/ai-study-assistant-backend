@@ -20,12 +20,12 @@ class CreateNotebookRequest(UpdatedBaseModel):
 
 class NotebookCreatedResponse(BaseModel):
     """Schema for the response when creating a notebook."""
-    id: int = Field(...)
+    id: str = Field(...)
     message: str = Field(...)
 
 class GetNotebook(BaseModel):
     """Schema for retrieving a notebook."""
-    id: int = Field(...)
+    id: str = Field(...)
     title: str = Field(..., min_length=1, max_length=100)
 
 class GetNotebookMetadata(GetNotebook):
@@ -34,4 +34,4 @@ class GetNotebookMetadata(GetNotebook):
 
 class GetAllNotebooksResponse(BaseModel):
     """Schema for the response when retrieving multiple notebooks."""
-    data: List[GetNotebookMetadata] = Field(..., min_length=1)
+    data: List[GetNotebookMetadata] = Field(...)

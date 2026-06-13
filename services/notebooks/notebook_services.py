@@ -1,33 +1,32 @@
 import logging
 from typing import Any
 
-from app.extensions import db
 from models import Notebook
 
 from validators.notebook_schemas import CreateNotebookRequest
-from repositories.notebook_repository import notebook_owned_by_user_query
+from repositories.notebook_repository import (
+    save_notebook,
+    get_notebook_by_notebook_id,
+    get_notebook_by_user_id,
+    remove_notebook
+)
 
-from exceptions import DatabaseError, ResourceNotFoundError
+from exceptions import ResourceNotFoundError
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
-def create_notebook(user_id: int, payload: CreateNotebookRequest) -> int:
+def create_notebook(user_id: str, payload: CreateNotebookRequest) -> str:
     """Creates a new notebook"""
     notebook = Notebook(title=payload.title, user_id=user_id)
     
-    db.session.add(notebook)
-    try:
-        db.session.commit()
-    except Exception:
-        logger.exception(f"Failed to create notebook")
-        db.session.rollback()
-        raise DatabaseError(f"Failed to create notebook")
+    save_notebook(notebook)
+
     return notebook.id
 
-def get_notebook(notebook_id: int, user_id: int) -> dict[str, Any]:
+def get_notebook(notebook_id: str, user_id: str) -> dict[str, Any]:
     """Gets a specific notebook"""
-    notebook = db.session.scalar(notebook_owned_by_user_query(notebook_id, user_id))
+    notebook = get_notebook_by_notebook_id(notebook_id, user_id)
 
     if not notebook:
         raise ResourceNotFoundError(f"Notebook with id {notebook_id} not found")
@@ -38,12 +37,9 @@ def get_notebook(notebook_id: int, user_id: int) -> dict[str, Any]:
         "created_at": notebook.created_at.isoformat()
     }
 
-def get_all_notebooks(user_id: int) -> list[dict[str, Any]]:
+def get_all_notebooks(user_id: str) -> list[dict[str, Any]]:
     """Get all notebooks"""
-    notebooks = db.session.scalars(
-        db.select(Notebook)
-        .where(Notebook.user_id == user_id)
-    ).all()
+    notebooks = get_notebook_by_user_id(user_id)
 
     return [
         {
@@ -54,17 +50,11 @@ def get_all_notebooks(user_id: int) -> list[dict[str, Any]]:
         for notebook in notebooks
     ]
 
-def delete_notebook(notebook_id: int, user_id: int) -> None:
+def delete_notebook(notebook_id: str, user_id: str) -> None:
     """Deletes a specific notebook"""
-    notebook = db.session.scalar(notebook_owned_by_user_query(notebook_id, user_id))
+    notebook = get_notebook_by_notebook_id(notebook_id, user_id)
 
     if not notebook:
         raise ResourceNotFoundError(f"Notebook with id {notebook_id} not found")
 
-    db.session.delete(notebook)
-    try:
-        db.session.commit()
-    except Exception:
-        logger.exception(f"Failed to delete notebook")
-        db.session.rollback()
-        raise DatabaseError(f"Failed to delete notebook")
+    remove_notebook(notebook)

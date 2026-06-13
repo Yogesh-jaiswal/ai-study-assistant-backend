@@ -1,24 +1,23 @@
 import logging
-from typing import Any
-from app.extensions import db
 from models import User
 
 from exceptions import AuthenticationError
+from repositories.user_repository import get_user_by_email
 
 from validators.auth.login_schemas import LoginRequest
 
 from services.auth.password_service import verify_password
-from configs import settings
+from configs import get_settings
+
+# Get the settings object
+settings = get_settings()
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
 def login_user(payload: LoginRequest) -> User:
     """Check credententials and generate access token for user"""
-    user = db.session.scalar(
-        db.select(User)
-        .where(User.email == payload.email.lower())
-    )
+    user = get_user_by_email(payload.email)
 
     if user:
         is_password_ok = verify_password(payload.password, user.password_hash)

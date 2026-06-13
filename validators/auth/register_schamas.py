@@ -27,6 +27,6 @@ class RegistrationRequest(UpdatedBaseModel):
     
 class RegistrationResponse(BaseModel):
     """Schema for the response when registring a new user"""
-    id: int = Field(..., description="User's unique identifier")
+    id: str = Field(..., description="User's unique identifier")
     email: EmailStr = Field(..., description="User's email address")
     message: str = Field(..., description="Success message for registration")

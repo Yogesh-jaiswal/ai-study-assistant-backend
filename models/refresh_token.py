@@ -17,8 +17,8 @@ class RefreshToken(db.Model):
         default=lambda: str(uuid.uuid4())
     )
 
-    user_id: Mapped[int] = mapped_column(
-        db.Integer,
+    user_id: Mapped[str] = mapped_column(
+        db.String,
         db.ForeignKey("users.id"),
         nullable=False
     )

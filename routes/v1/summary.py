@@ -13,9 +13,12 @@ from validators.error_response_schemas import (
 )
 from decorators.json_required import json_required
 from decorators.login_required import login_required
-from configs import settings
+from configs import get_settings
 from app.extensions import limiter
 from . import v1_bp
+
+# Get the settings object
+settings = get_settings()
 
 # Set up logging
 logger = logging.getLogger(__name__)

@@ -1,9 +1,12 @@
 from pydantic import BaseModel, Field, field_validator
 from typing import Literal
 
-from configs import settings
+from configs import get_settings
 
 from . import UpdatedBaseModel
+
+# Get the settings object
+settings = get_settings()
 
 class SummaryRequest(UpdatedBaseModel):
     """Request schema for summary generation."""

@@ -7,8 +7,8 @@ class BaseAppSettings(BaseSettings):
     """Application settings object."""
     # App Settings
     DEBUG: bool = Field(default=True)
-    LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = Field(default="INFO")
-    ENVIROMENT: Literal["development", "testing", "production"] = Field(default="development")
+    LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = Field(default="DEBUG")
+    ENVIRONMENT: Literal["development", "testing", "production"] = Field(default="development")
 
     # Model Settings
     AI_MODEL: Literal["FAKE", "GEMINI"] = Field(default="FAKE")
@@ -57,6 +57,11 @@ class BaseAppSettings(BaseSettings):
     
     # Login Settings
     DUMMY_HASH: str
+
+    # Redis Settings
+    REDIS_HOST: str = Field(default="localhost")
+    REDIS_PORT: int = Field(default=6379)
+    REDIS_DB: int = Field(default=0)
     
     model_config = SettingsConfigDict(
         env_file=".env",

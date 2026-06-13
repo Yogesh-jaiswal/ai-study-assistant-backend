@@ -14,9 +14,12 @@ from validators.error_response_schemas import (
     RateLimitExceededResponse,
     ServerErrorResponse
 )
-from configs import settings
+from configs import get_settings
 
 from . import auth_bp
+
+# Get the settings object
+settings = get_settings()
 
 # Re login the user and rotate refresh token
 @auth_bp.get(

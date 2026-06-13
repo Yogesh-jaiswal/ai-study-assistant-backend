@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from typing import List
 from sqlalchemy import func
@@ -13,11 +14,13 @@ if TYPE_CHECKING:
 class Summary(db.Model):
     __tablename__ = "summaries"
 
-    id: Mapped[int] = mapped_column(
-        primary_key=True
+    id: Mapped[str] = mapped_column(
+        db.String(36),
+        primary_key=True,
+        default=lambda: str(uuid.uuid4())
     )
 
-    notebook_id: Mapped[int] = mapped_column(
+    notebook_id: Mapped[str] = mapped_column(
         db.ForeignKey("notebooks.id"),
         nullable=False
     )

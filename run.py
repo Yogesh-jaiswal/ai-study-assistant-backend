@@ -1,12 +1,15 @@
 import logging
 
 from app import create_app
-from configs import settings
+from configs import get_settings
 from validators.response_schemas import HealthResponse
 from validators.error_response_schemas import (
     RateLimitExceededResponse,
     ServerErrorResponse
 )
+
+# Get the settings object
+settings = get_settings()
 
 # Set up app logger
 logger = logging.getLogger("app")

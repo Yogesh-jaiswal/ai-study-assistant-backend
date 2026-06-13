@@ -2,10 +2,13 @@ from pydantic import BaseModel, Field, field_validator
 from typing import List
 from datetime import datetime
 
-from configs import settings
+from configs import get_settings
 from models.enums import FileTypes, ProcessingStatus
 
 from . import UpdatedBaseModel
+
+# Get the settings object
+settings = get_settings()
 
 class FileUploadRequest(UpdatedBaseModel):
     filename: str = Field(..., description="Name of the file being uploaded", min_length=1, max_length=255)
@@ -23,11 +26,11 @@ class FileUploadRequest(UpdatedBaseModel):
         return value
 
 class FileUploadedResponse(BaseModel):
-    id: int = Field(..., description="Unique identifier for the uploaded file")
+    id: str = Field(..., description="Unique identifier for the uploaded file")
     message: str = Field(..., description="Success message confirming file upload")
 
 class FileMetadataResponse(BaseModel):
-    id: int = Field(..., description="Unique identifier for the uploaded file")
+    id: str = Field(..., description="Unique identifier for the uploaded file")
     filename: str = Field(..., description="Name of the uploaded file")
     source_type: FileTypes = Field(..., description="type of the uploaded file")
     processing_status: ProcessingStatus = Field(..., description="Current processing status of the uploaded file")
