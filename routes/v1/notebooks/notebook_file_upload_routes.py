@@ -4,7 +4,7 @@ from flask import g, jsonify
 from flask_openapi3 import APIBlueprint
 from pydantic import BaseModel
 
-from services.uploads.upload_services import (
+from services.uploads.upload_service import (
     create_upload,
     get_all_uploads,
     get_upload,

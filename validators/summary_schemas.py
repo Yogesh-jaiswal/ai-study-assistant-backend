@@ -20,7 +20,7 @@ class GenerateSummaryRequest(UpdatedBaseModel):
         return v
 
 class GenerateSummaryResponse(BaseModel):
-    id: str = Field(..., description="Unique identifier for the generated summary")
+    task_id: int = Field(..., description="Unique identifier for the celery background task")
     message: str = Field(..., description="Success message confirming summary generation")
 
 class SummaryMetadataResponse(BaseModel):

@@ -4,8 +4,8 @@ from flask import g, jsonify
 from flask_openapi3 import APIBlueprint
 from pydantic import BaseModel
 
-from services.summaries.summary_services import (
-    generate_summary,
+from services.summaries.summary_service import (
+    enqueue_summary_generation,
     get_all_summaries,
     get_summary,
     delete_summary
@@ -49,7 +49,7 @@ class SummaryIDPathParams(NotebookIDPathParams):
     "",
     summary = "Endpoint to generate a based on selected uploads from a notebook",
     responses = {
-        201: GenerateSummaryResponse,
+        202: GenerateSummaryResponse,
         400: RequestJSONErrorResponse,
         404: ResourceNotFoundResponse,
         422: ValidationErrorResponse,
@@ -67,14 +67,14 @@ def generate_summary_endpoint(path: NotebookIDPathParams):
     """
     payload = GenerateSummaryRequest(**g.json_data)
 
-    summary_id = generate_summary(str(path.notebook_id), g.user_id, payload)
+    task_id = enqueue_summary_generation(str(path.notebook_id), g.user_id, payload)
 
     return jsonify(
         GenerateSummaryResponse(
-            id=summary_id,
-            message="summary generated successfully"
+            task_id=task_id,
+            message="Summary generation started"
         ).model_dump()
-    ), 201
+    ), 202
 
 # Retreive all summaries from a notebook route
 @summary_bp.get(

@@ -7,7 +7,7 @@ def get_production_overrides() -> dict[str, Any]:
         "LOG_LEVEL": "INFO",
         "AI_MODEL": "GEMINI",
         "RATELIMIT_ENABLED": True,
-        # "LIMITER_STORAGE_URI": "redis://...",
+        "LIMITER_STORAGE_URI": "redis://localhost:6379/0",
         "ACCESS_TOKEN_MINUTES": 15
     }
 

@@ -1,10 +1,9 @@
 import logging
 from uuid import UUID
 from flask import g, jsonify
-from flask_openapi3 import APIBlueprint
 from pydantic import BaseModel
 
-from services.notebooks.notebook_services import (
+from services.notebooks.notebook_service import (
     create_notebook,
     delete_notebook,
     get_notebook,

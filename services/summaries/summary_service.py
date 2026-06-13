@@ -1,29 +1,26 @@
 import logging
 from typing import Any
-from pydantic import ValidationError
 
 from models import Summary
 from validators.summary_schemas import GenerateSummaryRequest
-from validators.request_schemas import SummaryRequest
-from exceptions import ResourceNotFoundError, ResponseValidationError
-from validators.response_schemas import SummaryResponse
-from services.ai.llm_client import generate_response
+from exceptions import ResourceNotFoundError
 from repositories.notebook_repository import (
     get_notebook_by_notebook_id,
     get_notebook_with_summaries
 )
 from repositories.upload_repository import get_uploads_in_group
 from repositories.summary_repository import (
-    save_summary,
     get_summary_by_summary_id,
     remove_summary
 )
+from tasks.summary_tasks import create_summary
+from services.integrations.redis_service import set_key
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
-def generate_summary(notebook_id: str, user_id: str, payload: GenerateSummaryRequest) -> str:
-    """Generates a summary for the specified notebook based on the provided upload IDs and saves it."""
+def enqueue_summary_generation(notebook_id: str, user_id: str, payload: GenerateSummaryRequest) -> str:
+    """Runs a background task to generate summary for the specified notebook based on the provided upload IDs and save it."""
     notebook = get_notebook_by_notebook_id(notebook_id, user_id)
     if not notebook:
         raise ResourceNotFoundError("Notebook not found")
@@ -38,28 +35,21 @@ def generate_summary(notebook_id: str, user_id: str, payload: GenerateSummaryReq
     title = notebook.title
     content = "\n\n".join(upload.raw_text for upload in uploads if upload.raw_text)
 
-    summary_payload = SummaryRequest(topic=title, notes=content)
+    task = create_summary.delay(title, content, notebook.id, upload_ids)
 
-    # Validate the response against the SummaryResponse schema
-    try:
-        ai_output = generate_response(summary_payload, task="summary")
-        summary_data = SummaryResponse(**ai_output)
-    except ValidationError:
-        logger.exception("response validation failed")
-
-        raise ResponseValidationError(
-            "model response failed"
-        )
-
-    summary = Summary(
-        notebook_id=notebook_id,
-        summary_data=summary_data.model_dump(),
-        upload_count=len(uploads)
+    set_key(
+        f"task:{task.id}:owner",
+        user_id,
+        86400
     )
 
-    save_summary(summary, uploads)
+    set_key(
+        f"task:{task.id}:type",
+        "summary",
+        86400
+    )
     
-    return summary.id
+    return task.id
 
 def get_all_summaries(notebook_id: str, user_id: str) -> list[dict[str, Any]]:
     """Retrieves all summaries for a notebook."""

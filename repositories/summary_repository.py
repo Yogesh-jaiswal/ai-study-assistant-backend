@@ -3,7 +3,6 @@ import logging
 from app.extensions import db
 from models import (
     Notebook,
-    Upload,
     Summary,
     UploadSummaryRelationship
 )
@@ -13,7 +12,7 @@ from exceptions import DatabaseError
 logger = logging.getLogger(__name__)
 
 
-def save_summary(summary: Summary, uploads: list[Upload]) -> None:
+def save_summary(summary: Summary, uploads_ids: list[str]) -> None:
     """
     Persist a summary and its upload relationships in a single transaction.
 
@@ -26,10 +25,10 @@ def save_summary(summary: Summary, uploads: list[Upload]) -> None:
 
         relationships = [
             UploadSummaryRelationship(
-                upload_id=upload.id,
+                upload_id=upload_id,
                 summary_id=summary.id
             )
-            for upload in uploads
+            for upload_id in uploads_ids
         ]
 
         db.session.add_all(relationships)

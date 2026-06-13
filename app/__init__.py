@@ -5,7 +5,7 @@ from routes.v1 import v1_bp
 from handlers.error_handlers import register_error_handlers
 from middlewares.request_middlewares import register_middleware
 from configs.logging_config import configure_logging
-from app.extensions import ext
+import app.extensions as ext
 from configs import get_settings
 import models
 
