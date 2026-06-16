@@ -5,30 +5,13 @@ from validators.auth.register_schamas import (
     RegistrationRequest,
     RegistrationResponse
 )
-from validators.error_response_schemas import (
-    RequestJSONErrorResponse,
-    UnauthorizedResponse,
-    ValidationErrorResponse,
-    RateLimitExceededResponse,
-    ServerErrorResponse
-)
 from decorators.json_required import json_required
+from utils.response_envelopes import create_success_response
 
 from . import auth_bp
 
 # Register a user route
-@auth_bp.post(
-    "/register",
-    summary="Register a new user",
-    responses={
-        201: RegistrationResponse,
-        400: RequestJSONErrorResponse,
-        401: UnauthorizedResponse,
-        422: ValidationErrorResponse,
-        429: RateLimitExceededResponse,
-        500: ServerErrorResponse
-    }
-)
+@auth_bp.post("/register")
 @json_required
 def register_endpoint():
     """
@@ -39,9 +22,11 @@ def register_endpoint():
     user = register_user(payload)
 
     return jsonify(
-        RegistrationResponse(
-            id = user.id,
-            email = user.email,
-            message = "User registered successfully"
-        ).model_dump()
+        create_success_response(
+                RegistrationResponse(
+                id = user.id,
+                email = user.email,
+                message = "User registered successfully"
+            ).model_dump()
+        )
     ), 201

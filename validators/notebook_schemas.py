@@ -34,4 +34,4 @@ class GetNotebookMetadata(GetNotebook):
 
 class GetAllNotebooksResponse(BaseModel):
     """Schema for the response when retrieving multiple notebooks."""
-    data: List[GetNotebookMetadata] = Field(...)
+    notebooks: List[GetNotebookMetadata] = Field(...)

@@ -1,7 +1,6 @@
 import logging
 from uuid import UUID
 from flask import g, jsonify
-from pydantic import BaseModel
 
 from services.notebooks.notebook_service import (
     create_notebook,
@@ -15,36 +14,16 @@ from validators.notebook_schemas import (
     GetNotebook,
     GetAllNotebooksResponse
 )
-from validators.error_response_schemas import (
-    RequestJSONErrorResponse,
-    ValidationErrorResponse,
-    RateLimitExceededResponse,
-    ResourceNotFoundResponse,
-    ServerErrorResponse
-)
 from decorators.json_required import json_required
 from decorators.login_required import login_required
+from utils.response_envelopes import create_success_response
 from . import notebook_bp
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
-# Notebook path parameters model
-class NotebookPath(BaseModel):
-    id: UUID
-
 # Create new notebook route
-@notebook_bp.post(
-    "",
-    summary = "Endpoint to create a new notebook",
-    responses = {
-        201: NotebookCreatedResponse,
-        400: RequestJSONErrorResponse,
-        422: ValidationErrorResponse,
-        429: RateLimitExceededResponse,
-        500: ServerErrorResponse
-    }
-)
+@notebook_bp.post("")
 @json_required
 @login_required
 def create_notebook_endpoint():
@@ -57,22 +36,16 @@ def create_notebook_endpoint():
     notebook_id = create_notebook(g.user_id, payload)
 
     return jsonify(
-        NotebookCreatedResponse(
-            id=notebook_id,
-            message="notebook created"
-        ).model_dump()
+        create_success_response(
+            NotebookCreatedResponse(
+                id=notebook_id,
+                message="notebook created"
+            ).model_dump()
+        )
     ), 201
 
 # Get all notebooks route
-@notebook_bp.get(
-    "",
-    summary = "Endpoint to retrieve all notebooks",
-    responses = {
-        200: GetAllNotebooksResponse,
-        429: RateLimitExceededResponse,
-        500: ServerErrorResponse
-    }
-)
+@notebook_bp.get("")
 @login_required
 def get_all_notebooks_endpoint():
     """
@@ -81,43 +54,25 @@ def get_all_notebooks_endpoint():
     """
     notebooks = get_all_notebooks(g.user_id)
 
-    return jsonify(GetAllNotebooksResponse(data=notebooks).model_dump()), 200
+    return jsonify(create_success_response(GetAllNotebooksResponse(notebooks=notebooks).model_dump())), 200
 
 
 # Retrieve specific notebook route
-@notebook_bp.get(
-    "/<string:id>",
-    summary = "Endpoint to retrieve a specific notebook",
-    responses = {
-        200: GetNotebook,
-        404: ResourceNotFoundResponse,
-        429: RateLimitExceededResponse,
-        500: ServerErrorResponse
-    }
-)
+@notebook_bp.get("/<uuid:id>")
 @login_required
-def get_notebook_endpoint(path: NotebookPath):
-    notebook = get_notebook(str(path.id), g.user_id)
+def get_notebook_endpoint(id: UUID):
+    notebook = get_notebook(str(id), g.user_id)
 
-    return jsonify(GetNotebook(**notebook).model_dump()), 200
+    return jsonify(create_success_response(GetNotebook(**notebook).model_dump())), 200
 
 
 # Notebook deletion route
-@notebook_bp.delete(
-    "/<string:id>",
-    summary = "Endpoint to delete a specific notebook",
-    responses = {
-        204: None,
-        404: ResourceNotFoundResponse,
-        429: RateLimitExceededResponse,
-        500: ServerErrorResponse
-    }
-)
+@notebook_bp.delete("/<uuid:id>")
 @login_required
-def delete_notebook_endpoint(path: NotebookPath):
+def delete_notebook_endpoint(id: UUID):
     """
     Endpoint to delete a specific notebook.
     """
-    delete_notebook(str(path.id), g.user_id)
+    delete_notebook(str(id), g.user_id)
 
     return "", 204

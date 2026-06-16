@@ -57,7 +57,7 @@ def logged_in_user(client, registered_user):
         "client": client,
         "email": registered_user["email"],
         "username": registered_user["username"],
-        "access_token": response.get_json()["access_token"]
+        "access_token": response.get_json()["data"]["access_token"]
     }
 
 
@@ -77,5 +77,5 @@ def second_logged_in_user(client, second_registered_user):
         "client": client,
         "email": second_registered_user["email"],
         "username": second_registered_user["username"],
-        "access_token": response.get_json()["access_token"]
+        "access_token": response.get_json()["data"]["access_token"]
     }

@@ -1,11 +1,8 @@
 from celery import Celery
 
-from app import create_app
 from configs import get_settings
 
 settings = get_settings()
-
-flask_app = create_app()
 
 celery_app = Celery(
     "ai_study_assistant",
@@ -13,7 +10,13 @@ celery_app = Celery(
     backend=f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}/{settings.REDIS_DB}"
 )
 
+celery_app.conf.update(
+    task_always_eager=settings.CELERY_TASK_ALWAYS_EAGER,
+    task_eager_propagates=settings.CELERY_TASK_EAGER_PROPAGATES,
+    task_store_eager_result=True
+)
+
 celery_app.conf.imports = (
-    "tasks.example_task",
-    "tasks.summary_task"
+    "tasks.example_tasks",
+    "tasks.summary_tasks"
 )

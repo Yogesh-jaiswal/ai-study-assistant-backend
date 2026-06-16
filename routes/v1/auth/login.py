@@ -7,15 +7,9 @@ from validators.auth.login_schemas import (
     LoginRequest,
     LoginResponse
 )
-from validators.error_response_schemas import (
-    RequestJSONErrorResponse,
-    UnauthorizedResponse,
-    ValidationErrorResponse,
-    RateLimitExceededResponse,
-    ServerErrorResponse
-)
 from decorators.json_required import json_required
 from configs import get_settings
+from utils.response_envelopes import create_success_response
 
 from . import auth_bp
 
@@ -23,18 +17,7 @@ from . import auth_bp
 settings = get_settings()
 
 # Login a user route
-@auth_bp.post(
-    "/login",
-    summary="Logs in a user and generates an access token",
-    responses={
-        200: LoginResponse,
-        400: RequestJSONErrorResponse,
-        401: UnauthorizedResponse,
-        422: ValidationErrorResponse,
-        429: RateLimitExceededResponse,
-        500: ServerErrorResponse
-    }
-)
+@auth_bp.post("/login")
 @json_required
 def login_endpoint():
     """
@@ -47,11 +30,13 @@ def login_endpoint():
     access_token = create_access_token(user.id)
 
     response = jsonify(
-        LoginResponse(
-            access_token = access_token,
-            expires_in = settings.ACCESS_TOKEN_MINUTES * 60,
-            message = "Log in successful"
-        ).model_dump()
+        create_success_response(
+            LoginResponse(
+                access_token = access_token,
+                expires_in = settings.ACCESS_TOKEN_MINUTES * 60,
+                message = "Log in successful"
+            ).model_dump()
+        )
     )
 
     refresh_token = create_refresh_token(user.id)

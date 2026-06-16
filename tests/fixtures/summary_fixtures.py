@@ -1,7 +1,7 @@
 from pytest import fixture
+import time
 
-@fixture()
-def generated_summary(uploaded_file):
+def generate_summary(uploaded_file):
     client = uploaded_file["client"]
 
     response = client.post(
@@ -14,34 +14,47 @@ def generated_summary(uploaded_file):
         }
     )
 
-    assert response.status_code == 201
+    assert response.status_code == 202
+
+    task_id = response.get_json()["data"]["task_id"]
+
+    for _ in range(20):
+        polling_response = client.get(
+            f"/v1/tasks/{task_id}",
+            headers={
+                "Authorization": f"Bearer {uploaded_file['access_token']}"
+            }
+        )
+
+        assert polling_response.status_code == 200
+
+        poll_data = polling_response.get_json()
+
+        if poll_data["data"]["status"] == "SUCCESS":
+            summary_id = poll_data["data"]["result"]["summary_id"]
+            break
+        elif poll_data["data"]["status"] == "FAILURE":
+            raise AssertionError (
+                f"task failed {task_id}"
+            )
+        
+        time.sleep(0.5)
+
+    assert summary_id is not None, (
+        f"Task {task_id} did not finish in time"
+    )
 
     return {
-        "id": response.get_json()["id"],
+        "id": summary_id,
         "notebook_id": uploaded_file["notebook_id"],
         "client": client,
         "access_token": uploaded_file["access_token"]
     }
 
 @fixture()
+def generated_summary(uploaded_file):
+    return generate_summary(uploaded_file)
+
+@fixture()
 def second_generated_summary(second_uploaded_file):
-    client = second_uploaded_file["client"]
-
-    response = client.post(
-        f"/v1/notebooks/{second_uploaded_file['notebook_id']}/summaries",
-        json = {
-            "upload_ids": [second_uploaded_file["id"]]
-        },
-        headers={
-            "Authorization": f"Bearer {second_uploaded_file['access_token']}"
-        }
-    )
-
-    assert response.status_code == 201
-
-    return {
-        "id": response.get_json()["id"],
-        "notebook_id": second_uploaded_file["notebook_id"],
-        "client": client,
-        "access_token": second_uploaded_file["access_token"]
-    }
+    return generate_summary(second_uploaded_file)

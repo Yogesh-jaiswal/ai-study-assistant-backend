@@ -19,7 +19,7 @@ def uploaded_file(created_notebook):
     assert response.status_code == 201
 
     return {
-        "id": response.get_json()["id"],
+        "id": response.get_json()["data"]["id"],
         "notebook_id": created_notebook["id"],
         "client": client,
         "access_token": created_notebook["access_token"]
@@ -44,7 +44,7 @@ def second_uploaded_file(second_created_notebook):
     assert response.status_code == 201
 
     return {
-        "id": response.get_json()["id"],
+        "id": response.get_json()["data"]["id"],
         "client": client,
         "notebook_id": second_created_notebook["id"],
         "access_token": second_created_notebook["access_token"]

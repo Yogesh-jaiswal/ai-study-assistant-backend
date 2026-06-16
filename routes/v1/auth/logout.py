@@ -4,15 +4,8 @@ from services.auth.refresh_token_service import revoke_refresh_token, verify_ref
 from validators.auth.login_schemas import (
     LogoutResponse
 )
-from validators.error_response_schemas import (
-    RequestJSONErrorResponse,
-    UnauthorizedResponse,
-    ValidationErrorResponse,
-    RateLimitExceededResponse,
-    ServerErrorResponse
-)
-from decorators.login_required import login_required
 from configs import get_settings
+from utils.response_envelopes import create_success_response
 
 from . import auth_bp
 
@@ -20,18 +13,7 @@ from . import auth_bp
 settings = get_settings()
 
 # Logout a user route
-@auth_bp.get(
-    "/logout",
-    summary="Logs out a user and revokes refresh token",
-    responses={
-        200: LogoutResponse,
-        400: RequestJSONErrorResponse,
-        401: UnauthorizedResponse,
-        422: ValidationErrorResponse,
-        429: RateLimitExceededResponse,
-        500: ServerErrorResponse
-    }
-)
+@auth_bp.get("/logout")
 def logout_endpoint():
     """
     Endpoint to logout the user and revoke refresh token
@@ -43,9 +25,11 @@ def logout_endpoint():
     revoke_refresh_token(session)
 
     response = jsonify(
-        LogoutResponse(
-            message = "Log out successful"
-        ).model_dump()
+        create_success_response(
+            LogoutResponse(
+                message = "Log out successful"
+            ).model_dump()
+        )
     )
 
     response.delete_cookie("refresh_token")

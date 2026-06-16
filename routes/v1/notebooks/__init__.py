@@ -1,9 +1,9 @@
-from flask_openapi3 import APIBlueprint
+from flask import Blueprint
 from .notebook_file_upload_routes import upload_bp
 from .notebook_summary import summary_bp
 
 # Blueprint for notebook-related routes
-notebook_bp = APIBlueprint('notebook', __name__, url_prefix='/notebooks')
+notebook_bp = Blueprint('notebook', __name__, url_prefix='/notebooks')
 
 # Loading basic notebook routes
 from . import basic_notebooks_routes

@@ -120,9 +120,9 @@ def test_get_all_notebooks(created_notebook):
 
     assert response.status_code == 200
 
-    data = response.get_json()
+    data = response.get_json()["data"]
 
-    assert len(data["data"]) == 1
+    assert len(data["notebooks"]) == 1
 
 
 def test_get_all_notebooks_empty(logged_in_user):
@@ -140,9 +140,9 @@ def test_get_all_notebooks_empty(logged_in_user):
 
     assert response.status_code == 200
 
-    data = response.get_json()
+    data = response.get_json()["data"]
 
-    assert len(data["data"]) == 0
+    assert len(data["notebooks"]) == 0
 
 
 def test_delete_notebook(created_notebook):

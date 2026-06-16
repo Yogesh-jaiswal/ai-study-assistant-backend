@@ -1,4 +1,5 @@
 import uuid
+import time
 
 fake_id = str(uuid.uuid4())
 
@@ -18,7 +19,28 @@ def test_generate_summary(uploaded_file):
         }
     )
 
-    assert response.status_code == 201
+    assert response.status_code == 202
+
+    task_id = response.get_json()["data"]["task_id"]
+
+    for _ in range(20):
+        polling_response = client.get(
+            f"/v1/tasks/{task_id}",
+            headers={
+                "Authorization": f"Bearer {uploaded_file['access_token']}"
+            }
+        )
+
+        poll_data = polling_response.get_json()["data"]
+
+        if poll_data["status"] == "SUCCESS":
+            break
+        elif poll_data["status"] == "FAILED":
+            raise AssertionError (
+                f"task failed {task_id}"
+            )
+        
+        time.sleep(0.5)
 
 def test_generate_summary_invalid_uploads(uploaded_file):
     """
@@ -137,7 +159,7 @@ def test_get_all_summaries(generated_summary):
 
     assert response.status_code == 200
 
-    data = response.get_json()
+    data = response.get_json()["data"]
 
     assert len(data["summaries"]) == 1
 
@@ -156,7 +178,7 @@ def test_get_empty_summaries(created_notebook):
 
     assert response.status_code == 200
 
-    data = response.get_json()
+    data = response.get_json()["data"]
 
     assert len(data["summaries"]) == 0
 

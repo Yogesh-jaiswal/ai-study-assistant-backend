@@ -2,14 +2,13 @@ import time
 import uuid
 import logging
 
-from flask import g, request
-from flask_openapi3 import OpenAPI
+from flask import Flask, g, request
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
 # Middleware to log request details and measure processing time
-def register_middleware(app: OpenAPI):
+def register_middleware(app: Flask):
     """Registers middleware functions for logging and request tracking."""
 
     @app.before_request

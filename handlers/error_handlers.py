@@ -1,9 +1,9 @@
 import logging
 from typing import Any
-from flask import jsonify, Response
+from flask import Flask, jsonify, Response
 from pydantic import ValidationError
 from flask_limiter.errors import RateLimitExceeded
-from flask_openapi3 import OpenAPI
+from utils.response_envelopes import create_error_envelope
 
 from exceptions import (
     DatabaseError,
@@ -19,12 +19,16 @@ logger = logging.getLogger(__name__)
 
 # Helper function to create a consistent error response
 def create_error_msg(error_type: str, message: str, status_code: int) -> Response:
-    return jsonify({
-            "error": {
-                "type": error_type,
-                "message": message
+    return jsonify(
+        create_error_envelope(
+            {
+                "error": {
+                    "type": error_type,
+                    "message": message
+                }
             }
-        }), status_code
+        )
+    ), status_code
 
 # Function to reconstruct validation errors into a more user-friendly format
 def reconstruct_validation_errors(errors: dict) -> list[dict[str, Any]]:
@@ -40,7 +44,7 @@ def reconstruct_validation_errors(errors: dict) -> list[dict[str, Any]]:
     return error_list
 
 # Function to register all error handlers with the Flask app
-def register_error_handlers(app: OpenAPI):
+def register_error_handlers(app: Flask):
     @app.errorhandler(ValidationError)
     def handle_validation_errors(e):
         """Handle Pydantic validation errors and return a structured error response."""

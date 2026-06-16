@@ -5,9 +5,11 @@ def get_testing_overrides() -> dict[str, Any]:
     overrides = {
         "DEBUG": False,
         "LOG_LEVEL": "ERROR",
-        "DATABASE_URL": "sqlite://",
+        "DATABASE_URL": "sqlite:///test.db",
         "RATELIMIT_ENABLED": False,
-        "AI_MODEL": "FAKE"
+        "AI_MODEL": "FAKE",
+        "CELERY_TASK_ALWAYS_EAGER": True,
+        "CELERY_TASK_EAGER_PROPAGATES": True
     }
 
     return overrides

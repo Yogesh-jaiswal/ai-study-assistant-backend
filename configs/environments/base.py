@@ -62,6 +62,10 @@ class BaseAppSettings(BaseSettings):
     REDIS_HOST: str = Field(default="localhost")
     REDIS_PORT: int = Field(default=6379)
     REDIS_DB: int = Field(default=0)
+
+    # Celery Settings
+    CELERY_TASK_ALWAYS_EAGER: bool = Field(default=False)
+    CELERY_TASK_EAGER_PROPAGATES: bool = Field(default=False)
     
     model_config = SettingsConfigDict(
         env_file=".env",

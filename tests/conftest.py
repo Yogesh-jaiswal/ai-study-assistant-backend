@@ -7,7 +7,14 @@ from sqlalchemy.orm import sessionmaker
 
 from app import create_app
 from app.extensions import db
+from app.celery_app import celery_app as celery
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--async-tasks",
+        action="store_true",
+        default=False
+    )
 
 @fixture(scope="session")
 def app():
@@ -26,28 +33,51 @@ def app():
         db.drop_all()
 
 @fixture()
-def session(app):
-    connection = db.engine.connect()
-    transaction = connection.begin()
+def session(app, request):
 
-    Session = sessionmaker(bind=connection)
-    session = Session()
+    if request.config.getoption("--async-tasks"):
 
-    previous_session = db.session
-    db.session = session
+        try:
+            yield db.session
+        finally:
+            db.session.rollback()
 
-    yield session
+            for table in reversed(db.metadata.sorted_tables):
+                db.session.execute(table.delete())
 
-    session.close()
-    transaction.rollback()
-    connection.close()
+            db.session.commit()
 
-    db.session = previous_session
+    else:
 
+        connection = db.engine.connect()
+        transaction = connection.begin()
+
+        Session = sessionmaker(bind=connection)
+        session = Session()
+
+        previous_session = db.session
+        db.session = session
+
+        yield session
+
+        session.close()
+        transaction.rollback()
+        connection.close()
+
+        db.session = previous_session
 
 @fixture()
 def client(app, session):
     return app.test_client()
+
+@fixture(scope="session", autouse=True)
+def celery_mode(request):
+
+    async_mode = request.config.getoption("--async-tasks")
+
+    celery.conf.task_always_eager = not async_mode
+
+    yield
 
 pytest_plugins = [
     "tests.fixtures.auth_fixtures",

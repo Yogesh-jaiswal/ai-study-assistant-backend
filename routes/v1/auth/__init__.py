@@ -1,10 +1,7 @@
-from flask_openapi3 import APIBlueprint
+from flask import Blueprint
 
 # Blueprint for auth-related routes
-auth_bp = APIBlueprint('auth', __name__, url_prefix="/auth")
+auth_bp = Blueprint('auth', __name__, url_prefix="/auth")
 
-from . import register
-from . import login
-from . import me
-from . import refresh
-from . import logout
+# Load all the auth related routes
+from . import register, login, me, refresh, logout

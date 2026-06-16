@@ -299,3 +299,189 @@ Consider access-token blacklisting if:
 - The application becomes publicly deployed
 - Security requirements become stricter
 - "Logout everywhere" functionality is introduced
+
+# Decision 7: Remove Flask-OpenAPI3 and Use Native Flask Routing
+
+## Decision
+
+Remove Flask-OpenAPI3 from the project and migrate fully to native Flask.
+
+Changes:
+
+* Replace `OpenAPI` with `Flask`
+* Replace `APIBlueprint` with `Blueprint`
+* Remove OpenAPI route metadata
+* Remove OpenAPI response declarations
+* Remove OpenAPI path parameter schemas
+* Use native Flask route parameters directly
+* Keep Pydantic for request validation and response serialization
+
+Example:
+
+Before:
+
+```python
+@summary_bp.delete(
+    "/<string:summary_id>",
+    summary="Delete summary",
+    responses={...}
+)
+def delete_summary(path: SummaryIDPathParams):
+```
+
+After:
+
+```python
+@summary_bp.delete("/<uuid:summary_id>")
+def delete_summary(summary_id: UUID):
+```
+
+## Reason
+
+Flask-OpenAPI3 introduced significant boilerplate while providing limited value at the current stage of the project.
+
+Issues encountered:
+
+* Route definitions became verbose
+* Response schemas required constant maintenance
+* Swagger documentation was partially inaccurate
+* Nested blueprint behavior was not fully represented
+* Validation was already handled through custom logic and Pydantic models
+* OpenAPI integration increased coupling to a specific framework
+
+The project currently has no external consumers and does not require generated API documentation.
+
+## Benefits
+
+* Simpler route definitions
+* Less framework-specific code
+* Easier maintenance
+* Faster feature development
+* Reduced boilerplate
+* Easier future framework migration
+
+## Tradeoffs
+
+* Loss of automatic Swagger/OpenAPI generation
+* Manual API documentation may be required later
+* API contracts are no longer generated automatically
+
+## Future Considerations
+
+If the API becomes publicly consumed:
+
+* Reintroduce OpenAPI generation
+* Evaluate FastAPI
+* Evaluate dedicated API documentation tooling
+
+Until then, development speed and maintainability take priority.
+
+# Decision 8: Standardized Response Envelope
+
+## Decision
+
+Adopt a standardized response envelope for all successful and failed API responses that return content.
+
+Success format:
+
+```json
+{
+    "success": true,
+    "data": ...,
+    "error": null
+}
+```
+
+Error format:
+
+```json
+{
+    "success": false,
+    "data": null,
+    "error": {
+        "code": "...",
+        "message": "..."
+    }
+}
+```
+
+Responses that intentionally return no content will continue using:
+
+```http
+204 No Content
+```
+
+Examples:
+
+* Delete notebook
+* Delete upload
+* Delete summary
+* Logout
+
+## Reason
+
+Before the change, different endpoints returned different response structures.
+
+Examples:
+
+```json
+{
+    "id": "...",
+    "title": "..."
+}
+```
+
+```json
+{
+    "notebooks": [...]
+}
+```
+
+```json
+{
+    "message": "Created"
+}
+```
+
+This required clients to understand endpoint-specific response formats.
+
+A response envelope provides:
+
+* Consistent client experience
+* Predictable API responses
+* Easier frontend integration
+* Easier error handling
+* Simpler testing patterns
+
+## Benefits
+
+* Consistent response structure
+* Centralized success/error handling
+* Easier frontend development
+* Easier API testing
+* Easier future API evolution
+
+## Tradeoffs
+
+* Slightly larger response payloads
+* Additional wrapping layer around resources
+
+## Versioning Decision
+
+No new API version will be created for this change.
+
+Reason:
+
+* The application currently has no external users
+* No production clients depend on the existing response structure
+* Backward compatibility is not currently required
+
+API versioning should be introduced only when multiple active consumers require support for older contracts.
+
+## Future Considerations
+
+If the API becomes publicly consumed:
+
+* Introduce semantic API versioning
+* Define version deprecation policies
+* Maintain backward compatibility guarantees when necessary

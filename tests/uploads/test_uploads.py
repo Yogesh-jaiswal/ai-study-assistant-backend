@@ -113,7 +113,7 @@ def test_get_all_uploads(uploaded_file):
 
     assert response.status_code == 200
 
-    data = response.get_json()
+    data = response.get_json()["data"]
 
     assert len(data["uploads"]) == 1
 
@@ -132,7 +132,7 @@ def test_get_empty_uploads(created_notebook):
 
     assert response.status_code == 200
 
-    data = response.get_json()
+    data = response.get_json()["data"]
 
     assert len(data["uploads"]) == 0
 

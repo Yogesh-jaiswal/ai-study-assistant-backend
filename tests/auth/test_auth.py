@@ -16,7 +16,7 @@ def test_login_flow(client, registered_user):
     assert login_response.status_code == 200
     assert client.get_cookie("refresh_token") is not None
 
-    access_token = login_response.get_json()["access_token"]
+    access_token = login_response.get_json()["data"]["access_token"]
 
     me_response = client.get(
         "/v1/auth/me",
@@ -27,7 +27,7 @@ def test_login_flow(client, registered_user):
 
     assert me_response.status_code == 200
 
-    data = me_response.get_json()
+    data = me_response.get_json()["data"]
 
     assert data["email"] == registered_user["email"]
     assert data["username"] == registered_user["username"]
@@ -37,7 +37,7 @@ def test_login_flow(client, registered_user):
     assert refresh_response.status_code == 200
     assert client.get_cookie("refresh_token") is not None
 
-    access_token = refresh_response.get_json()["access_token"]
+    access_token = refresh_response.get_json()["data"]["access_token"]
 
     me_response = client.get(
         "/v1/auth/me",
@@ -48,7 +48,7 @@ def test_login_flow(client, registered_user):
 
     assert me_response.status_code == 200
 
-    data = me_response.get_json()
+    data = me_response.get_json()["data"]
 
     assert data["email"] == registered_user["email"]
     assert data["username"] == registered_user["username"]
