@@ -15,7 +15,7 @@ def login_required(func):
         auth_header = request.headers.get("Authorization", "")
 
         if not auth_header.startswith("Bearer "):
-            raise AuthenticationError("Authentication failed")
+            raise AuthenticationError("Authentication failed, login again")
         
         token = auth_header.split(" ", 1)[1]
 
@@ -25,7 +25,7 @@ def login_required(func):
             user_id = payload.get("sub")
 
             if not user_id:
-                raise AuthenticationError("Authentication failed")
+                raise AuthenticationError("Authentication failed, login again")
 
             g.user_id = str(UUID(user_id))
         except (
@@ -33,7 +33,7 @@ def login_required(func):
             jwt.ExpiredSignatureError, 
             jwt.InvalidTokenError
         ):
-            raise AuthenticationError("Authentication failed")
+            raise AuthenticationError("Authentication failed, login again")
         
         return func(*args, **kwargs)
     

@@ -6,8 +6,8 @@ class LLMError(Exception):
 class ResponseValidationError(Exception):
     pass
 
-# Custom empty request JSON error
-class RequestJSONError(Exception):
+# Custom bad request error
+class BadRequestError(Exception):
     pass
 
 # Custom resource not found error
@@ -18,5 +18,10 @@ class ResourceNotFoundError(Exception):
 class DatabaseError(Exception):
     pass
 
+# Custom authentication error
 class AuthenticationError(Exception):
+    pass
+
+# custom unsupported file type error
+class UnsupportedFileTypeError(Exception):
     pass

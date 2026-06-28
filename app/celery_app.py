@@ -16,6 +16,11 @@ celery_app.conf.update(
     task_store_eager_result=True
 )
 
+print(
+    f"ENV={settings.ENVIRONMENT} "
+    f"ASYNC={not settings.CELERY_TASK_ALWAYS_EAGER}"
+)
+
 celery_app.conf.imports = (
     "tasks.example_tasks",
     "tasks.summary_tasks"

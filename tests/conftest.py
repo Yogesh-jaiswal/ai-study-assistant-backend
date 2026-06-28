@@ -1,20 +1,36 @@
 import os
+import shutil
+from pathlib import Path
 
 os.environ["ENVIRONMENT"] = "testing"
 
-from pytest import fixture
+from pytest import fixture, mark
 from sqlalchemy.orm import sessionmaker
 
 from app import create_app
 from app.extensions import db
 from app.celery_app import celery_app as celery
+from configs import get_settings
 
 def pytest_addoption(parser):
     parser.addoption(
         "--async-tasks",
         action="store_true",
-        default=False
+        default=False,
+        help="Enable/ Disable Async Environment"
     )
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--async-tasks"):
+        return
+
+    skip_async = mark.skip(
+        reason="Need --async-tasks option to run"
+    )
+
+    for item in items:
+        if "async_test" in item.keywords:
+            item.add_marker(skip_async)
 
 @fixture(scope="session")
 def app():
@@ -78,6 +94,16 @@ def celery_mode(request):
     celery.conf.task_always_eager = not async_mode
 
     yield
+
+@fixture(scope="session", autouse=True)
+def cleanup_uploads():
+    yield
+
+    upload_dir = Path(get_settings().UPLOAD_FOLDER)
+
+    if upload_dir.exists():
+        shutil.rmtree(upload_dir)
+
 
 pytest_plugins = [
     "tests.fixtures.auth_fixtures",

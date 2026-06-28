@@ -1,8 +1,13 @@
+import os
 import logging
+from uuid import uuid4
 from typing import Any
+from pathlib import Path
+
+from werkzeug.utils import secure_filename
 
 from models import Upload
-from models.enums import ProcessingStatus
+from models.enums import ProcessingStatus, FileTypes
 from repositories.notebook_repository import (
     get_notebook_by_notebook_id,
     get_notebook_with_uploads
@@ -12,30 +17,80 @@ from repositories.upload_repository import (
     get_upload_by_upload_id,
     remove_upload
 )
-from validators.upload_schemas import FileUploadRequest
+from tasks.processing_task import process_file
+from services.integrations.redis_service import set_key
+from configs import get_settings
 
-from exceptions import ResourceNotFoundError, DatabaseError
+from exceptions import ResourceNotFoundError, BadRequestError, UnsupportedFileTypeError
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
-def create_upload(notebook_id: str, user_id: str, payload: FileUploadRequest) -> str:
+# Extension map to get the file type enum based on file extension
+EXTENSION_MAP = {
+    ".txt": FileTypes.TXT,
+    ".pdf": FileTypes.PDF
+}
+
+# Settings object
+settings = get_settings()
+
+def upload_file(notebook_id: str, user_id: str, file) -> str:
     """Creates a new upload for a notebook."""
+    file.seek(0, os.SEEK_END)
+    size = file.tell()
+    file.seek(0)
+    if (size > settings.MAX_CONTENT_LENGTH):
+        raise BadRequestError("File size is too large.")
+    
+    filename = secure_filename(file.filename)
+    extension = Path(filename).suffix.lower()
+    source_type = EXTENSION_MAP.get(extension)
+
+    if not source_type:
+        raise UnsupportedFileTypeError(...)
+
     notebook = get_notebook_by_notebook_id(notebook_id, user_id)
     if not notebook:
         raise ResourceNotFoundError(f"notebook with id {notebook_id} not found")
+    
+    upload_dir = f"{settings.UPLOAD_FOLDER}/{notebook.id}/"
+
+    # Ensure upload folder exists
+    os.makedirs(upload_dir, exist_ok=True)
+
+    file_path = os.path.join(upload_dir, f"{uuid4()}_{filename}")
+
+    file.save(file_path)
 
     upload = Upload(
         notebook_id=notebook_id, 
-        filename=payload.filename, 
-        source_type=payload.source_type, 
-        processing_status=ProcessingStatus.COMPLETED, 
-        raw_text=payload.raw_text
+        filename=filename, 
+        source_type=source_type, 
+        processing_status=ProcessingStatus.PENDING, 
+        file_path=file_path
     )
 
     save_upload(upload)
 
-    return upload.id
+    task = process_file.delay(notebook_id, user_id, upload.id)
+
+    set_key(
+        f"task:{task.id}:owner",
+        user_id,
+        86400
+    )
+
+    set_key(
+        f"task:{task.id}:type",
+        "upload",
+        86400
+    )
+
+    return {
+        "upload_id": upload.id,
+        "task_id": task.id
+    }
 
 def get_all_uploads(notebook_id: str, user_id: str) -> list[dict[str, Any]]:
     """Retrieves all uploads for a notebook."""
@@ -66,6 +121,9 @@ def get_upload(notebook_id: str, user_id: str, upload_id: str) -> dict[str, Any]
     if not upload:
         raise ResourceNotFoundError(f"Upload with id {upload_id} not found in notebook {notebook_id}")
     
+    if upload.processing_status != ProcessingStatus.COMPLETED:
+        raise BadRequestError("File is still processing")
+    
     return {
         "id": upload.id,
         "filename": upload.filename,
@@ -84,5 +142,8 @@ def delete_upload(notebook_id: str, user_id: str, upload_id: str) -> None:
     )
     if not upload:
         raise ResourceNotFoundError(f"Upload with id {upload_id} not found in notebook {notebook_id}")
+    
+    if Path(upload.file_path).exists():
+       os.remove(upload.file_path)
 
     remove_upload(upload)

@@ -2,11 +2,12 @@ import json
 import re
 import logging
 
-from typing import Any
+from typing import Any, Literal
 
 from .prompt_builder import (
     create_summary_prompt, 
-    create_quiz_prompt
+    create_quiz_prompt,
+    create_ask_prompt
 )
 from .providers.fake_response import create_fake_response
 from .providers.gemini_response import create_gemini_response
@@ -41,12 +42,21 @@ def build_prompt_for_task(payload: object, task: str) -> str:
             prompt = create_summary_prompt(payload.topic, payload.notes)
         case "quiz":
             prompt = create_quiz_prompt(payload.topic, payload.notes, payload.n, payload.level)
+        case "ask":
+            prompt = create_ask_prompt(payload.question, payload.context)
         case _:
             raise LLMError(f"unsupported task: {task}")
 
     return prompt
 
-def generate_response(payload: object, task: str = "summary") -> dict[str, Any]:
+def generate_response(
+        payload: object, 
+        task: Literal[
+            "summary",
+            "quiz",
+            "ask"
+        ] = "summary"
+    ) -> dict[str, Any]:
     """Generates a response from the LLM based on the given payload and task."""
     task = task.lower()
     
@@ -66,6 +76,8 @@ def generate_response(payload: object, task: str = "summary") -> dict[str, Any]:
             response = create_gemini_response(prompt)
             
             logger.info("gemini response received")
+        case _:
+            raise LLMError("Unsupported AI provider")
             
     # Process the response based on the model used
     if settings.AI_MODEL != "FAKE": 

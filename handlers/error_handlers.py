@@ -9,9 +9,10 @@ from exceptions import (
     DatabaseError,
     LLMError,
     ResponseValidationError,
-    RequestJSONError,
+    BadRequestError,
     ResourceNotFoundError,
-    AuthenticationError
+    AuthenticationError,
+    UnsupportedFileTypeError
 )
 
 # Set up logging
@@ -72,11 +73,12 @@ def register_error_handlers(app: Flask):
             500
         )
     
-    @app.errorhandler(RequestJSONError)
+    @app.errorhandler(BadRequestError)
+    @app.errorhandler(UnsupportedFileTypeError)
     def handle_json_errors(e):
-        """Handle JSON parsing errors and return a structured error response."""
+        """Handle restricted user calls and return a structured error response."""
         return create_error_msg(
-            "validation_error",
+            "bad_request_error",
             str(e),
             400
         )

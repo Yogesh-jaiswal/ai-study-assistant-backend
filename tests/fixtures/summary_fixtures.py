@@ -52,9 +52,9 @@ def generate_summary(uploaded_file):
     }
 
 @fixture()
-def generated_summary(uploaded_file):
-    return generate_summary(uploaded_file)
+def generated_summary(processed_file):
+    return generate_summary(processed_file)
 
 @fixture()
-def second_generated_summary(second_uploaded_file):
-    return generate_summary(second_uploaded_file)
+def second_generated_summary(second_processed_file):
+    return generate_summary(second_processed_file)

@@ -2,7 +2,7 @@ import logging
 from functools import wraps
 from flask import request, g
 
-from exceptions import RequestJSONError
+from exceptions import BadRequestError
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ def json_required(func):
         if data is None:
             logger.warning("request rejected: body is not valid JSON")
 
-            raise RequestJSONError(
+            raise BadRequestError(
                 "Request body must contain valid JSON"
             )
         

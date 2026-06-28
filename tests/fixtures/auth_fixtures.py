@@ -15,6 +15,7 @@ def registered_user(client):
     assert response.status_code == 201
 
     return {
+        "user_id": response.get_json()["data"]["id"],
         "email": "john@test.com",
         "username": "John123",
         "password": "John@123"
@@ -35,6 +36,7 @@ def second_registered_user(client):
     assert response.status_code == 201
 
     return {
+        "user_id": response.get_json()["data"]["id"],
         "email": "alice@test.com",
         "username": "Alice123",
         "password": "Alice@123"
@@ -54,6 +56,7 @@ def logged_in_user(client, registered_user):
     assert response.status_code == 200
 
     return {
+        "user_id": registered_user["user_id"],
         "client": client,
         "email": registered_user["email"],
         "username": registered_user["username"],
@@ -74,6 +77,7 @@ def second_logged_in_user(client, second_registered_user):
     assert response.status_code == 200
 
     return {
+        "user_id": second_registered_user["user_id"],
         "client": client,
         "email": second_registered_user["email"],
         "username": second_registered_user["username"],

@@ -1,0 +1,20 @@
+from repositories.embedding_repository import search_top_k_chunks
+from services.embeddings.embeddings_generator import EmbeddingGenerator
+from configs import get_settings
+
+from .top_k_search import top_k_search
+
+class SimilaritySearchService:
+
+    def search(self, notebook_id: str, user_id: str, query: str, k: int = 5) -> list[tuple[float, str]]:
+        """
+        Search query in stored embeddings and return top k result
+        """
+        embedder = EmbeddingGenerator()
+
+        query_embeddings = embedder.embed(query)
+
+        if get_settings().USE_PGVECTOR:
+            return search_top_k_chunks(notebook_id, user_id, query_embeddings, k)
+        else:
+            return top_k_search(notebook_id, user_id, query_embeddings, k)

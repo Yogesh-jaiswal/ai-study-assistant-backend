@@ -1,10 +1,6 @@
 from pydantic import BaseModel, Field, field_validator, ValidationInfo
 from typing import List
 
-class HealthResponse(BaseModel):
-    """Schema for health route response"""
-    message: str
-
 class SummaryResponse(BaseModel):
     """Schema for summary response"""
     summary: str = Field(..., min_length=10)

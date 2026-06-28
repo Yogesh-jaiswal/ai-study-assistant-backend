@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from flask import jsonify, g
-from services.tasks.task_service import task_status
+from services.task_status.task_service import task_status
 from utils.response_envelopes import create_success_response
 
 from . import v1_bp

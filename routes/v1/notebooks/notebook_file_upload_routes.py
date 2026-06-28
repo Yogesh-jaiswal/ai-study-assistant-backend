@@ -1,19 +1,19 @@
 import logging
 from uuid import UUID
-from flask import g, jsonify, Blueprint
+from flask import g, jsonify, Blueprint, request
 
 from services.uploads.upload_service import (
-    create_upload,
+    upload_file,
     get_all_uploads,
     get_upload,
     delete_upload
 )
 from validators.upload_schemas import (
-    FileUploadRequest,
     FileUploadedResponse,
     GetAllUploadsResponse,
     GetUploadResponse
 )
+from exceptions import BadRequestError
 from decorators.json_required import json_required
 from decorators.login_required import login_required
 from utils.response_envelopes import create_success_response
@@ -27,23 +27,23 @@ upload_bp = Blueprint("uploads", __name__, url_prefix="<uuid:notebook_id>/upload
 
 # Upload a new file route
 @upload_bp.post("")
-@json_required
 @login_required
 def upload_file_endpoint(notebook_id: UUID):
     """
     Endpoint to upload a file to a notebook.
-    Expects a JSON payload with the file details.
     """
-    payload = FileUploadRequest(**g.json_data)
+    files = request.files.getlist("files")
 
-    upload_id = create_upload(str(notebook_id), g.user_id, payload)
+    if not files:
+        raise BadRequestError("No file provided")
+    
+    uploads = []
+    for file in files:
+        uploads.append(upload_file(str(notebook_id), g.user_id, file))
 
     return jsonify(
         create_success_response(
-            FileUploadedResponse(
-                id=upload_id,
-                message="file uploaded successfully"
-            ).model_dump()
+            [FileUploadedResponse(**upload).model_dump() for upload in uploads]
         )
     ), 201
 

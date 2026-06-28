@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .notebook import Notebook
     from .upload_summary_relationship import UploadSummaryRelationship
+    from .document_chunk import DocumentChunk
 
 class Upload(db.Model):
     __tablename__ = "uploads"
@@ -28,6 +29,11 @@ class Upload(db.Model):
 
     filename: Mapped[str] = mapped_column(
         db.String(255),
+        nullable=False
+    )
+
+    file_path: Mapped[str] = mapped_column(
+        db.String,
         nullable=False
     )
 
@@ -61,6 +67,11 @@ class Upload(db.Model):
 
     notebook: Mapped["Notebook"] = db.relationship("Notebook", back_populates="uploads", lazy="raise_on_sql")
     upload_summary_relationships: Mapped[List["UploadSummaryRelationship"]] = db.relationship(
+        back_populates="upload",
+        cascade="all, delete-orphan",
+        lazy="raise_on_sql"
+    )
+    chunks: Mapped[List["DocumentChunk"]] = db.relationship(
         back_populates="upload",
         cascade="all, delete-orphan",
         lazy="raise_on_sql"

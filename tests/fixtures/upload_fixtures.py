@@ -1,51 +1,102 @@
+import time
+from io import BytesIO
 from pytest import fixture
 
-@fixture()
-def uploaded_file(created_notebook):
+def create_text_file():
+    return (
+        BytesIO(
+            b"""
+                Python is a programming language.
+
+                Flask is a Python framework.
+
+                Paris is the capital of France.
+
+                Machine learning uses data.
+
+                SQL stores structured information.
+            """
+        ),
+        "Recursion.txt"
+    )
+
+
+def upload_file(created_notebook):
     client = created_notebook["client"]
 
     response = client.post(
         f"/v1/notebooks/{created_notebook['id']}/uploads",
-        json = {
-            "filename": "Recursion.txt",
-            "source_type": "txt",
-            "raw_text": "Recursion is a function which calls itself either directly or indirectly"
+        data={
+            "files": create_text_file()
         },
         headers={
             "Authorization": f"Bearer {created_notebook['access_token']}"
-        }
+        },
+        content_type="multipart/form-data"
     )
 
     assert response.status_code == 201
 
+    data = response.get_json()["data"][0]
+
     return {
-        "id": response.get_json()["data"]["id"],
+        "id": data["upload_id"],
+        "task_id": data["task_id"],
         "notebook_id": created_notebook["id"],
         "client": client,
         "access_token": created_notebook["access_token"]
     }
 
-@fixture()
-def second_uploaded_file(second_created_notebook):
-    client = second_created_notebook["client"]
+def wait_process_file(created_notebook):
+    uploaded_data = upload_file(created_notebook)
+    client = uploaded_data["client"]
+    task_id = uploaded_data["task_id"]
 
-    response = client.post(
-        f"/v1/notebooks/{second_created_notebook['id']}/uploads",
-        json = {
-            "filename": "Recursion.txt",
-            "source_type": "txt",
-            "raw_text": "Recursion is a function which calls itself either directly or indirectly"
-        },
-        headers={
-            "Authorization": f"Bearer {second_created_notebook['access_token']}"
-        }
-    )
+    for _ in range(120):
+        polling_response = client.get(
+            f"/v1/tasks/{task_id}",
+            headers={
+                "Authorization": f"Bearer {uploaded_data['access_token']}"
+            }
+        )
 
-    assert response.status_code == 201
+        assert polling_response.status_code == 200
+
+        poll_data = polling_response.get_json()
+
+        if poll_data["data"]["status"] == "SUCCESS":
+            break
+        elif poll_data["data"]["status"] == "FAILURE":
+            raise AssertionError (
+                f"task failed {task_id}"
+            )
+        
+        time.sleep(0.5)
+    else:
+        raise AssertionError(
+            f"Task {task_id} never completed"
+        )
 
     return {
-        "id": response.get_json()["data"]["id"],
+        "id": uploaded_data["id"],
+        "notebook_id": uploaded_data["notebook_id"],
         "client": client,
-        "notebook_id": second_created_notebook["id"],
-        "access_token": second_created_notebook["access_token"]
+        "access_token": uploaded_data["access_token"]
     }
+
+@fixture()
+def uploaded_file(created_notebook):
+    return upload_file(created_notebook)
+
+
+@fixture()
+def second_uploaded_file(second_created_notebook):
+    return upload_file(second_created_notebook)
+
+@fixture
+def processed_file(created_notebook):
+    return wait_process_file(created_notebook)
+
+@fixture
+def second_processed_file(second_created_notebook):
+    return wait_process_file(second_created_notebook)

@@ -85,3 +85,17 @@ def get_uploads_in_group(
     ).all()
 
     return uploads
+
+def update_upload(upload: Upload) -> None:
+    """
+    Update an upload from the database.
+
+    Raises:
+        DatabaseError: If the update transaction fails.
+    """
+    try:
+        db.session.commit()
+    except Exception:
+        logger.exception("Failed to update upload")
+        db.session.rollback()
+        raise DatabaseError("Failed to update upload")

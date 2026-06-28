@@ -25,6 +25,9 @@ def create_fake_response(task: str="summary", n: int=5) -> dict[str, Any] | list
                 ]
             }
         
+        case "ask":
+            return {"response": "..."}
+        
         # Default case for unsupported tasks
         case _:
             raise LLMError(f"unsupported task: {task}")

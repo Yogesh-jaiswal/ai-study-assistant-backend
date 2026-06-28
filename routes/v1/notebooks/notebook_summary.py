@@ -36,7 +36,7 @@ summary_bp = Blueprint("summaries", __name__, url_prefix="<uuid:notebook_id>/sum
 @login_required
 def generate_summary_endpoint(notebook_id: UUID):
     """
-    Endpoint to generate a based on selected uploads from a notebook.
+    Endpoint to generate a summary based on selected uploads from a notebook.
     Expects a JSON payload with the upload ids
     """
     payload = GenerateSummaryRequest(**g.json_data)

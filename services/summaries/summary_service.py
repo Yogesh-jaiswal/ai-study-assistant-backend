@@ -1,9 +1,9 @@
 import logging
 from typing import Any
 
-from models import Summary
+from models.enums import ProcessingStatus
 from validators.summary_schemas import GenerateSummaryRequest
-from exceptions import ResourceNotFoundError
+from exceptions import ResourceNotFoundError, BadRequestError
 from repositories.notebook_repository import (
     get_notebook_by_notebook_id,
     get_notebook_with_summaries
@@ -31,6 +31,12 @@ def enqueue_summary_generation(notebook_id: str, user_id: str, payload: Generate
     
     if len(uploads) != len(upload_ids):
         raise ResourceNotFoundError("One or more uploads not found")
+    
+    for upload in uploads:
+        if upload.processing_status != ProcessingStatus.COMPLETED:
+            raise BadRequestError(
+                "All uploads are not processed yet. Please wait!"
+            )
     
     title = notebook.title
     content = "\n\n".join(upload.raw_text for upload in uploads if upload.raw_text)

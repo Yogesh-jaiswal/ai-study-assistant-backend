@@ -31,13 +31,17 @@ class BaseAppSettings(BaseSettings):
     RATELIMIT_HEADERS_ENABLED: bool = Field(default=True)
     SUMMARY_RATE_LIMIT: str = Field(default="10/minute")
     QUIZ_RATE_LIMIT: str = Field(default="5/minute")
+    ASK_RATE_LIMIT: str = Field(default="15/minute")
 
     # Database Settings
     DATABASE_URL: str = Field(default="sqlite:///study_assistant.db")
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = Field(default=False)
+    USE_PGVECTOR: bool = Field(default=True)
+    HNSW_EF_SEARCH: int = Field(default=100)
 
     # Upload Settings
-    MAX_CONTENT_LENGTH: int = Field(default=500000)
+    MAX_CONTENT_LENGTH: int = Field(default=10485760) # 10 MB
+    UPLOAD_FOLDER: str = Field(default="file_uploads")
 
     # JWT Settings
     JWT_PRIVATE_KEY_PATH: Path = Field(default="keys/private.pem")
@@ -66,6 +70,12 @@ class BaseAppSettings(BaseSettings):
     # Celery Settings
     CELERY_TASK_ALWAYS_EAGER: bool = Field(default=False)
     CELERY_TASK_EAGER_PROPAGATES: bool = Field(default=False)
+
+    # Embedding Settings
+    EMBEDDINGS_MODEL: str = Field(default="all-MiniLM-L6-v2")
+
+    # Database query settings
+    MIN_SIMILARITY: float = Field(default=0.65)
     
     model_config = SettingsConfigDict(
         env_file=".env",

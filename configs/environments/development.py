@@ -6,7 +6,8 @@ def get_development_overrides() -> dict[str, Any]:
         "DEBUG": True,
         "LOG_LEVEL": "DEBUG",
         "AI_MODEL": "FAKE",
-        "DATABASE_URL": "sqlite:///study_assistant.db",
+        "DATABASE_URL": "postgresql+psycopg://postgres:Yo995624%40@localhost:5432/ai_study_assistant",
+        "USE_PGVECTOR": True,
         "LIMITER_STORAGE_URI": "memory://",
         "ACCESS_TOKEN_MINUTES": 15
     }
