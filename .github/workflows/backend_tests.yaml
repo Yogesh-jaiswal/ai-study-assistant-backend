@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - phase-3-infrastructure
+      - github-workflow
   pull_request:
 
 jobs:
@@ -85,7 +86,7 @@ jobs:
       - name: Run Sync Tests
         if: matrix.mode == 'sync'
         run: |
-          python -m pytest -vv tests/
+          python -m pytest -s tests/
 
       - name: Run Async Tests
         if: matrix.mode == 'async'
