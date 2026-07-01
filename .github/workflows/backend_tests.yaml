@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - phase-3-infrastructure
+      - github-workflow
   pull_request:
 
 jobs:
