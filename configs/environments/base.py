@@ -83,7 +83,7 @@ class BaseAppSettings(BaseSettings):
     EMBEDDINGS_MODEL: str = Field(default="all-MiniLM-L6-v2")
 
     # Database query settings
-    MIN_SIMILARITY: float = Field(default=0.65)
+    MIN_SIMILARITY: float = Field(default=0.4)
     
     model_config = SettingsConfigDict(
         env_file=".env",

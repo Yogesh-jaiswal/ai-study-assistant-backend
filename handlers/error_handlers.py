@@ -116,7 +116,6 @@ def register_error_handlers(app: Flask):
     @app.errorhandler(DatabaseError)
     def handle_database_errors(e):
         """Handle database errors and return a structured error response."""
-        logger.error(f"Database error: {str(e)}", exc_info=True)
 
         return create_error_msg(
             "database_error",

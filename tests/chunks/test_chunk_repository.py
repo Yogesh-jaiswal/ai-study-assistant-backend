@@ -18,7 +18,7 @@ def test_create_and_get_chunks(
     )
     create_chunk(
         upload_id,
-        "chunk_two",
+        "chunk two",
         3
     )
 

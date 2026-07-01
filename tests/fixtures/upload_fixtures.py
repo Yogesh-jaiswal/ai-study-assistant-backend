@@ -8,13 +8,31 @@ def create_text_file():
             b"""
                 Python is a programming language.
 
-                Flask is a Python framework.
+                Python supports object oriented programming.
+
+                Python is commonly used with Flask.
+
+                Python has many libraries.
+
+
 
                 Paris is the capital of France.
 
-                Machine learning uses data.
+                France is located in Europe.
+
+                Paris has the Eiffel Tower.
+
+                The Seine flows through Paris.
+
+
 
                 SQL stores structured information.
+
+                SQL databases use tables.
+
+                Indexes improve query speed.
+
+                SQL supports joins.
             """
         ),
         "Recursion.txt"

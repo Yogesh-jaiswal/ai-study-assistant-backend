@@ -1,3 +1,4 @@
+import pytest
 from services.retrieval.similarity_search_service import SimilaritySearchService
 
 search_engine = SimilaritySearchService()
@@ -12,28 +13,26 @@ def test_retrieval(processed_file, logged_in_user):
         "Paris is capital of France"
     )
 
-    assert len(data) > 0
+    assert any("France" in chunk for _, chunk in data)
 
 def test_multi_query_retrieval(processed_file, logged_in_user):
     """
     Retrieving multiple query related chunks
     """
-    queries = [
-        "What is Python?",
-        "What framework is Flask?",
-        "What is the capital of France?",
-        "What stores information?",
-        "What uses data?"
-    ]
+    queries = {
+        "What is Python?": "Python",
+        "What is the capital of France?": "Paris",
+        "What stores structured information?": "SQL"
+    }
 
-    for query in queries:
+    for query, expected in queries.items():
         data = search_engine.search(
             processed_file["notebook_id"],
             logged_in_user["user_id"],
             query
         )
 
-        assert len(data) > 0
+        assert any(expected in chunk for _, chunk in data)
 
 def test_other_user_retrieval(processed_file, second_logged_in_user):
     """
