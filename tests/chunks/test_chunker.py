@@ -29,6 +29,11 @@ def test_chunk_multiple_chunks():
     ]
 
 def test_chunk_overlap():
+    chunker = FixedSizeChunker(
+        chunk_size=10,
+        overlap=2
+    )
+    
     text = "abcdefghij1234567890"
 
     chunks = chunker.chunk(text)

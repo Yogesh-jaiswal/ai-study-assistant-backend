@@ -116,14 +116,14 @@ def register_error_handlers(app: Flask):
     @app.errorhandler(DatabaseError)
     def handle_database_errors(e):
         """Handle database errors and return a structured error response."""
+        logger.error(f"Database error: {str(e)}", exc_info=True)
 
         return create_error_msg(
             "database_error",
             "A database error occurred",
             500
         )
-    
-    """
+
     @app.errorhandler(Exception)
     def handle_unexpected_errors(e):
         logger.error(f"Unexpected error: {str(e)}", exc_info=True) # Log the unexpected error with stack trace for debugging purposes
@@ -132,4 +132,3 @@ def register_error_handlers(app: Flask):
             "unexpected server error",
             500
         )
-    """

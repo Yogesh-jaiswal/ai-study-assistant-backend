@@ -4,7 +4,7 @@ def get_testing_overrides() -> dict[str, Any]:
     """function to get the testing environment config changes"""
     overrides = {
         "DEBUG": False,
-        "LOG_LEVEL": "ERROR",
+        "LOG_LEVEL": "DEBUG",
         "DATABASE_URL": "sqlite:///test.db",
         "USE_PGVECTOR": False,
         "RATELIMIT_ENABLED": False,
