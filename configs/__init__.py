@@ -1,4 +1,3 @@
-import os
 from functools import cache
 
 from .environments.base import BaseAppSettings

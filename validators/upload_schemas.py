@@ -1,14 +1,9 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 from typing import List
 from datetime import datetime
 
 from configs import get_settings
 from models.enums import FileTypes, ProcessingStatus
-
-from . import UpdatedBaseModel
-
-# Get the settings object
-settings = get_settings()
 
 class FileUploadedResponse(BaseModel):
     upload_id: str = Field(..., description="Unique identifier for the uploaded file")

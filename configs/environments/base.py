@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field, computed_field
+from pydantic import Field, computed_field, model_validator
 from typing import Literal, List
 from pathlib import Path
 
@@ -12,8 +12,16 @@ class BaseAppSettings(BaseSettings):
 
     # Model Settings
     AI_MODEL: Literal["FAKE", "GEMINI"] = Field(default="FAKE")
-    MODEL_API_KEY: str
-    MODEL_NAME: str = Field(default="gemini-1.5-flash")
+    MODEL_API_KEY: str | None = Field(default=None)
+    MODEL_NAME: str = Field(default="gemini-2.0-flash")
+
+    @model_validator(mode="after")
+    def validate_ai_settings(self):
+        if self.AI_MODEL == "GEMINI" and not self.MODEL_API_KEY:
+            raise ValueError(
+                "MODEL_API_KEY is required when AI_MODEL='GEMINI'"
+            )
+        return self
 
     # Quiz Settings
     DEFAULT_QUIZ_COUNT: int = Field(default = 5, ge = 1, le = 20)
@@ -36,7 +44,7 @@ class BaseAppSettings(BaseSettings):
     # Database Settings
     DATABASE_URL: str = Field(default="sqlite:///study_assistant.db")
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = Field(default=False)
-    USE_PGVECTOR: bool = Field(default=True)
+    USE_PGVECTOR: bool = Field(default=False)
     HNSW_EF_SEARCH: int = Field(default=100)
 
     # Upload Settings

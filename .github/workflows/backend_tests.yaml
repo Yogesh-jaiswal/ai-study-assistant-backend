@@ -1,0 +1,114 @@
+name: Backend Tests
+
+on:
+  push:
+    branches:
+      - main
+      - phase-3-infrastructure
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        mode: [sync, async]
+
+    env:
+      ENVIRONMENT: testing
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Copy testing environment
+        run: cp .env.testing .env
+
+      - name: Generate temporary JWT keys
+        run: |
+          mkdir -p keys
+          openssl genrsa -out keys/private.pem 2048
+          openssl rsa -in keys/private.pem -pubout -out keys/public.pem
+
+      - name: Start Docker services
+        run: docker compose up -d
+
+      - name: Wait for Redis
+        run: |
+          REDIS_CONTAINER=$(docker compose ps -q redis)
+
+          timeout 60 bash -c "
+          until [ \"\$(docker inspect -f '{{.State.Health.Status}}' $REDIS_CONTAINER)\" = \"healthy\" ]
+          do
+            sleep 1
+          done
+          "
+
+      - name: Wait for PostgreSQL
+        run: |
+          DB_CONTAINER=$(docker compose ps -q db)
+
+          timeout 60 bash -c "
+          until [ \"\$(docker inspect -f '{{.State.Health.Status}}' $DB_CONTAINER)\" = \"healthy\" ]
+          do
+            sleep 1
+          done
+          "
+
+      - name: Run database migrations
+        run: python -m flask db upgrade
+
+      - name: Start Celery Worker
+        if: matrix.mode == 'async'
+        run: |
+          celery -A app.worker worker --pool=solo --loglevel=info > celery.log 2>&1 &
+
+          timeout 180 bash -c '
+          until celery -A app.worker inspect ping
+          do
+            sleep 2
+          done
+          '
+
+      - name: Run Sync Tests
+        if: matrix.mode == 'sync'
+        run: |
+          python -m pytest -vv tests/
+
+      - name: Run Async Tests
+        if: matrix.mode == 'async'
+        run: |
+          python -m pytest -vv tests/ --async-tasks
+
+      - name: Save Docker logs
+        if: failure()
+        run: docker compose logs > docker.log
+
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs-${{ matrix.mode }}
+          path: |
+            docker.log
+            celery.log
+
+      - name: Stop Docker
+        if: always()
+        run: docker compose down -v
+
+defaults:
+  run:
+    shell: bash
