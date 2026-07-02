@@ -71,7 +71,7 @@ def test_register_duplicate_email(client, registered_user):
         }
     )
 
-    assert response.status_code == 401
+    assert response.status_code == 409
 
 
 def test_register_without_email(client):

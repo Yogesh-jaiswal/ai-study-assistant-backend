@@ -1,4 +1,4 @@
-from services.file_processors.text_cleaner import TextCleaner
+from services.file_processors.cleaner.text_cleaner import TextCleaner
 
 
 def test_clean_multiple_spaces():

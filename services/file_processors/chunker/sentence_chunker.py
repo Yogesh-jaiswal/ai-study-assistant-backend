@@ -16,7 +16,7 @@ class SentenceChunker:
         self.max_sentences = max_sentences
         self.overlap_sentences = overlap_sentences
 
-    def chunk(self, text: str) -> list[str]:
+    def chunk_text(self, text: str) -> list[str]:
         sentences = sent_tokenize(text)
         chunks = []
         start = 0

@@ -3,7 +3,7 @@ from pydantic import ValidationError
 from typing import Any
 
 from validators.request_schemas import SummaryRequest
-from services.ai.llm_client import generate_response
+from services.ai.legacy.llm_client import generate_response
 from validators.response_schemas import SummaryResponse
 from exceptions import ResponseValidationError
 

@@ -6,7 +6,8 @@ from validators.query_schemas import(
     QueryRequest,
     QueryResponse
 )
-from services.queries.query_services import answer_query
+from . import notebook_bp
+from services.chat.chat_services import answer_query
 from app.extensions import limiter
 from decorators.json_required import json_required
 from decorators.login_required import login_required
@@ -19,11 +20,8 @@ settings = get_settings()
 # Set up logging
 logger = logging.getLogger(__name__)
 
-# Custom summaries blueprint for notebook summaries
-ask_bp = Blueprint("ask", __name__, url_prefix="<uuid:notebook_id>/ask")
-
-# Generate a new summary route
-@ask_bp.post("")
+# Chat route
+@notebook_bp.post("<uuid:notebook_id>/ask")
 @limiter.limit(settings.ASK_RATE_LIMIT, override_defaults=False)
 @json_required
 @login_required

@@ -1,5 +1,5 @@
 from repositories.embedding_repository import search_top_k_chunks
-from services.embeddings.embeddings_generator import EmbeddingGenerator
+from services.file_processors.embeddings.embeddings_generator import EmbeddingGenerator
 from configs import get_settings
 
 from .top_k_search import top_k_search

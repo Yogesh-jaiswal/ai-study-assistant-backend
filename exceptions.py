@@ -22,6 +22,10 @@ class DatabaseError(Exception):
 class AuthenticationError(Exception):
     pass
 
+# Custom conflict error
+class ConflictError(Exception):
+    pass
+
 # custom unsupported file type error
 class UnsupportedFileTypeError(Exception):
     pass

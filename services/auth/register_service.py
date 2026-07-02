@@ -8,7 +8,7 @@ from repositories.user_repository import (
 
 from validators.auth.register_schamas import RegistrationRequest
 
-from exceptions import AuthenticationError
+from exceptions import ConflictError
 
 from services.auth.password_service import hash_password
 
@@ -19,7 +19,7 @@ def register_user(payload: RegistrationRequest) -> User:
     """Registers a new user"""
     if get_user_by_email(payload.email):
         logger.warning(f"Registration attempt with existing email: {payload.email.lower()}")
-        raise AuthenticationError("Registration failed")
+        raise ConflictError("Registration failed")
 
     password_hash = hash_password(payload.password)
     user = User(

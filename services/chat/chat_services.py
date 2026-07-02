@@ -1,8 +1,9 @@
 from services.retrieval.similarity_search_service import SimilaritySearchService
-from services.ai.llm_client import generate_response
 from services.ai.context_assembler import ContextAssembler
 
-from validators.query_schemas import QueryRequest, QueryServiceRequest
+from .chat_generator import ChatGenerator
+
+from validators.query_schemas import QueryRequest
 
 def answer_query(notebook_id: str, user_id: str, payload: QueryRequest) -> dict[str, str]:
     """Generates the response for the asked query"""
@@ -20,9 +21,9 @@ def answer_query(notebook_id: str, user_id: str, payload: QueryRequest) -> dict[
         [content for _, content in search_response]
     )
 
-    response = generate_response(QueryServiceRequest(
-        question=payload.question,
+    response = ChatGenerator.generate(
+        question=payload.question, 
         context=context
-    ), "ask")
+    )
 
     return response

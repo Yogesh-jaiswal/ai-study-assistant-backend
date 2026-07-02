@@ -4,7 +4,7 @@ from typing import Any
 
 from validators.request_schemas import QuizRequest
 
-from services.ai.llm_client import generate_response
+from services.ai.legacy.llm_client import generate_response
 from validators.response_schemas import QuizResponse
 from exceptions import ResponseValidationError
 

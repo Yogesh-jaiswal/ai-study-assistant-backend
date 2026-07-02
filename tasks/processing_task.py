@@ -7,9 +7,6 @@ from app.celery_app import celery_app as celery
 from app.extensions import db
 from models.enums import ProcessingStatus
 from services.file_processors import FileProcessor
-from services.file_processors.text_cleaner import TextCleaner
-from services.chunker import ChunkerFactory
-from services.embeddings import EmbeddingFactory
 from repositories.upload_repository import update_upload, get_upload_by_upload_id
 from repositories.chunk_repository import bulk_create_chunks
 from repositories.embedding_repository import bulk_create_embeddings
@@ -105,14 +102,12 @@ def process_file(self, notebook_id: str, user_id: str, upload_id: str):
 
     # Process file
     try:
-        processor = FileProcessor.get_processor(
-            source_type, 
+        processor = FileProcessor(
+            source_type,
             test_mode=(settings.ENVIRONMENT == "testing")
         )
 
-        raw_text = processor.extract_text(file_path) # Extract text
-        
-        cleaned_text = TextCleaner.clean(raw_text) # Cleanup text
+        processed_file = processor.process(file_path)
 
         fresh_upload = get_upload_by_upload_id(
             notebook_id,
@@ -124,21 +119,15 @@ def process_file(self, notebook_id: str, user_id: str, upload_id: str):
             logger.warning("Upload deleted during processing")
             return
         
-        # Chunk cleaned text into fixed size chunks
-        chunker = ChunkerFactory.get_chunker(type="sentence")
-        chunks = chunker.chunk(cleaned_text)
-        created_chunks = bulk_create_chunks(fresh_upload.id, chunks)
+        # Save chunks into the database
+        created_chunks = bulk_create_chunks(fresh_upload.id, processed_file.chunks)
 
-        # Generate embeddings of the all the chunks
-        embeder = EmbeddingFactory.get_provider()
-        texts = [chunk.content for chunk in created_chunks]
-        vectors = embeder.embed_many(texts)
-        
+        # Save embeddinbgs into the database
         chunk_ids = [chunk.id for chunk in created_chunks]
-        bulk_create_embeddings(chunk_ids, vectors)
+        bulk_create_embeddings(chunk_ids, processed_file.embeddings)
 
         # Set file processing status to completed
-        fresh_upload.raw_text = cleaned_text
+        fresh_upload.raw_text = processed_file.cleaned_text
         fresh_upload.processing_status = ProcessingStatus.COMPLETED
 
         db.session.commit() # commit once to prevent race conditions

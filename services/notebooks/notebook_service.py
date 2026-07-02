@@ -1,4 +1,7 @@
+import os
 import logging
+from shutil import rmtree
+from pathlib import Path
 from typing import Any
 
 from models import Notebook
@@ -10,6 +13,7 @@ from repositories.notebook_repository import (
     get_notebook_by_user_id,
     remove_notebook
 )
+from configs import get_settings
 
 from exceptions import ResourceNotFoundError
 
@@ -56,5 +60,10 @@ def delete_notebook(notebook_id: str, user_id: str) -> None:
 
     if not notebook:
         raise ResourceNotFoundError(f"Notebook with id {notebook_id} not found")
+    
+    upload_dir = Path(get_settings().UPLOAD_FOLDER) / str(notebook.id)
+
+    if upload_dir.exists():
+        rmtree(upload_dir)
 
     remove_notebook(notebook)

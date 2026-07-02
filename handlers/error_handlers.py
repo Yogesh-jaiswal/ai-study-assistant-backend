@@ -6,6 +6,7 @@ from flask_limiter.errors import RateLimitExceeded
 from utils.response_envelopes import create_error_envelope
 
 from exceptions import (
+    ConflictError,
     DatabaseError,
     LLMError,
     ResponseValidationError,
@@ -111,6 +112,15 @@ def register_error_handlers(app: Flask):
             "authentication_error",
             str(e),
             401
+        )
+    
+    @app.errorhandler(ConflictError)
+    def handle_conflict_errors(e):
+        """Handle conflict errors and return a structured error response."""
+        return create_error_msg(
+            "conflict_error",
+            str(e),
+            409
         )
 
     @app.errorhandler(DatabaseError)

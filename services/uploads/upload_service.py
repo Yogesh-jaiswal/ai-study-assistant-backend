@@ -48,7 +48,7 @@ def upload_file(notebook_id: str, user_id: str, file) -> str:
     source_type = EXTENSION_MAP.get(extension)
 
     if not source_type:
-        raise UnsupportedFileTypeError(...)
+        raise UnsupportedFileTypeError(f"Unsupported file type {source_type}")
 
     notebook = get_notebook_by_notebook_id(notebook_id, user_id)
     if not notebook:

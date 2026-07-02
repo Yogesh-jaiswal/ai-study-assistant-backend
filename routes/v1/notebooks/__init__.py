@@ -8,6 +8,9 @@ notebook_bp = Blueprint('notebook', __name__, url_prefix='/notebooks')
 # Loading basic notebook routes
 from . import basic_notebooks_routes
 
+# Loading chat route
+from . import notebook_ask_routes
+
 # Register the blueprints with the notebook blueprint
 notebook_bp.register_blueprint(upload_bp)
 notebook_bp.register_blueprint(summary_bp)

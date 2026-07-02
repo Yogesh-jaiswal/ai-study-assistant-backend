@@ -1,4 +1,4 @@
-from services.embeddings.embeddings_generator import EmbeddingGenerator
+from services.file_processors.embeddings.embeddings_generator import EmbeddingGenerator
 from repositories.embedding_repository import get_embeddings_by_upload
 from repositories.chunk_repository import get_chunks_by_upload
 

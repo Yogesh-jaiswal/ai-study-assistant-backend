@@ -1,5 +1,5 @@
 import pytest
-from services.chunker import FixedSizeChunker
+from services.file_processors.chunker import FixedSizeChunker
 
 chunker = FixedSizeChunker(
     chunk_size=10,
@@ -7,21 +7,21 @@ chunker = FixedSizeChunker(
 )
 
 def test_chunk_small_text():
-    chunks = chunker.chunk("hello")
+    chunks = chunker.chunk_text("hello")
 
     assert chunks == ["hello"]
 
 def test_chunk_exact_size():
     text = "abcdefghij"
 
-    chunks = chunker.chunk(text)
+    chunks = chunker.chunk_text(text)
 
     assert chunks == ["abcdefghij"]
 
 def test_chunk_multiple_chunks():
     text = "abcdefghij1234567890"
 
-    chunks = chunker.chunk(text)
+    chunks = chunker.chunk_text(text)
 
     assert chunks == [
         "abcdefghij",
@@ -36,7 +36,7 @@ def test_chunk_overlap():
     
     text = "abcdefghij1234567890"
 
-    chunks = chunker.chunk(text)
+    chunks = chunker.chunk_text(text)
 
     assert chunks == [
         "abcdefghij",
@@ -45,8 +45,7 @@ def test_chunk_overlap():
     ]
 
 def test_chunk_empty_text():
-    chunks = chunker.chunk("")
-
+    chunks = chunker.chunk_text("")
     assert chunks == []
 
 def test_invalid_overlap():
