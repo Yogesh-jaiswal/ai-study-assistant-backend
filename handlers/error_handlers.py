@@ -135,7 +135,7 @@ def register_error_handlers(app: Flask):
 
     @app.errorhandler(Exception)
     def handle_unexpected_errors(e):
-        logger.error(f"Unexpected error: {str(e)}", exc_info=True) # Log the unexpected error with stack trace for debugging purposes
+        logger.exception(f"Unexpected error: {str(e)}") # Log the unexpected error with stack trace for debugging purposes
         return create_error_msg(
             "internal_server_error",
             "unexpected server error",

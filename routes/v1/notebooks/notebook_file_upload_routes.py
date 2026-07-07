@@ -8,10 +8,12 @@ from services.uploads.upload_service import (
     get_upload,
     delete_upload
 )
+from services.uploads.yt_uploads_service import upload_yt_video
 from validators.upload_schemas import (
     FileUploadedResponse,
     GetAllUploadsResponse,
-    GetUploadResponse
+    GetUploadResponse,
+    YoutubeUploadRequest
 )
 from exceptions import BadRequestError
 from decorators.json_required import json_required
@@ -82,3 +84,20 @@ def delete_upload_endpoint(notebook_id: UUID, upload_id: UUID):
     delete_upload(str(notebook_id), g.user_id, str(upload_id))
 
     return "", 204
+
+# Upload a new youtube video
+@upload_bp.post("/youtube")
+@login_required
+def upload_yt_video_endpoint(notebook_id: UUID):
+    """
+    Endpoint to upload a youtube video to a notebook.
+    """
+    payload = YoutubeUploadRequest(**g.json_data)
+    
+    upload = upload_yt_video(notebook_id, g.user_id, payload)
+
+    return jsonify(
+        create_success_response(
+            FileUploadedResponse(**upload).model_dump()
+        )
+    ), 201

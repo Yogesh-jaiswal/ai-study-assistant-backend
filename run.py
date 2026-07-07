@@ -21,4 +21,12 @@ def home():
     }
 
 if __name__ == "__main__":
+    if settings.EMBEDDINGS_MODEL == "all-MiniLM-L6-v2":
+        logger.warning(
+            "English-only embeddings configured. "
+            "Multilingual documents are supported but retrieval quality "
+            "may be lower. Consider switching to a multilingual model "
+            "if multilingual search is required."
+            "\n You can change it by changing the app settings."
+        )
     app.run(debug=settings.DEBUG)

@@ -1,0 +1,51 @@
+AI Study Assistant
+This document is used to test multiple file processors.
+
+Features
+Text extraction
+Markdown parsing
+PDF extraction
+DOCX extraction
+OCR support
+CSV compatibility
+
+Numbered List
+Upload document
+Extract text
+Chunk content
+Generate embeddings
+Retrieve answers
+
+Block Quote
+Artificial Intelligence is useful only when it helps humans learn better.
+
+Code Block
+def greet(name):
+    return f"Hello {name}"
+
+Table
+| Feature | Status | Notes |
+| TXT | ✅ | Supported |
+| Markdown | ✅ | Supported |
+| PDF | ✅ | OCR fallback |
+| DOCX | ✅ | Tables supported |
+| Images | ✅ | OCR based |
+
+Mixed Languages
+English sentence.
+नमस्ते दुनिया।
+
+Hyperlink
+Google: https://www.google.com
+
+Bold / Italic
+Bold text
+Italic text
+Bold Italic
+
+Inline Code
+Use pytest to execute the tests.
+
+Final Paragraph
+The quick brown fox jumps over the lazy dog.
+Pack my box with five dozen liquor jugs.

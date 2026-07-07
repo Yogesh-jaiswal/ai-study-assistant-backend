@@ -50,6 +50,7 @@ def verify_refresh_token(token: str | None) -> RefreshToken:
     )
 
     if expires_at < datetime.now(timezone.utc):
+        delete_refresh_token(session)
         logger.warning("Refresh token expired")
         raise AuthenticationError("Authentication failed, login again")
     

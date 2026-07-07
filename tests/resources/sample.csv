@@ -1,0 +1,15 @@
+Student ID,Student Name,Course,Topic,Score,Status,Language
+1001,Yogesh Jaiswal,AI Study Assistant,Retrieval Pipeline,95,Completed,English
+1002,Alice Johnson,AI Study Assistant,Embeddings,88,Completed,English
+1003,Bob Smith,AI Study Assistant,Vector Database,91,In Progress,English
+1004,Rahul Verma,AI Study Assistant,Document Chunking,84,Completed,Hindi
+1005,Sneha Sharma,AI Study Assistant,Context Assembly,97,Completed,English
+1006,John Doe,AI Study Assistant,Flashcards,76,Pending,English
+1007,Emily Clark,AI Study Assistant,Question Answering,89,Completed,English
+1008,Amit Kumar,AI Study Assistant,OCR Processing,93,Completed,Hindi
+1009,Olivia Brown,AI Study Assistant,PDF Extraction,90,Completed,English
+1010,David Wilson,AI Study Assistant,YouTube Processing,87,In Progress,English
+1011,,AI Study Assistant,Image OCR,,Pending,English
+1012,नमस्ते विद्यार्थी,AI Study Assistant,बहुभाषी परीक्षण,99,Completed,Hindi
+1013,"Smith, Alex",AI Study Assistant,"Tables, CSV, Parsing",92,Completed,English
+1014,"Quoted ""Value""",AI Study Assistant,CSV Escaping,85,Completed,English

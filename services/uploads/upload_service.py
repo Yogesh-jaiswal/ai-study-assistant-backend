@@ -6,6 +6,8 @@ from pathlib import Path
 
 from werkzeug.utils import secure_filename
 
+from PIL import Image
+
 from models import Upload
 from models.enums import ProcessingStatus, FileTypes
 from repositories.notebook_repository import (
@@ -29,13 +31,20 @@ logger = logging.getLogger(__name__)
 # Extension map to get the file type enum based on file extension
 EXTENSION_MAP = {
     ".txt": FileTypes.TXT,
-    ".pdf": FileTypes.PDF
+    ".pdf": FileTypes.PDF,
+    ".md": FileTypes.MARKDOWN,
+    ".docx": FileTypes.DOCX,
+    ".csv": FileTypes.CSV
+}
+SUPPORTED_IMAGE_EXTENSIONS = {
+    ext.lower() : FileTypes.IMAGE
+    for ext, _ in Image.registered_extensions().items()
 }
 
 # Settings object
 settings = get_settings()
 
-def upload_file(notebook_id: str, user_id: str, file) -> str:
+def upload_file(notebook_id: str, user_id: str, file) -> dict[str, str]:
     """Creates a new upload for a notebook."""
     file.seek(0, os.SEEK_END)
     size = file.tell()
@@ -45,7 +54,11 @@ def upload_file(notebook_id: str, user_id: str, file) -> str:
     
     filename = secure_filename(file.filename)
     extension = Path(filename).suffix.lower()
-    source_type = EXTENSION_MAP.get(extension)
+    source_type = (
+        EXTENSION_MAP.get(extension) 
+        or 
+        SUPPORTED_IMAGE_EXTENSIONS.get(extension)
+    )
 
     if not source_type:
         raise UnsupportedFileTypeError(f"Unsupported file type {source_type}")

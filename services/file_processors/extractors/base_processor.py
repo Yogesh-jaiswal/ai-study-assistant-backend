@@ -1,8 +1,9 @@
+from pathlib import Path
 from abc import ABC, abstractmethod
 
 class BaseProcessor(ABC):
     
     @abstractmethod
-    def extract_text(self, file_path: str) -> str:
+    def extract_text(self, file_path: str | Path) -> str:
         """Extract text from the file using given file path"""
         pass

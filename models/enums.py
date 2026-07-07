@@ -11,6 +11,6 @@ class FileTypes(str, Enum):
     DOCX = "docx"
     TXT = "txt"
     CSV = "csv"
-    XLSX = "xlsx"
-    PPTX = "pptx"
     MARKDOWN = "md"
+    IMAGE = "img"
+    YOUTUBE = "yt"

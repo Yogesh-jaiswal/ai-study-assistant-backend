@@ -31,7 +31,7 @@ def refresh_endpoint():
     
     response = jsonify(
         create_success_response(
-                LoginResponse(
+            LoginResponse(
                 access_token = new_access_token,
                 expires_in = settings.ACCESS_TOKEN_MINUTES * 60,
                 message = "Re login successful"

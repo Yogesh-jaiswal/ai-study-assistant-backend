@@ -109,5 +109,6 @@ pytest_plugins = [
     "tests.fixtures.auth_fixtures",
     "tests.fixtures.notebook_fixtures",
     "tests.fixtures.upload_fixtures",
-    "tests.fixtures.summary_fixtures"
+    "tests.fixtures.summary_fixtures",
+    "tests.fixtures.extractor_fixtures"
 ]

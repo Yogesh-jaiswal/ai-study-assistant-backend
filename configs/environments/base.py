@@ -80,7 +80,7 @@ class BaseAppSettings(BaseSettings):
     CELERY_TASK_EAGER_PROPAGATES: bool = Field(default=False)
 
     # Embedding Settings
-    EMBEDDINGS_MODEL: str = Field(default="all-MiniLM-L6-v2")
+    EMBEDDINGS_MODEL: str = Field(default="all-MiniLM-L6-v2") # <- Consider changing it to this multilingual model "paraphrase-multilingual-MiniLM-L12-v2" for multi language support
 
     # Database query settings
     MIN_SIMILARITY: float = Field(default=0.4)

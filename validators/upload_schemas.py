@@ -1,8 +1,11 @@
-from pydantic import BaseModel, Field
+from urllib.parse import urlparse
+
+from pydantic import BaseModel, Field, field_validator
 from typing import List
 from datetime import datetime
 
-from configs import get_settings
+from . import UpdatedBaseModel
+
 from models.enums import FileTypes, ProcessingStatus
 
 class FileUploadedResponse(BaseModel):
@@ -21,3 +24,23 @@ class GetUploadResponse(FileMetadataResponse):
 
 class GetAllUploadsResponse(BaseModel):
     uploads: List[FileMetadataResponse] = Field(..., description="List of all uploads for the notebook")
+
+class YoutubeUploadRequest(UpdatedBaseModel):
+    url: str = Field(..., description="youtube video url")
+
+    @field_validator("url")
+    @classmethod
+    def validate_youtube_url(cls, value: str):
+        parsed = urlparse(value)
+
+        allowed_hosts = {
+            "youtube.com",
+            "www.youtube.com",
+            "youtu.be",
+            "m.youtube.com",
+        }
+
+        if parsed.scheme not in {"http", "https"} or parsed.netloc.lower() not in allowed_hosts:
+            raise ValueError("Invalid YouTube URL")
+
+        return value

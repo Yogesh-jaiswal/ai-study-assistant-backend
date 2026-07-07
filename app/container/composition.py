@@ -3,8 +3,8 @@ from app.container.app_container import AppContainer
 from providers.settings.settings_provider import SettingsProvider
 
 from app.container.registries.embedding_registry import embedding_registry
-from app.container.registries.provider_registry import retrieval_registry
-# from app.container.registries.ai_registry import ai_registry
+from app.container.registries.retrieval_registry import retrievl_registry
+from app.container.registries.ai_model_registry import ai_registry
 
 
 class CompositionRoot:
