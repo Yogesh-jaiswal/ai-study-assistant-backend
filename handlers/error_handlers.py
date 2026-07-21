@@ -9,7 +9,7 @@ from exceptions import (
     ConflictError,
     DatabaseError,
     LLMError,
-    ResponseValidationError,
+    AIResponseValidationError,
     BadRequestError,
     ResourceNotFoundError,
     AuthenticationError,
@@ -65,7 +65,7 @@ def register_error_handlers(app: Flask):
             500
         )
     
-    @app.errorhandler(ResponseValidationError)
+    @app.errorhandler(AIResponseValidationError)
     def handle_response_validation_errors(e):
         """Handle response validation errors and return a structured error response."""
         return create_error_msg(
@@ -133,11 +133,11 @@ def register_error_handlers(app: Flask):
             500
         )
 
-    @app.errorhandler(Exception)
+    """@app.errorhandler(Exception)
     def handle_unexpected_errors(e):
         logger.exception(f"Unexpected error: {str(e)}") # Log the unexpected error with stack trace for debugging purposes
         return create_error_msg(
             "internal_server_error",
             "unexpected server error",
             500
-        )
+        )"""

@@ -6,7 +6,7 @@ from datetime import datetime
 
 from . import UpdatedBaseModel
 
-from models.enums import FileTypes, ProcessingStatus
+from models.enums import FileTypes, ProcessingStatus, UploadPurpose
 
 class FileUploadedResponse(BaseModel):
     upload_id: str = Field(..., description="Unique identifier for the uploaded file")
@@ -15,7 +15,8 @@ class FileUploadedResponse(BaseModel):
 class FileMetadataResponse(BaseModel):
     id: str = Field(..., description="Unique identifier for the uploaded file")
     filename: str = Field(..., description="Name of the uploaded file")
-    source_type: FileTypes = Field(..., description="type of the uploaded file")
+    source_type: FileTypes = Field(..., description="Type of the uploaded file")
+    upload_purpose: UploadPurpose = Field(..., description="Purpose of the uploaded file")
     processing_status: ProcessingStatus = Field(..., description="Current processing status of the uploaded file")
     uploaded_at: datetime = Field(..., description="Timestamp of when the file was uploaded")
 
@@ -26,7 +27,7 @@ class GetAllUploadsResponse(BaseModel):
     uploads: List[FileMetadataResponse] = Field(..., description="List of all uploads for the notebook")
 
 class YoutubeUploadRequest(UpdatedBaseModel):
-    url: str = Field(..., description="youtube video url")
+    url: str = Field(..., description="YouTube video url")
 
     @field_validator("url")
     @classmethod

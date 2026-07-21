@@ -57,7 +57,7 @@ def get_notebook_by_notebook_id(
     return notebook
 
 
-def get_notebook_by_user_id(user_id: str) -> list[Notebook]:
+def get_notebook_by_user_id(user_id: str, limit: int, offset: int) -> list[Notebook]:
     """
     Retrieve all notebooks belonging to a user.
 
@@ -67,9 +67,29 @@ def get_notebook_by_user_id(user_id: str) -> list[Notebook]:
     notebooks = db.session.scalars(
         db.select(Notebook)
         .where(Notebook.user_id == user_id)
+        .order_by(
+            Notebook.created_at.desc()
+        )
+        .offset(offset)
+        .limit(limit)
     ).all()
 
     return notebooks
+
+
+def update_notebook(notebook: Notebook) -> None:
+    """
+    Update a specific notebook.
+
+    Raises:
+        DatabaseError: If the notebook transaction fails.
+    """
+    try:
+        db.session.commit()
+    except Exception:
+        logger.exception("Failed to update notebook")
+        db.session.rollback()
+        raise DatabaseError("Failed to update notebook")
 
 
 def remove_notebook(notebook: Notebook) -> None:
@@ -107,7 +127,7 @@ def get_notebook_with_uploads(
     return notebook
 
 
-def get_notebook_with_summaries(
+def get_notebook_with_ai_content(
     notebook_id: str,
     user_id: str
 ) -> Notebook | None:
@@ -119,7 +139,7 @@ def get_notebook_with_summaries(
     """
     notebook = db.session.scalar(
         notebook_owned_by_user_query(notebook_id, user_id)
-        .options(db.selectinload(Notebook.summaries))
+        .options(db.selectinload(Notebook.ai_contents))
     )
 
     return notebook

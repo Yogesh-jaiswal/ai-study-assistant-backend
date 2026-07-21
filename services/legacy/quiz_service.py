@@ -6,7 +6,7 @@ from validators.request_schemas import QuizRequest
 
 from services.ai.legacy.llm_client import generate_response
 from validators.response_schemas import QuizResponse
-from exceptions import ResponseValidationError
+from exceptions import AIResponseValidationError
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ def generate_quiz(payload: QuizRequest) -> dict[str: Any]:
     except ValidationError:
         logger.exception(f"response validation failed")
 
-        raise ResponseValidationError(
+        raise AIResponseValidationError(
             "model response failed"
         )
     

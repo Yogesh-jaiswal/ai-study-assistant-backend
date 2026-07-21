@@ -1,0 +1,25 @@
+{
+  "exam_name": "Common University Entrance Test (CUET-UG)",
+  "description": "A broad university admission screening test built to handle single-subject modules where applicants select a fixed subset of questions out of a larger pool.",
+  "total_marks": 200,
+  "duration": "45 minutes",
+  "navigation_rules": {
+    "allow_cross_section_navigation": true,
+    "has_sectional_timers": false,
+    "is_computer_adaptive": false
+  },
+  "sections": [
+    {
+      "section_name": "Domain Specific Subject (e.g., Chemistry)",
+      "total_marks": 200,
+      "question_groups": [
+        {
+          "group_title": "Main Paper Question Bank",
+          "selection_rule": { "type": "choose_n", "count": 40 },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
+          "parts": [{ "label": "Q01-Q50", "count": 50, "marks": 5 }]
+        }
+      ]
+    }
+  ]
+}

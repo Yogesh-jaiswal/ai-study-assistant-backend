@@ -1,4 +1,3 @@
-import logging
 from uuid import UUID
 from flask import Blueprint, g, jsonify
 
@@ -16,9 +15,6 @@ from configs import get_settings
 
 # Get the settings object
 settings = get_settings()
-
-# Set up logging
-logger = logging.getLogger(__name__)
 
 # Chat route
 @notebook_bp.post("<uuid:notebook_id>/ask")

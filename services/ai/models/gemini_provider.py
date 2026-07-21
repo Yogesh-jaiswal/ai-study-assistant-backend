@@ -17,7 +17,7 @@ class GeminiProvider:
     def __init__(self):
         self.client = get_gemini_client(get_settings().MODEL_API_KEY)
 
-    def generate(self, prompt: str, response_schema: type[BaseModel]) -> dict[str, Any]:
+    def generate(self, prompt: str, response_schema: type[BaseModel], generation_options: dict | None = None) -> dict[str, Any]:
 
         response = self.client.models.generate_content(
             model=get_settings().MODEL_NAME,
@@ -25,7 +25,11 @@ class GeminiProvider:
             config={
                 "response_mime_type": "application/json",
                 "response_schema": response_schema,
-                "system_instruction": "You are a study-focused tutor that responds in JSON format according to the provided schema."
+                "system_instruction": """
+                    You are a study-focused educational assistant.
+                    Always respond using only valid JSON that conforms to the provided response schema.
+                    Never include markdown, code fences, or explanatory text outside the JSON response.
+                """
             }
         )
 

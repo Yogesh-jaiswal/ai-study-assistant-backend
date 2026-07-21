@@ -1,12 +1,12 @@
-import logging
 from uuid import UUID
-from flask import g, jsonify
+from flask import g, jsonify, request
 
 from services.notebooks.notebook_service import (
     create_notebook,
     delete_notebook,
     get_notebook,
-    get_all_notebooks
+    get_all_notebooks,
+    edit_notebook
 )
 from validators.notebook_schemas import (
     CreateNotebookRequest,
@@ -17,10 +17,8 @@ from validators.notebook_schemas import (
 from decorators.json_required import json_required
 from decorators.login_required import login_required
 from utils.response_envelopes import create_success_response
+from configs import get_settings
 from . import notebook_bp
-
-# Set up logging
-logger = logging.getLogger(__name__)
 
 # Create new notebook route
 @notebook_bp.post("")
@@ -52,7 +50,13 @@ def get_all_notebooks_endpoint():
     Endpoint to retrieve all notebooks.
     Expects a JSON payload with pagination and filtering options.
     """
-    notebooks = get_all_notebooks(g.user_id)
+    limit = request.args.get("limit", default=20, type=int)
+    limit = min(limit, get_settings().MAX_LIMIT)
+
+    page = request.args.get("page", default=1, type=int)
+    offset = (page - 1) * limit
+
+    notebooks = get_all_notebooks(g.user_id, limit, offset)
 
     return jsonify(create_success_response(GetAllNotebooksResponse(notebooks=notebooks).model_dump())), 200
 
@@ -64,6 +68,28 @@ def get_notebook_endpoint(id: UUID):
     notebook = get_notebook(str(id), g.user_id)
 
     return jsonify(create_success_response(GetNotebook(**notebook).model_dump())), 200
+
+
+# Notebook edit route
+@notebook_bp.patch("/<uuid:id>/edit")
+@login_required
+def edit_notebook_endpoint(id: UUID):
+    """
+    Endpoint to edit a specific notebook.
+    Expects a JSON payload with pagination and filtering options.
+    """
+    payload = CreateNotebookRequest(**g.json_data)
+
+    notebook_id = edit_notebook(str(id), g.user_id, payload)
+
+    return jsonify(
+        create_success_response(
+            NotebookCreatedResponse(
+                id=notebook_id,
+                message="notebook created"
+            ).model_dump()
+        )
+    ), 200
 
 
 # Notebook deletion route

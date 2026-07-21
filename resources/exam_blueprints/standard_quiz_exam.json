@@ -1,0 +1,55 @@
+{
+  "exam_name": "Standard Quiz",
+  "description": "A short formative assessment designed to evaluate recall and conceptual understanding through primarily multiple-choice questions. Suitable for classroom quizzes, practice tests, and quick knowledge checks.",
+  "total_marks": 30,
+  "duration": "25 minutes",
+  "navigation_rules": {
+    "allow_cross_section_navigation": true,
+    "has_sectional_timers": false,
+    "is_computer_adaptive": false
+  },
+  "sections": [
+    {
+      "section_name": "Quiz",
+      "total_marks": 30,
+      "question_groups": [
+        {
+          "group_title": "Multiple Choice Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q1-Q10",
+              "count": 10,
+              "marks": 2
+            }
+          ]
+        },
+        {
+          "group_title": "True/False Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "TrueFalse",
+            "answer_type": "boolean",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q11-Q15",
+              "count": 5,
+              "marks": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -23,5 +23,6 @@ print(
 
 celery_app.conf.imports = (
     "tasks.example_tasks",
-    "tasks.summary_tasks"
+    "tasks.ai_content_task",
+    "tasks.processing_task"
 )

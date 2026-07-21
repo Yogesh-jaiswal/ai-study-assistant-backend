@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .user import User
-    from .summary import Summary
+    from .ai_content import AIContent
     from .upload import Upload
 
 class Notebook(db.Model):
@@ -39,4 +39,4 @@ class Notebook(db.Model):
 
     user: Mapped["User"] = db.relationship("User", back_populates="notebooks", lazy="raise_on_sql")
     uploads: Mapped[list["Upload"]] = db.relationship("Upload", back_populates="notebook", cascade="all, delete-orphan", lazy="raise_on_sql")
-    summaries: Mapped[list["Summary"]] = db.relationship("Summary", back_populates="notebook", cascade="all, delete-orphan", lazy="raise_on_sql")
+    ai_contents: Mapped[list["AIContent"]] = db.relationship("AIContent", back_populates="notebook", cascade="all, delete-orphan", lazy="raise_on_sql")

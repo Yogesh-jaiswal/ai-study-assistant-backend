@@ -1,0 +1,47 @@
+{
+  "exam_name": "National College Entrance Examination (Gaokao)",
+  "description": "China's rigorous university admissions model that packs a complex mix of single-select, multi-select, short numerical fill-ins, and heavy subjective long-form tasks.",
+  "total_marks": 750,
+  "duration": "Distributed across 2-3 Days",
+  "navigation_rules": {
+    "allow_cross_section_navigation": false,
+    "has_sectional_timers": false,
+    "is_computer_adaptive": false
+  },
+  "sections": [
+    {
+      "section_name": "Mathematics Paper",
+      "total_marks": 150,
+      "question_groups": [
+        {
+          "group_title": "Part 1: Single-Option MCQs",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 0 },
+          "parts": [{ "label": "Q01-Q08", "count": 8, "marks": 5 }]
+        },
+        {
+          "group_title": "Part 2: Multiple-Option MCQs",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "MultiSelect", "answer_type": "multiple_choice", "negative_marking": 0 },
+          "parts": [{ "label": "Q09-Q12", "count": 4, "marks": 5 }]
+        },
+        {
+          "group_title": "Part 3: Fill-in-the-Blanks (NAT)",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "FillBlank", "answer_type": "text", "negative_marking": 0 },
+          "parts": [{ "label": "Q13-Q16", "count": 4, "marks": 5 }]
+        },
+        {
+          "group_title": "Part 4: Comprehensive Subjective Solutions",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "Subjective", "answer_type": "text", "negative_marking": 0 },
+          "parts": [
+            { "label": "Q17", "count": 1, "marks": 10 },
+            { "label": "Q18", "count": 1, "marks": 12 },
+            { "label": "Q19-Q22", "count": 4, "marks": 12 }
+          ]
+        }
+      ]
+    }
+  ]
+}

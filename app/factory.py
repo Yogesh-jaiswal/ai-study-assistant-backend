@@ -6,6 +6,7 @@ from handlers.error_handlers import register_error_handlers
 from middlewares.request_middlewares import register_middleware
 from configs.logging_config import configure_logging
 import app.extensions as ext
+from app.commands.seed_blueprints import seed_exam_blueprints_command
 from configs import get_settings
 import models
 
@@ -30,6 +31,9 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = (
         settings.SQLALCHEMY_TRACK_MODIFICATIONS
     )
+
+    # Register DB seeding command
+    app.cli.add_command(seed_exam_blueprints_command)
 
     # Initialize extensions
     ext.limiter.init_app(app)

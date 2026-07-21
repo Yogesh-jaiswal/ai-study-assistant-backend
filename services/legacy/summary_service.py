@@ -5,7 +5,7 @@ from typing import Any
 from validators.request_schemas import SummaryRequest
 from services.ai.legacy.llm_client import generate_response
 from validators.response_schemas import SummaryResponse
-from exceptions import ResponseValidationError
+from exceptions import AIResponseValidationError
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ def generate_summary(payload: SummaryRequest) -> dict[str, Any]:
     except ValidationError:
         logger.exception(f"response validation failed")
 
-        raise ResponseValidationError(
+        raise AIResponseValidationError(
             "model response failed"
         )
     

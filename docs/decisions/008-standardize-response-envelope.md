@@ -37,7 +37,7 @@ Examples:
 
 * Delete notebook
 * Delete upload
-* Delete summary
+* Delete AI content
 * Logout
 
 ## Reason

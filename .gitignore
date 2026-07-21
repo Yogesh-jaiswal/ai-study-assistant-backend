@@ -8,3 +8,5 @@ instance/
 *.db
 keys/
 *.pem
+file_uploads/
+tests/tmp_uploads

@@ -5,12 +5,12 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.extensions import db
-from .enums import FileTypes, ProcessingStatus
+from .enums import FileTypes, ProcessingStatus, UploadPurpose
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .notebook import Notebook
-    from .upload_summary_relationship import UploadSummaryRelationship
+    from .upload_ai_content_relationship import UploadAIContentRelationship
     from .document_chunk import DocumentChunk
 
 class Upload(db.Model):
@@ -34,6 +34,12 @@ class Upload(db.Model):
 
     file_path: Mapped[str] = mapped_column(
         db.String,
+        nullable=False
+    )
+
+    upload_purpose: Mapped[UploadPurpose] = mapped_column(
+        db.Enum(UploadPurpose),
+        default= lambda: UploadPurpose.NOTES,
         nullable=False
     )
 
@@ -66,7 +72,7 @@ class Upload(db.Model):
     )
 
     notebook: Mapped["Notebook"] = db.relationship("Notebook", back_populates="uploads", lazy="raise_on_sql")
-    upload_summary_relationships: Mapped[List["UploadSummaryRelationship"]] = db.relationship(
+    upload_ai_content_relationships: Mapped[List["UploadAIContentRelationship"]] = db.relationship(
         back_populates="upload",
         cascade="all, delete-orphan",
         lazy="raise_on_sql"

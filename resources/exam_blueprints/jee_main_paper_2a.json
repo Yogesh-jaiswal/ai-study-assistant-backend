@@ -1,0 +1,59 @@
+{
+  "exam_name": "Joint Entrance Examination (JEE) Main - Paper 2A",
+  "description": "Admissions to Undergraduate Architecture Programs (B.Arch)",
+  "duration": "3 hours",
+  "total_marks": 400,
+  "navigation_rules": {
+    "allow_cross_section_navigation": true,
+    "has_sectional_timers": false,
+    "is_computer_adaptive": false
+  },
+
+  "sections": [
+    {
+      "section_name": "Mathematics (Part I)",
+      "total_marks": 100,
+      "question_groups": [
+        {
+          "group_title": "Section A: Multiple Choice Questions",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
+          "parts": [{ "label": "Q01-Q20", "count": 20, "marks": 4 }]
+        },
+        {
+          "group_title": "Section B: Numerical Value Questions",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "Numerical", "answer_type": "numeric", "negative_marking": 1 },
+          "parts": [{ "label": "Q21-Q25", "count": 5, "marks": 4 }]
+        }
+      ]
+    },
+    {
+      "section_name": "Aptitude Test (Part II)",
+      "total_marks": 200,
+      "question_groups": [
+        {
+          "group_title": "General Architectural Aptitude MCQs",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
+          "parts": [{ "label": "Q26-Q75", "count": 50, "marks": 4 }]
+        }
+      ]
+    },
+    {
+      "section_name": "Drawing Test (Part III)",
+      "total_marks": 100,
+      "question_groups": [
+        {
+          "group_title": "Subjective Drawing Exam (Offline on Paper)",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "DiagramQuestion", "answer_type": "drawing", "negative_marking": 0 },
+          "parts": [
+            { "label": "Q76", "count": 1, "marks": 50 },
+            { "label": "Q77", "count": 1, "marks": 50 }
+          ]
+        }
+      ]
+    }
+  ]
+}

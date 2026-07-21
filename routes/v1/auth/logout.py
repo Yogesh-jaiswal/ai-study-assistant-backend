@@ -27,7 +27,7 @@ def logout_endpoint():
     response = jsonify(
         create_success_response(
             LogoutResponse(
-                message = "Log out successful"
+                message = "log out successful"
             ).model_dump()
         )
     )

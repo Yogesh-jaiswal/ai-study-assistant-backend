@@ -3,7 +3,7 @@ class LLMError(Exception):
     pass
 
 # Custom response validation Error
-class ResponseValidationError(Exception):
+class AIResponseValidationError(Exception):
     pass
 
 # Custom bad request error

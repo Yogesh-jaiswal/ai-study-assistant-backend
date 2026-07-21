@@ -1,85 +1,52 @@
 from pytest import fixture
+from tests.builders.auth_builder import AuthBuilder
+
+
+@fixture
+def auth_builder(client):
+    return AuthBuilder(client)
+
+
+@fixture
+def registered_user(auth_builder):
+    return auth_builder.register(
+        email="john@test.com",
+        username="John123",
+        password="John@123"
+    )
 
 
 @fixture()
-def registered_user(client):
-    response = client.post(
-        "/v1/auth/register",
-        json={
-            "email": "john@test.com",
-            "username": "John123",
-            "password": "John@123"
-        }
+def second_registered_user(auth_builder):
+    return auth_builder.register(
+        email="alice@test.com",
+        username="Alice123",
+        password="Alice@123"
     )
 
-    assert response.status_code == 201
+
+@fixture
+def logged_in_user(auth_builder, registered_user):
+
+    login = auth_builder.login(
+        email=registered_user["email"],
+        password=registered_user["password"],
+    )
 
     return {
-        "user_id": response.get_json()["data"]["id"],
-        "email": "john@test.com",
-        "username": "John123",
-        "password": "John@123"
+        **registered_user,
+        **login
     }
 
 
 @fixture()
-def second_registered_user(client):
-    response = client.post(
-        "/v1/auth/register",
-        json={
-            "email": "alice@test.com",
-            "username": "Alice123",
-            "password": "Alice@123"
-        }
+def second_logged_in_user(auth_builder, second_registered_user):
+    login = auth_builder.login(
+        email=second_registered_user["email"],
+        password=second_registered_user["password"],
     )
 
-    assert response.status_code == 201
-
     return {
-        "user_id": response.get_json()["data"]["id"],
-        "email": "alice@test.com",
-        "username": "Alice123",
-        "password": "Alice@123"
-    }
-
-
-@fixture()
-def logged_in_user(client, registered_user):
-    response = client.post(
-        "/v1/auth/login",
-        json={
-            "email": registered_user["email"],
-            "password": registered_user["password"]
-        }
-    )
-
-    assert response.status_code == 200
-
-    return {
-        "user_id": registered_user["user_id"],
-        "client": client,
-        "email": registered_user["email"],
-        "username": registered_user["username"],
-        "access_token": response.get_json()["data"]["access_token"]
-    }
-
-
-@fixture()
-def second_logged_in_user(client, second_registered_user):
-    response = client.post(
-        "/v1/auth/login",
-        json={
-            "email": second_registered_user["email"],
-            "password": second_registered_user["password"]
-        }
-    )
-
-    assert response.status_code == 200
-
-    return {
-        "user_id": second_registered_user["user_id"],
-        "client": client,
-        "email": second_registered_user["email"],
-        "username": second_registered_user["username"],
-        "access_token": response.get_json()["data"]["access_token"]
+        **second_registered_user,
+        **login
     }

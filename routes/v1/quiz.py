@@ -1,4 +1,3 @@
-import logging
 from flask import g, jsonify
 
 from services.legacy.quiz_service import generate_quiz
@@ -12,9 +11,6 @@ from . import v1_bp
 
 # Get the settings object
 settings = get_settings()
-
-# Set up logging
-logger = logging.getLogger(__name__)
 
 @v1_bp.post("/quiz")
 @limiter.limit(settings.QUIZ_RATE_LIMIT, override_defaults=False)

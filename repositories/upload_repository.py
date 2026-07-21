@@ -1,6 +1,7 @@
 import logging
 
 from models import Notebook, Upload
+from models.enums import UploadPurpose
 from exceptions import DatabaseError
 from app.extensions import db
 
@@ -23,6 +24,42 @@ def save_upload(upload: Upload) -> None:
         logger.exception("Failed creating upload")
         db.session.rollback()
         raise DatabaseError("Failed to create upload")
+    
+
+def get_all_uploads_by_notebook_id(
+        notebook_id: str,
+        user_id: str,
+        purpose: UploadPurpose,
+        limit: int,
+        offset: int
+) -> list[Upload]:
+    """
+    Retrieve all uploads under a notebook.
+
+    Returns:
+        List of uploads if notebook found otherwise empty list.
+    """
+
+    query = (
+        db.select(Upload)
+        .join(Notebook)
+        .where(
+            Notebook.id == notebook_id,
+            Notebook.user_id == user_id
+        )
+        .order_by(
+            Upload.uploaded_at.desc()
+        )
+        .limit(limit)
+        .offset(offset)
+    )
+
+    if purpose is not None and purpose != "all":
+        query = query.where(
+            Upload.upload_purpose == purpose
+        )
+
+    return db.session.scalars(query).all()
 
 
 def get_upload_by_upload_id(

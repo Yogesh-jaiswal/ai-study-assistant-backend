@@ -1,0 +1,79 @@
+{
+  "exam_name": "Standard Certification Examination",
+  "description": "A professional certification assessment designed to evaluate practical knowledge and decision-making through scenario-based questions, case studies, multiple-choice, multi-select, and specialized interactive question formats. Focuses on real-world application rather than descriptive writing.",
+  "total_marks": 100,
+  "duration": "2 hours",
+  "navigation_rules": {
+    "allow_cross_section_navigation": true,
+    "has_sectional_timers": false,
+    "is_computer_adaptive": false
+  },
+  "sections": [
+    {
+      "section_name": "Professional Knowledge Assessment",
+      "total_marks": 100,
+      "question_groups": [
+        {
+          "group_title": "Scenario-Based Multiple Choice",
+          "selection_rule": {
+            "type": "all"
+          },
+          "resource": {
+            "resource_type": "passage"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q1-Q20",
+              "count": 20,
+              "marks": 2
+            }
+          ]
+        },
+        {
+          "group_title": "Case Study Multi-Select",
+          "selection_rule": {
+            "type": "all"
+          },
+          "resource": {
+            "resource_type": "passage"
+          },
+          "defaults": {
+            "question_type": "MultiSelect",
+            "answer_type": "multiple_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q21-Q30",
+              "count": 10,
+              "marks": 3
+            }
+          ]
+        },
+        {
+          "group_title": "Interactive Professional Tasks",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Custom",
+            "answer_type": "essay",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Matching",
+              "count": 6,
+              "marks": 5
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

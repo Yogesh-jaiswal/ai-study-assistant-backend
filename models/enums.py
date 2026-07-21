@@ -1,5 +1,9 @@
 from enum import Enum
 
+class UploadPurpose(str, Enum):
+    NOTES = "notes"
+    REFERENCE = "reference"
+
 class ProcessingStatus(str, Enum):
     PENDING = "pending"
     PROCESSING = "processing"
@@ -14,3 +18,14 @@ class FileTypes(str, Enum):
     MARKDOWN = "md"
     IMAGE = "img"
     YOUTUBE = "yt"
+
+class AIContentTypes(str, Enum):
+    SUMMARY = "summary"
+    QUIZ = "quiz"
+    FLASHCARDS = "flashcards"
+    MIND_MAPS = "mind_maps"
+    EXAM = "exam"
+
+class EvaluationTypes(str, Enum):
+    QUIZ = "quiz"
+    EXAM = "exam"

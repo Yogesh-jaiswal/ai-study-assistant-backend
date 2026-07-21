@@ -1,0 +1,121 @@
+{
+  "exam_name": "Standard University Examination",
+  "description": "A comprehensive university-level examination designed to evaluate conceptual understanding, analytical reasoning, numerical problem-solving, and critical writing through sectional questions, internal choices, case studies, and long-form responses.",
+  "total_marks": 100,
+  "duration": "3 hours",
+  "navigation_rules": {
+    "allow_cross_section_navigation": true,
+    "has_sectional_timers": false,
+    "is_computer_adaptive": false
+  },
+  "sections": [
+    {
+      "section_name": "Section A - Fundamentals",
+      "total_marks": 20,
+      "question_groups": [
+        {
+          "group_title": "Short Conceptual Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Subjective_Short",
+            "answer_type": "text",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q1-Q10",
+              "count": 10,
+              "marks": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Section B - Analytical & Numerical",
+      "total_marks": 40,
+      "question_groups": [
+        {
+          "group_title": "Numerical Problem Solving",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Numerical",
+            "answer_type": "numeric",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q11-Q15",
+              "count": 5,
+              "marks": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Section C - Case Studies & Essays",
+      "total_marks": 40,
+      "question_groups": [
+        {
+          "group_title": "Case Study Analysis",
+          "selection_rule": {
+            "type": "all"
+          },
+          "resource": {
+            "resource_type": "passage"
+          },
+          "defaults": {
+            "question_type": "Subjective",
+            "answer_type": "essay",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q16-Q17",
+              "count": 2,
+              "marks": 10
+            }
+          ]
+        },
+        {
+          "group_title": "Essay Question (Attempt Any One)",
+          "selection_rule": {
+            "type": "or"
+          },
+          "defaults": {
+            "question_type": "Subjective",
+            "answer_type": "essay",
+            "negative_marking": 0
+          },
+          "alternatives": [
+            {
+              "title": "Question 18",
+              "parts": [
+                {
+                  "label": "Q18",
+                  "count": 1,
+                  "marks": 20
+                }
+              ]
+            },
+            {
+              "title": "Question 19",
+              "parts": [
+                {
+                  "label": "Q19",
+                  "count": 1,
+                  "marks": 20
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

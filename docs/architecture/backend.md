@@ -6,7 +6,25 @@ The AI Study Assistant backend follows a **Layered Architecture** designed aroun
 
 Each layer has a single responsibility and communicates only with its immediate lower layer. This keeps business logic isolated from HTTP handling, persistence, and infrastructure-specific code while making the codebase easier to extend and maintain.
 
-The backend is implemented as a modular monolith, allowing new features to be added without large-scale refactoring.
+The backend is implemented as a feature-oriented modular monolith. Each feature owns its routes, services, validators, generators, and persistence logic while sharing common infrastructure such as authentication, AI providers, Celery, retrieval, and persistence utilities.
+
+---
+
+## Feature-Oriented Organization
+
+Business features are organized into independent modules.
+
+Each feature owns its own:
+
+* Routes
+* Validators
+* Services
+* Jobs
+* Schemas
+* AI generators or evaluators
+* Persistence logic
+
+Shared infrastructure such as authentication, AI providers, Celery, storage, and retrieval remains centralized and reusable across all features.
 
 ---
 
@@ -14,17 +32,13 @@ The backend is implemented as a modular monolith, allowing new features to be ad
 
 ```
 Client
-    │
-    ▼
+    ↓
 Routes
-    │
-    ▼
+    ↓
 Services
-    │
-    ▼
+    ↓
 Repositories
-    │
-    ▼
+    ↓
 Database
 ```
 
@@ -64,6 +78,7 @@ Responsibilities include:
 * Performing business validations
 * Scheduling background jobs
 * Coordinating AI features
+* Creating execution contexts for asynchronous workflows
 
 The majority of application logic belongs here.
 
@@ -120,21 +135,19 @@ Typical workflow:
 
 ```
 Route
-
-↓
-
+    ↓
 Service
-
-↓
-
+    ↓
+Validator
+    ↓
 Celery Task
-
-↓
-
-Service
-
-↓
-
+    ↓
+Loader
+    ↓
+Bundle
+    ↓
+Job
+    ↓
 Repository
 ```
 
@@ -160,29 +173,17 @@ Typical request flow:
 
 ```
 Client
-
 ↓
-
 Before Request Middleware
-
 ↓
-
 Route
-
 ↓
-
 Service
-
 ↓
-
 Repository
-
 ↓
-
 After Request Middleware
-
 ↓
-
 Response
 ```
 
@@ -213,6 +214,21 @@ Additional rules:
 * Logging is available throughout the application.
 * Error handlers remain independent and may catch exceptions from any layer.
 * Route decorators are only used within the routing layer.
+
+---
+
+## Feature Jobs
+
+Feature Jobs provide an orchestration layer between asynchronous Celery tasks and feature-specific workflows.
+
+Responsibilities include:
+* Executing feature workflows
+* Receiving fully prepared bundles
+* Coordinating generators or evaluators
+* Performing feature-specific post-processing
+* Preparing persistence objects
+
+Feature Jobs allow Celery workers to remain generic while feature implementations evolve independently.
 
 ---
 
@@ -247,7 +263,9 @@ Reusable functionality should exist once and be shared throughout the applicatio
 Examples include:
 
 * Authentication helpers
-* AI generators
+* AI infrastructure
+* Generation Bundles
+* Evaluation Bundles
 * File processing pipeline
 * Retrieval pipeline
 
@@ -259,10 +277,11 @@ New features should be implemented by extending the architecture instead of modi
 
 Examples include:
 
-* New AI generators
+* New AI generators and generation workflows
 * New retrieval strategies
 * New file processors
 * Additional AI providers
+* New asynchronous feature workflows
 
 ---
 
@@ -303,6 +322,8 @@ The emphasis is on writing maintainable software rather than optimizing prematur
 
 * [Authentication Architecture](authentication.md)
 * [AI Architecture](ai.md)
+* [Attempt Architecture](attempts.md)
 * [Retrieval Architecture](retrieval.md)
 * [Database Architecture](database.md)
 * [Celery Architecture](celery.md)
+* [File Processing Architecture](file_processing.md)

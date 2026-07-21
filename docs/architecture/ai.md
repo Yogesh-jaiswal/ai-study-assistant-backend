@@ -1,13 +1,27 @@
-# AI Architecture
+# AI Infrastructure
 
 ## Overview
 
 The AI layer provides a reusable infrastructure for all AI-powered features in the backend. Its purpose is to isolate provider-specific logic from business logic while allowing new AI features to be implemented with minimal changes to the underlying infrastructure.
 
-The architecture follows the same layered philosophy as the rest of the backend:
+The infrastructure follows the same layered philosophy as the rest of the backend:
 
 ```
-Feature
+Route
+    ↓
+Generation Service
+    ↓
+Generation Context
+    ↓
+Generation Validator
+    ↓
+Celery Task
+    ↓
+Bundle Loader
+    ↓
+GenerationBundle
+    ↓
+Generation Job
     ↓
 Generator
     ↓
@@ -15,9 +29,7 @@ Prompt
     ↓
 AI Engine
     ↓
-AI Provider
-    ↓
-Validated Response
+Provider
 ```
 
 Business features never communicate directly with AI providers. Instead, every request passes through the AI Engine, which selects the configured provider and returns a validated response.
@@ -52,9 +64,9 @@ Example:
 ```
 services/
     summaries/
-        generator.py
+        summar_generator.py
         summary_prompt.py
-        response_schema.py
+        summary_schema.py
 ```
 
 The feature owns everything specific to its business logic.
@@ -75,9 +87,102 @@ The generator contains no provider-specific code.
 
 ---
 
+### Generation Jobs
+
+Generation Jobs act as orchestration adapters between Celery tasks and individual AI feature generators.
+
+Responsibilities:
+
+* Receive generation context
+* Receive job options
+* Convert GenerationBundle into prompt-ready context
+* Invoke the correct feature generator
+* Pass provider-specific testing options to the AI Engine when required
+* Return normalized AI content
+
+Generation Jobs act as the execution boundary between Celery and individual AI features. They encapsulate feature-specific generation options while keeping Celery unaware of business logic.
+---
+
+### Feature-specific Post-processing
+
+Some AI features require post-processing after generation.
+
+For example, exam generation merges AI-generated question content into a predefined blueprint before persistence.
+
+This post-processing remains inside the feature's AI Job rather than the AI Engine, ensuring infrastructure remains independent of business logic.
+
+---
+
+### Generation Context
+
+Every AI generation request first creates a `GenerationContext`.
+
+The GenerationContext contains identifiers for every resource required during generation rather than the resources themselves.
+
+Current supported resources include:
+
+* Notes
+* Reference papers
+* Exam blueprints
+
+Additional resource types can be introduced without changing feature generators.
+
+The GenerationContext travels through the asynchronous pipeline until it reaches the Celery worker.
+
+---
+
+### Resource Validation
+
+Before loading any resources, the Celery worker validates the GenerationContext.
+
+Validation includes:
+
+* Resource existence
+* Ownership and access control
+* Processing status
+* Resource type compatibility
+
+Only validated resources proceed to the loading stage.
+
+---
+
+### Resource Assembly
+
+After validation, resources are loaded and converted into a provider-independent `GenerationBundle`.
+
+The GenerationBundle contains prompt-ready resources rather than database models.
+
+Current resource types include:
+
+* Notes
+* Reference papers
+* Exam blueprints
+
+Generators remain completely unaware of how resources are stored or retrieved and only consume the GenerationBundle.
+
+This separation allows additional resource types to be introduced without modifying generators.
+
+---
+
 ### Prompt
 
-Every feature owns its own prompt.
+Prompts receive a normalized `GenerationBundle` rather than individual resources.
+
+Example:
+
+```
+Resources:
+
+Notes:
+...
+
+---
+
+References:
+...
+```
+
+Then each feature uses this context build its own prompt.
 
 Examples:
 
@@ -98,10 +203,12 @@ Each feature defines its own Pydantic response schema.
 
 Example:
 
-```
+```text
 SummaryResponse
-ChatResponse
 QuizResponse
+FlashcardResponse
+MindMapResponse
+ExamResponse
 ```
 
 Response schemas serve multiple purposes:
@@ -134,12 +241,13 @@ The engine knows nothing about:
 * Mind maps
 * Business logic
 
-Its only inputs are:
+Its inputs are:
 
 * Prompt
 * Response schema
+* Job options
 
-This separation allows new AI features to be added without modifying the engine.
+The AI Engine treats job options as opaque metadata and forwards them directly to the selected provider without interpreting them.
 
 ---
 
@@ -159,7 +267,7 @@ Future providers may include:
 * Ollama
 * LM Studio
 
-Providers are registered inside the engine and remain completely independent of business features.
+Providers may optionally consume provider-specific job options. Unknown options should be ignored, allowing feature-specific testing behavior without affecting production providers.
 
 -> Current registration is static. A provider registration system may be introduced during a future architecture refactor.
 
@@ -170,6 +278,8 @@ Providers are registered inside the engine and remain completely independent of 
 The Fake Provider exists to support testing and local development.
 
 Instead of manually maintaining fake responses for every feature, it automatically generates valid responses directly from the supplied Pydantic response schema.
+
+For features requiring deterministic test behavior (such as generating a fixed number of quiz questions), optional provider-specific job options may be supplied. These options are ignored by production providers but allow the Fake Provider to generate predictable test data without introducing feature-specific logic into the AI Engine.
 
 Benefits:
 
@@ -207,7 +317,7 @@ These improvements belong to the infrastructure layer and should not affect busi
 
 ## Extensibility
 
-The current architecture is expected to support most future AI features such as:
+The current architecture is designed to support independent AI features while allowing each feature to introduce its own prompts, response schemas, post-processing, and resource requirements without modifying shared infrastructure.
 
 * Summaries
 * Chat
@@ -250,8 +360,25 @@ These workflows extend the AI infrastructure rather than replacing it.
 
 The AI infrastructure should remain generic.
 
-Business logic belongs to individual AI features.
+Business features own:
 
-Providers belong to the infrastructure.
+* Prompts
+* Response schemas
+* Generation Jobs
+* Post-processing logic
 
-Neither layer should know about the other beyond the prompt and response schema contract.
+The infrastructure owns:
+
+* Resource validation
+* Resource loading
+* AI Engine
+* Providers
+
+The only contract between both layers is:
+
+* GenerationBundle
+* Prompt
+* Response schema
+* Job options
+
+This separation allows new AI capabilities to be introduced without modifying the underlying AI infrastructure.

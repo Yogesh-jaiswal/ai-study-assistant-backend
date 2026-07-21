@@ -1,0 +1,109 @@
+{
+  "exam_name": "Standard School Examination",
+  "description": "A traditional school examination designed to assess foundational knowledge, conceptual understanding, and written expression through a balanced mix of objective and subjective questions. Suitable for periodic tests, half-yearly, annual, and board-style examinations.",
+  "total_marks": 80,
+  "duration": "2 hours",
+  "navigation_rules": {
+    "allow_cross_section_navigation": true,
+    "has_sectional_timers": false,
+    "is_computer_adaptive": false
+  },
+  "sections": [
+    {
+      "section_name": "Question Paper",
+      "total_marks": 80,
+      "question_groups": [
+        {
+          "group_title": "Multiple Choice Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q1-Q10",
+              "count": 10,
+              "marks": 1
+            }
+          ]
+        },
+        {
+          "group_title": "Fill in the Blanks",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "FillBlank",
+            "answer_type": "text",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q11-Q15",
+              "count": 5,
+              "marks": 1
+            }
+          ]
+        },
+        {
+          "group_title": "True or False",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "TrueFalse",
+            "answer_type": "boolean",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q16-Q20",
+              "count": 5,
+              "marks": 1
+            }
+          ]
+        },
+        {
+          "group_title": "Short Answer Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Subjective_Short",
+            "answer_type": "text",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q21-Q30",
+              "count": 10,
+              "marks": 3
+            }
+          ]
+        },
+        {
+          "group_title": "Long Answer Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Subjective",
+            "answer_type": "essay",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q31-Q34",
+              "count": 4,
+              "marks": 10
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -26,7 +26,7 @@ def register_endpoint():
                 RegistrationResponse(
                 id = user.id,
                 email = user.email,
-                message = "User registered successfully"
+                message = "user registered successfully"
             ).model_dump()
         )
     ), 201

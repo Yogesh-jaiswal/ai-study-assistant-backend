@@ -1,0 +1,37 @@
+{
+  "exam_name": "Test Blueprint",
+  "description": "Blueprint used exclusively for automated integration tests.",
+  "total_marks": 10,
+  "duration": "10 minutes",
+  "navigation_rules": {
+    "allow_cross_section_navigation": true,
+    "has_sectional_timers": false,
+    "is_computer_adaptive": false
+  },
+  "sections": [
+    {
+      "section_name": "Test Section",
+      "total_marks": 10,
+      "question_groups": [
+        {
+          "group_title": "Multiple Choice Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q1-Q5",
+              "count": 5,
+              "marks": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .notebook import Notebook
     from .refresh_token import RefreshToken
+    from .exam_blueprint import ExamBlueprint
 
 class User(db.Model):
     __tablename__ = "users"
@@ -43,3 +44,4 @@ class User(db.Model):
 
     refresh_tokens: Mapped[list["RefreshToken"]] = db.relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan", lazy="raise_on_sql")
     notebooks: Mapped[list["Notebook"]] = db.relationship("Notebook", back_populates="user", cascade="all, delete-orphan", lazy="raise_on_sql")
+    blueprints:  Mapped[list["ExamBlueprint"]] = db.relationship("ExamBlueprint", back_populates="user", cascade="all, delete-orphan", lazy="raise_on_sql")

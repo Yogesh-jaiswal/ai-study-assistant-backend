@@ -1,0 +1,68 @@
+{
+  "exam_name": "Joint Entrance Examination (JEE) Main - Paper 1",
+  "description": "Computer Based Test (CBT) for B.E. / B.Tech Admissions",
+  "duration": "3 hours",
+  "total_marks": 300,
+  "navigation_rules": {
+    "allow_cross_section_navigation": true,
+    "has_sectional_timers": false,
+    "is_computer_adaptive": false
+  },
+
+  "sections": [
+    {
+      "section_name": "Mathematics",
+      "total_marks": 100,
+      "question_groups": [
+        {
+          "group_title": "Section A: Multiple Choice Questions",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
+          "parts": [{ "label": "Q01-Q20", "count": 20, "marks": 4 }]
+        },
+        {
+          "group_title": "Section B: Numerical Value Questions",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "Numerical", "answer_type": "numeric", "negative_marking": 1 },
+          "parts": [{ "label": "Q21-Q25", "count": 5, "marks": 4 }]
+        }
+      ]
+    },
+    {
+      "section_name": "Physics",
+      "total_marks": 100,
+      "question_groups": [
+        {
+          "group_title": "Section A: Multiple Choice Questions",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
+          "parts": [{ "label": "Q26-Q45", "count": 20, "marks": 4 }]
+        },
+        {
+          "group_title": "Section B: Numerical Value Questions",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "Numerical", "answer_type": "numeric", "negative_marking": 1 },
+          "parts": [{ "label": "Q46-Q50", "count": 5, "marks": 4 }]
+        }
+      ]
+    },
+    {
+      "section_name": "Chemistry",
+      "total_marks": 100,
+      "question_groups": [
+        {
+          "group_title": "Section A: Multiple Choice Questions",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
+          "parts": [{ "label": "Q51-Q70", "count": 20, "marks": 4 }]
+        },
+        {
+          "group_title": "Section B: Numerical Value Questions",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "Numerical", "answer_type": "numeric", "negative_marking": 1 },
+          "parts": [{ "label": "Q71-Q75", "count": 5, "marks": 4 }]
+        }
+      ]
+    }
+  ]
+}

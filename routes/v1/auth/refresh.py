@@ -34,7 +34,7 @@ def refresh_endpoint():
             LoginResponse(
                 access_token = new_access_token,
                 expires_in = settings.ACCESS_TOKEN_MINUTES * 60,
-                message = "Re login successful"
+                message = "re login successful"
             ).model_dump()
         )
     )

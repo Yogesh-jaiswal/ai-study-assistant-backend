@@ -40,6 +40,7 @@ class BaseAppSettings(BaseSettings):
     SUMMARY_RATE_LIMIT: str = Field(default="10/minute")
     QUIZ_RATE_LIMIT: str = Field(default="5/minute")
     ASK_RATE_LIMIT: str = Field(default="15/minute")
+    AI_CONTENT_RATE_LIMIT: str = Field(default="15/minute")
 
     # Database Settings
     DATABASE_URL: str = Field(default="sqlite:///study_assistant.db")
@@ -82,8 +83,11 @@ class BaseAppSettings(BaseSettings):
     # Embedding Settings
     EMBEDDINGS_MODEL: str = Field(default="all-MiniLM-L6-v2") # <- Consider changing it to this multilingual model "paraphrase-multilingual-MiniLM-L12-v2" for multi language support
 
-    # Database query settings
+    # Database Query Settings
     MIN_SIMILARITY: float = Field(default=0.4)
+
+    # Pagination Settings
+    MAX_LIMIT: int = Field(default=100, gt=0)
     
     model_config = SettingsConfigDict(
         env_file=".env",

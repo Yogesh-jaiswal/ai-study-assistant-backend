@@ -1,8 +1,8 @@
-def create_summary_prompt(topic: str, notes: str) -> str:
+def create_summary_prompt(resources: str) -> str:
     """Creates a prompt for generating a summary of the given topic and notes."""
     return f"""
-        Topic: {topic}
-        Notes: {notes}
+        Resources: 
+        {resources}
 
         Do the following:
         1. Summarize the notes
@@ -16,4 +16,6 @@ def create_summary_prompt(topic: str, notes: str) -> str:
 
         STRICT RULES:
         - No explanations
+        - Do not implement facts on your own.
+        - Use the provided notes as base knowledge source.
     """

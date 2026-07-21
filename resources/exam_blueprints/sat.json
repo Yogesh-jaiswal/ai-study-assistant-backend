@@ -1,0 +1,31 @@
+{
+  "exam_name": "Digital SAT",
+  "description": "An internationally recognized digital university entrance exam that implements an adaptive testing engine to dynamically alter the question group difficulty mid-test.",
+  "total_marks": 1600,
+  "duration": "2 hours 14 minutes",
+  "navigation_rules": {
+    "allow_cross_section_navigation": false,
+    "has_sectional_timers": true,
+    "is_computer_adaptive": true
+  },
+  "sections": [
+    {
+      "section_name": "Reading and Writing Module",
+      "sectional_duration": "64 minutes",
+      "question_groups": [
+        {
+          "group_title": "Stage 1: Routing Module",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 0 },
+          "parts": [{ "label": "M1-Questions", "count": 27, "marks": 0 }] 
+        },
+        {
+          "group_title": "Stage 2: Adaptive Module (Determined at Runtime)",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 0 },
+          "parts": [{ "label": "M2-Questions-Dynamic", "count": 27, "marks": 0 }]
+        }
+      ]
+    }
+  ]
+}

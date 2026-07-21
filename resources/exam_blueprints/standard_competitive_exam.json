@@ -1,0 +1,85 @@
+{
+  "exam_name": "Standard Competitive Examination",
+  "description": "A high-volume objective examination designed for large-scale competitive assessments. Supports multiple sections, negative marking, extensive question banks, and optional computer-adaptive delivery while emphasizing speed, accuracy, and problem-solving.",
+  "total_marks": 200,
+  "duration": "3 hours",
+  "navigation_rules": {
+    "allow_cross_section_navigation": true,
+    "has_sectional_timers": false,
+    "is_computer_adaptive": true
+  },
+  "sections": [
+    {
+      "section_name": "Reasoning & Aptitude",
+      "total_marks": 60,
+      "question_groups": [
+        {
+          "group_title": "Objective Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "Q1-Q30",
+              "count": 30,
+              "marks": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Quantitative & Numerical Ability",
+      "total_marks": 60,
+      "question_groups": [
+        {
+          "group_title": "Mixed Objective Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Numerical",
+            "answer_type": "numeric",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "Q31-Q60",
+              "count": 30,
+              "marks": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "General Knowledge & Subject Knowledge",
+      "total_marks": 80,
+      "question_groups": [
+        {
+          "group_title": "Multiple Choice Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "Q61-Q100",
+              "count": 40,
+              "marks": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

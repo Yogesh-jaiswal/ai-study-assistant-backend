@@ -34,7 +34,7 @@ def login_endpoint():
             LoginResponse(
                 access_token = access_token,
                 expires_in = settings.ACCESS_TOKEN_MINUTES * 60,
-                message = "Log in successful"
+                message = "log in successful"
             ).model_dump()
         )
     )

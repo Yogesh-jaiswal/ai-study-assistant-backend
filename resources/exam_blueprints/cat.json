@@ -1,0 +1,34 @@
+{
+  "exam_name": "Common Admission Test (CAT)",
+  "description": "A high-stakes management test that activates automated, sequential section-locking controls alongside zero-negative-marking input fields.",
+  "total_marks": 198,
+  "duration": "2 hours",
+  "navigation_rules": {
+    "allow_cross_section_navigation": false,
+    "has_sectional_timers": true,
+    "is_computer_adaptive": false
+  },
+  "sections": [
+    {
+      "section_name": "Verbal Ability and Reading Comprehension (VARC)",
+      "sectional_duration": "40 minutes",
+      "question_groups": [
+        {
+          "group_title": "Reading Comprehension Passages",
+          "selection_rule": { "type": "all" },
+          "shared_material": {
+            "type": "passage"
+          },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
+          "parts": [{ "label": "RC-Questions", "count": 16, "marks": 3 }]
+        },
+        {
+          "group_title": "Verbal Ability TITA (Type In The Answer)",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "SubjectiveShort", "answer_type": "text", "negative_marking": 0 },
+          "parts": [{ "label": "TITA-Questions", "count": 8, "marks": 3 }]
+        }
+      ]
+    }
+  ]
+}

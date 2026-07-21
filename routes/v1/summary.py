@@ -1,4 +1,3 @@
-import logging
 from flask import g, jsonify
 
 from services.legacy.summary_service import generate_summary
@@ -12,9 +11,6 @@ from . import v1_bp
 
 # Get the settings object
 settings = get_settings()
-
-# Set up logging
-logger = logging.getLogger(__name__)
 
 @v1_bp.post("/summarize")
 @limiter.limit(settings.SUMMARY_RATE_LIMIT, override_defaults=False)

@@ -1,0 +1,31 @@
+{
+  "exam_name": "NEET-UG",
+  "description": "A medical entry exam featuring high-volume biological questions alongside an optional choice layout where candidates pick exactly 10 out of 15 questions in Section B.",
+  "total_marks": 720,
+  "duration": "3 hours 20 minutes",
+  "navigation_rules": {
+    "allow_cross_section_navigation": true,
+    "has_sectional_timers": false,
+    "is_computer_adaptive": false
+  },
+  "sections": [
+    {
+      "section_name": "Physics",
+      "total_marks": 180,
+      "question_groups": [
+        {
+          "group_title": "Section A",
+          "selection_rule": { "type": "all" },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
+          "parts": [{ "label": "Q01-Q35", "count": 35, "marks": 4 }]
+        },
+        {
+          "group_title": "Section B",
+          "selection_rule": { "type": "choose_n", "count": 10 },
+          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
+          "parts": [{ "label": "Q36-Q50", "count": 15, "marks": 4 }]
+        }
+      ]
+    }
+  ]
+}
