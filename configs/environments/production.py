@@ -8,7 +8,8 @@ def get_production_overrides() -> dict[str, Any]:
         "AI_MODEL": "GEMINI",
         "RATELIMIT_ENABLED": True,
         "LIMITER_STORAGE_URI": "redis://localhost:6379/0",
-        "ACCESS_TOKEN_MINUTES": 15
+        "ACCESS_TOKEN_MINUTES": 15,
+        "POSTGRES_DB": "ai_study_assistant_prod"
     }
 
     return overrides

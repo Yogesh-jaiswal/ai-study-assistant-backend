@@ -7,6 +7,13 @@ from services.integrations.ocr_service import OCR
 
 from .base_processor import BaseProcessor
 
+from models.enums import DocumentBlockType
+
+from services.file_processors.document.doc_representation import (
+    DocumentBlock,
+    DocumentRepresentation
+)
+
 MIN_TEXT_THRESHOLD = 120
 MIN_IMAGE_COVERAGE = 0.7
 OCR_DPI = 250
@@ -16,30 +23,36 @@ class PDFProcessor(BaseProcessor):
     def __init__(self):
         self.ocr = OCR()
         
-    def extract_text(self, file_path: str | Path) -> str:
-        output = []
-        seen = set()
+    def extract(self, file_path: str | Path) -> DocumentRepresentation:
+        blocks = []
+        seen: set[str] = set()
 
         with pymupdf.open(file_path) as doc:
-            for page in doc:
-                blocks = self._process_page(page)
+            pdf_metadata = doc.metadata
 
-                for block in blocks:
-                    block = block.strip()
-                    if block and block not in seen:
-                        seen.add(block)
-                        output.append(block)
+            for page_number, page in enumerate(doc, start=1):
+                for block in self._process_page(page):
+                    text = block.text.strip()
 
-        return "\n\n".join(output)
+                    if not text or text in seen:
+                        continue
+
+                    seen.add(text)
+                    block.text = text
+                    block.metadata.setdefault("page", page_number)
+                    blocks.append(block)
+
+        return DocumentRepresentation(
+            author=pdf_metadata.get("author") or None,
+            blocks=blocks,
+        )
     
-    def _process_page(self, page) -> list[str]:
+    def _process_page(self, page) -> list[DocumentBlock]:
         page_dict = page.get_text("dict")
 
-        text_length = self._text_length(page_dict)
-
-        if text_length >= MIN_TEXT_THRESHOLD:
+        if self._text_length(page_dict) >= MIN_TEXT_THRESHOLD:
             return self._extract_text(page, page_dict)
-        
+
         return self._extract_ocr(page, page_dict)
     
     @staticmethod
@@ -59,7 +72,7 @@ class PDFProcessor(BaseProcessor):
                     
         return total
     
-    def _extract_text(self, page, page_dict) -> list[str]:
+    def _extract_text(self, page, page_dict) -> list[DocumentBlock]:
         tables = page.find_tables().tables
         table_rects = [pymupdf.Rect(table.bbox) for table in tables]
 
@@ -68,7 +81,6 @@ class PDFProcessor(BaseProcessor):
         output.extend(self._extract_tables(tables))
 
         for block in page_dict["blocks"]:
-
             if block["type"] != 0:
                 continue
 
@@ -84,30 +96,39 @@ class PDFProcessor(BaseProcessor):
             ).strip()
 
             if text:
-                output.append(text)
+                output.append(
+                    DocumentBlock(
+                        type=DocumentBlockType.PARAGRAPH,
+                        text=text,
+                        metadata={},
+                    )
+                )
 
         return output
     
-    def _extract_tables(self, tables) -> list[str]:
+    def _extract_tables(self, tables) -> list[DocumentBlock]:
         output = []
 
         for table in tables:
             rows = table.extract()
 
             text = "\n".join(
-                " | ".join(
-                    (cell or "").strip() 
-                    for cell in row
-                ) 
+                " | ".join((cell or "").strip() for cell in row)
                 for row in rows
             ).strip()
 
             if text:
-                output.append(text)
+                output.append(
+                    DocumentBlock(
+                        type=DocumentBlockType.TABLE,
+                        text=text,
+                        metadata={},
+                    )
+                )
 
         return output
     
-    def _extract_ocr(self, page, page_dict) -> list[str]:
+    def _extract_ocr(self, page, page_dict) -> list[DocumentBlock]:
         page_rect = page.rect
         page_area = page_rect.width * page_rect.height
 
@@ -144,4 +165,13 @@ class PDFProcessor(BaseProcessor):
         
         text = self.ocr.extract_text(img)
 
-        return [text] if text else []
+        if not text:
+            return []
+
+        return [
+            DocumentBlock(
+                type=DocumentBlockType.OCR,
+                text=text,
+                metadata={},
+            )
+        ]

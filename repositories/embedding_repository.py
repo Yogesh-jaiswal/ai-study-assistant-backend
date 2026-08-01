@@ -61,8 +61,22 @@ def get_embeddings_by_notebook(notebook_id: str, user_id: str) -> list[ChunkEmbe
                 Notebook.user_id == user_id,
             )
             .options(
-                db.load_only(ChunkEmbedding.id, ChunkEmbedding.vector),
-                db.joinedload(ChunkEmbedding.chunk).load_only(DocumentChunk.content),
+                db.load_only(
+                    ChunkEmbedding.id,
+                    ChunkEmbedding.vector,
+                ),
+                db.joinedload(ChunkEmbedding.chunk)
+                    .load_only(
+                        DocumentChunk.content,
+                        DocumentChunk.block_type,
+                        DocumentChunk.chunk_metadata,
+                    )
+                    .joinedload(DocumentChunk.upload)
+                    .load_only(
+                        Upload.filename,
+                        Upload.author,
+                        Upload.source_type,
+                    )
             )
         )
         .all()
@@ -113,28 +127,46 @@ def get_embedding_by_chunk(chunk_id: str, upload_id: str, notebook_id: str, user
 
     return embeddings
 
-def search_top_k_chunks(notebook_id: str, user_id: str, query_embedding: list[float], k: int = 5) -> list[tuple[float, str]] | None:
+def retrieve_similar_chunks(
+    notebook_id: str,
+    user_id: str,
+    query_embedding: list[float],
+    k: int = 5,
+) -> list[tuple[float, DocumentChunk, Upload]] | None:
     """
-    Retrieve top k chunks of a certain notebook based on given query embeddings.
-    
+    Retrieve the top-k most similar chunks together with their upload.
+
     Returns:
-        A list of dictionaries containing 'score' and 'content', 
-        or None if PGVector is disabled.
+        List of:
+            (
+                similarity_score,
+                DocumentChunk ORM,
+                Upload ORM
+            )
+
+        Returns None when pgvector is disabled.
     """
+
     settings = get_settings()
 
     if not settings.USE_PGVECTOR:
         return None
-    
-    # Injecting local precision window parameter onto Postgres query planner
-    db.session.execute(db.text(f"SET local hnsw.ef_search = {settings.HNSW_EF_SEARCH};"))
 
-    distance_expr = ChunkEmbedding.vector.cosine_distance(query_embedding)
+    db.session.execute(
+        db.text(
+            f"SET LOCAL hnsw.ef_search = {settings.HNSW_EF_SEARCH};"
+        )
+    )
+
+    distance_expr = ChunkEmbedding.vector.cosine_distance(
+        query_embedding
+    )
 
     stmt = (
         db.select(
-            DocumentChunk.content,
-            distance_expr.label("distance")
+            DocumentChunk,
+            Upload,
+            distance_expr.label("distance"),
         )
         .join(ChunkEmbedding.chunk)
         .join(Upload)
@@ -146,15 +178,23 @@ def search_top_k_chunks(notebook_id: str, user_id: str, query_embedding: list[fl
         .order_by(distance_expr)
         .limit(k)
     )
-    
-    result = db.session.execute(stmt)
 
-    final_result = []
+    rows = db.session.execute(stmt)
 
-    for row in result:
-        score = max(0.0, 1.0 - row.distance)
+    results = []
 
-        if score >= settings.MIN_SIMILARITY:
-            final_result.append((round(score, 4), row.content))
+    for chunk, upload, distance in rows:
+        score = max(0.0, 1.0 - distance)
 
-    return final_result
+        if score < settings.MIN_SIMILARITY:
+            continue
+
+        results.append(
+            (
+                round(score, 4),
+                chunk,
+                upload,
+            )
+        )
+
+    return results

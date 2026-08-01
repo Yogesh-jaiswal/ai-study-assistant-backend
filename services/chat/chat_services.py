@@ -1,5 +1,6 @@
 from services.retrieval.similarity_search_service import SimilaritySearchService
-from services.ai.context_assembler import ContextAssembler
+from services.retrieval.context_assembler import ContextAssembler
+from services.retrieval.citation_builder import CitationBuilder
 
 from .chat_generator import ChatGenerator
 
@@ -13,17 +14,19 @@ def answer_query(notebook_id: str, user_id: str, payload: QueryRequest) -> dict[
 
     if not search_response:
         return {
-            "response":
-            "Sorry, I couldn't find the information in your notes."
+            "response": "Sorry, I couldn't find the information in your notes."
         }
 
-    context = ContextAssembler.build_context(
-        [content for _, content in search_response]
-    )
+    context = ContextAssembler.build_context(search_response)
 
     response = ChatGenerator.generate(
         question=payload.question, 
-        context=context
+        context=context.to_text()
     )
 
-    return response
+    citations = CitationBuilder.build(search_response)
+
+    return {
+        "citations": citations,
+        **response
+    }

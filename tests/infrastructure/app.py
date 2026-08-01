@@ -1,6 +1,6 @@
 from pytest import fixture
 
-from app import create_app
+from app.factory import create_app
 from app.extensions import db
 from app.commands.seed_blueprints import seed_exam_blueprints
 

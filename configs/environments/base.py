@@ -8,10 +8,10 @@ class BaseAppSettings(BaseSettings):
     # App Settings
     DEBUG: bool = Field(default=True)
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = Field(default="DEBUG")
-    ENVIRONMENT: Literal["development", "testing", "production"] = Field(default="development")
+    ENVIRONMENT: Literal["development", "testing", "production", "evaluation"] = Field(default="development")
 
     # Model Settings
-    AI_MODEL: Literal["FAKE", "GEMINI"] = Field(default="FAKE")
+    AI_MODEL: Literal["FAKE", "GEMINI"] = Field(default="GEMINI")
     MODEL_API_KEY: str | None = Field(default=None)
     MODEL_NAME: str = Field(default="gemini-2.0-flash")
 
@@ -43,10 +43,26 @@ class BaseAppSettings(BaseSettings):
     AI_CONTENT_RATE_LIMIT: str = Field(default="15/minute")
 
     # Database Settings
-    DATABASE_URL: str = Field(default="sqlite:///study_assistant.db")
+    POSTGRES_HOST: str
+    POSTGRES_PORT: int
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = Field(default=False)
     USE_PGVECTOR: bool = Field(default=False)
     HNSW_EF_SEARCH: int = Field(default=100)
+
+    @computed_field
+    @property
+    def DATABASE_URL(self) -> str:
+        return (
+            "postgresql+psycopg://"
+            f"{self.POSTGRES_USER}:"
+            f"{self.POSTGRES_PASSWORD}@"
+            f"{self.POSTGRES_HOST}:"
+            f"{self.POSTGRES_PORT}/"
+            f"{self.POSTGRES_DB}"
+        )
 
     # Upload Settings
     MAX_CONTENT_LENGTH: int = Field(default=10485760) # 10 MB

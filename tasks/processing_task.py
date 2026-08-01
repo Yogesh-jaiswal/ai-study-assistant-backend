@@ -124,10 +124,17 @@ def process_file(self, notebook_id: str, user_id: str, upload_id: str):
 
         # Save embeddinbgs into the database
         chunk_ids = [chunk.id for chunk in created_chunks]
-        bulk_create_embeddings(chunk_ids, processed_file.embeddings)
+        bulk_create_embeddings(
+            chunk_ids,
+            [
+                chunk.embedding
+                for chunk in processed_file.chunks
+            ]
+        )
 
         # Set file processing status to completed
-        fresh_upload.raw_text = processed_file.cleaned_text
+        fresh_upload.raw_text = processed_file.document.to_text()
+        fresh_upload.author = processed_file.document.author
         fresh_upload.processing_status = ProcessingStatus.COMPLETED
 
         db.session.commit() # commit once to prevent race conditions

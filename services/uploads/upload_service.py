@@ -108,6 +108,7 @@ def get_all_uploads(notebook_id: str, user_id: str, purpose: UploadPurpose | Non
         {
             "id": upload.id,
             "filename": upload.filename,
+            "author": upload.author,
             "source_type": upload.source_type.value,
             "upload_purpose": upload.upload_purpose.value,
             "processing_status": upload.processing_status.value,
@@ -134,6 +135,7 @@ def get_upload(notebook_id: str, user_id: str, upload_id: str) -> dict[str, Any]
     return {
         "id": upload.id,
         "filename": upload.filename,
+        "author": upload.author,
         "source_type": upload.source_type.value,
         "upload_purpose": upload.upload_purpose.value,
         "processing_status": upload.processing_status.value,

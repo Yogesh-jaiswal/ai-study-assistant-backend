@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What is Retrieval-Augmented Generation?",
+    "expected_output": "Retrieval-Augmented Generation combines information retrieval with language generation to produce grounded responses."
+  },
+  {
+    "question": "Which extension enables vector similarity search in PostgreSQL?",
+    "expected_output": "The pgvector extension enables efficient vector similarity search inside PostgreSQL."
+  },
+  {
+    "question": "Why is token-aware chunking useful?",
+    "expected_output": "Token-aware chunking respects the embedding model's token limits while preserving overlapping context between neighboring chunks."
+  },
+  {
+    "question": "Name three common NLP tasks.",
+    "expected_output": "Examples include text summarization, machine translation, question answering, sentiment analysis, and named entity recognition."
+  },
+  {
+    "question": "What is the purpose of Celery?",
+    "expected_output": "Celery executes long-running work asynchronously using a distributed task queue."
+  }
+]

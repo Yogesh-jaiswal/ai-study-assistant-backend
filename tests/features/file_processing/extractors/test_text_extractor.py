@@ -4,9 +4,9 @@ from services.file_processors.extractors.txt_processor import TextProcessor
 def test_extract_text(resource_dir):
     processor = TextProcessor()
 
-    text = processor.extract_text(
+    text = processor.extract(
         resource_dir / "sample.txt"
-    )
+    ).to_text()
 
     assert isinstance(text, str)
     assert len(text) > 100

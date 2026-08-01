@@ -1,5 +1,3 @@
-from .factory import create_app
+# app/__init__.py
 
-__all__ = [
-    "create_app"
-]
+__all__ = []

@@ -11,8 +11,8 @@ def test_extract_image(monkeypatch, resource_dir):
 
     processor = ImageProcessor()
 
-    text = processor.extract_text(
+    text = processor.extract(
         resource_dir / "sample.jpg"
-    )
+    ).to_text()
 
     assert text == "Mock OCR"

@@ -19,10 +19,9 @@ def test_extract_youtube(monkeypatch):
 
     processor = yt_processor.YouTubeProcessor()
 
-    text = processor.extract_text(
+    text = processor.extract(
         "https://www.youtube.com/watch?v=dQw4w9WgXcQ" # <- If you have find it don't open it
-    )
-
-    assert "Test Video" in text
+    ).to_text()
+    
     assert "Description" in text
     assert "Hello World" in text

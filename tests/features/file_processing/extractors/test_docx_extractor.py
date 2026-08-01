@@ -10,9 +10,9 @@ def test_extract_docx(monkeypatch, resource_dir):
 
     processor = DOCXProcessor()
 
-    text = processor.extract_text(
+    text = processor.extract(
         resource_dir / "sample.docx"
-    )
+    ).to_text()
 
     assert "AI Study Assistant" in text
     assert "TXT | ✅ | Supported" in text

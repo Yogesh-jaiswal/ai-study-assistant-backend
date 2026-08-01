@@ -1,6 +1,6 @@
 import logging
 
-from app import create_app
+from app.factory import create_app
 from configs import get_settings
 
 # Get the settings object

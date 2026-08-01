@@ -29,3 +29,13 @@ class AIContentTypes(str, Enum):
 class EvaluationTypes(str, Enum):
     QUIZ = "quiz"
     EXAM = "exam"
+
+class DocumentBlockType(str, Enum):
+    PARAGRAPH = "paragraph"
+    HEADING = "heading"
+    TABLE = "table"
+    OCR = "ocr"
+    CODE = "code"
+    LIST = "list"
+    TRANSCRIPT = "transcript"
+    DESCRIPTION = "description"

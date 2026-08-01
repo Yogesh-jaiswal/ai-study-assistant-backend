@@ -34,4 +34,4 @@ class GeminiProvider:
         )
 
         
-        response.parsed.model_dump()
+        return response.parsed.model_dump()

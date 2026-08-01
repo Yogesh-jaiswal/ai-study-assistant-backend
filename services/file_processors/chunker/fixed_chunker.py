@@ -1,4 +1,6 @@
-class FixedSizeChunker:
+from .base_chunker import BaseChunker
+
+class FixedSizeChunker(BaseChunker):
     """Divide the given text into given fixed size separate chunks."""
 
     def __init__(self, chunk_size: int = 500, overlap: int= 100):

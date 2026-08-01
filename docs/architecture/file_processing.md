@@ -2,30 +2,35 @@
 
 ## Overview
 
-The file processing layer is responsible for transforming uploaded learning resources into a normalized representation that can be consumed by the retrieval pipeline.
+The file processing layer transforms uploaded learning resources into a normalized document representation that can be consumed by the retrieval pipeline.
 
-Rather than treating every supported file format differently, the backend converts every resource into a common processed representation consisting of:
+Instead of treating every supported file format as plain text, each processor converts its source into a structured document composed of semantic blocks.
 
-* Cleaned text
-* Chunks
-* Embeddings
+Every supported source ultimately becomes:
 
-This allows the retrieval layer to remain completely independent of the original document format.
+```
+DocumentRepresentation
+│
+├── Document Author (Optional)
+└── Document Blocks
+```
 
-The file processing pipeline is executed asynchronously using Celery.
+This allows downstream systems to operate on a common representation regardless of the original document format.
+
+The complete processing pipeline executes asynchronously using Celery.
 
 ---
 
-## Design Goals
+# Design Goals
 
-The processing architecture follows these principles:
+The processing architecture was designed around several principles:
 
-* Support multiple document formats through a common interface.
-* Normalize every resource into the same internal representation.
-* Keep extraction independent from persistence.
-* Make new file formats easy to introduce.
-* Isolate format-specific logic.
-* Reuse the same retrieval pipeline regardless of document type.
+- Support multiple document formats through a common interface.
+- Preserve document structure whenever possible.
+- Keep extraction independent from persistence.
+- Separate document parsing from chunk generation.
+- Allow new file formats to be added without changing the processing pipeline.
+- Generate embeddings from semantic document blocks rather than raw files.
 
 ---
 
@@ -35,81 +40,53 @@ Every uploaded resource follows the same high-level workflow.
 
 ```
 Upload
-
-↓
-
+    ↓
 File Type Detection
-
-↓
-
+    ↓
 Processor Selection
-
-↓
-
-Text Extraction
-
-↓
-
-Text Cleaning
-
-↓
-
-Chunk Generation
-
-↓
-
+    ↓
+Document Extraction
+    ↓
+Document Representation
+    ↓
+Document Chunking
+    ↓
 Embedding Generation
-
-↓
-
+    ↓
 Database Persistence
 ```
 
-The retrieval layer only operates on the processed output and never interacts with raw uploaded files.
+The retrieval layer never operates directly on uploaded files.
+
+It only interacts with processed chunks stored in the database.
 
 ---
 
 # Processing Flow
 
-The complete processing workflow spans multiple architectural layers.
+The complete workflow spans multiple architectural layers.
 
 ```
 Route
-
-↓
-
+    ↓
 Upload Service
-
-↓
-
+    ↓
 Celery Task
-
-↓
-
+    ↓
 File Processor
-
-↓
-
-Processed File
-
-↓
-
+    ↓
 Repositories
-
-↓
-
+    ↓
 Database
 ```
 
-Each component owns a single responsibility.
+Each layer owns a single responsibility.
 
 ---
 
 # File Type Detection
 
-The upload layer determines the document type before processing begins.
-
-Detection is performed using the uploaded file extension.
+The upload layer determines the processor using the uploaded source type.
 
 Example:
 
@@ -118,292 +95,255 @@ notes.pdf
 
 ↓
 
-.pdf
+FileTypes.PDF
 
 ↓
 
-FileTypes.PDF
+PDFProcessor
 ```
 
-This step converts external file formats into an internal file type representation used throughout the backend.
+This converts external file formats into a common internal representation used throughout the backend.
 
 ---
 
 # Processor Registry
 
-After identifying the file type, processing is delegated through a registry.
+Concrete processors are resolved through a registry.
 
 ```
 FileType
-
-↓
-
+    ↓
 Processor Registry
-
-↓
-
+    ↓
 Concrete Processor
 ```
 
-Example:
+Supported processors include:
 
-```
-FileTypes.PDF
-        ↓
-PDFProcessor
+- PDF Processor
+- DOCX Processor
+- Markdown Processor
+- Text Processor
+- CSV Processor
+- Image Processor
+- YouTube Processor
 
-FileTypes.DOCX
-        ↓
-DOCXProcessor
-
-FileTypes.IMAGE
-        ↓
-ImageProcessor
-```
-
-The registry removes conditional logic from the processing pipeline and allows new processors to be added without modifying existing orchestration code.
+Adding support for new formats only requires implementing and registering another processor.
 
 ---
 
-# Processor Architecture
+# Document Representation
 
-Every processor implements the same processing interface.
+Every processor produces a common document representation.
+
+```
+DocumentRepresentation
+│
+├── author (optional)
+│
+└── blocks
+      ├── type
+      ├── text
+      └── metadata
+```
+
+The representation preserves document semantics before any retrieval-specific processing occurs.
+
+Processors no longer return plain text.
+
+---
+
+# Document Blocks
+
+Every document is divided into logical blocks.
+
+Current block types include:
+
+- Paragraph
+- Heading
+- Table
+- Code
+- List
+- OCR
+- Transcript
+- Description
+
+Each block stores:
+
+- semantic block type
+- extracted text
+- block-specific metadata
+
+Metadata varies by source.
 
 Examples include:
 
-* PDF Processor
-* DOCX Processor
-* Markdown Processor
-* Text Processor
-* CSV Processor
-* Image Processor
-* YouTube Processor
-
-Each processor is responsible only for understanding its own document format.
-
-The orchestration layer remains unaware of format-specific implementation details.
-
----
-
-# Normalized Output
-
-Regardless of the original resource, every processor produces the same logical result.
+PDF
 
 ```
-Processed File
-
-├── cleaned_text
-├── chunks
-└── embeddings
+page
 ```
 
-This normalized representation allows every downstream system to operate on a common structure.
+CSV
 
-The retrieval pipeline therefore does not need to distinguish between PDFs, images, markdown documents, or videos.
+```
+row_range
+```
+
+YouTube
+
+```
+start
+end
+```
+
+The metadata intentionally remains flexible rather than forcing every document type into a fixed schema.
 
 ---
 
 # OCR Support
 
-Images are treated as first-class learning resources.
-
-The image processor performs Optical Character Recognition (OCR) before entering the normal processing pipeline.
+Images are processed using OCR before entering the document representation.
 
 ```
 Image
-
-↓
-
+    ↓
 OCR
-
-↓
-
-Extracted Text
-
-↓
-
-Chunk Generation
-
-↓
-
-Embeddings
+    ↓
+OCR Block
+    ↓
+Document Representation
 ```
 
-Once OCR completes, images become indistinguishable from text-based documents.
+OCR output is treated the same as any other document block.
 
 ---
 
-# Chunk Generation
+# Document Chunking
 
-After text extraction and cleaning, documents are divided into smaller semantic units.
+After extraction, document blocks are converted into retrieval chunks.
 
-```
-Cleaned Text
+The chunker operates on document structure rather than raw text.
 
-↓
+Oversized blocks are tokenized and divided using the token-aware chunker while preserving metadata.
 
-Chunk Generator
+Certain block types remain intact.
 
-↓
+Current non-splittable blocks include:
 
-Chunks
-```
+- Headings
+- Tables
 
-Chunking prepares documents for embedding generation and retrieval.
-
-The current implementation uses the project's retrieval pipeline for chunk generation.
-
-Future chunking strategies may evolve independently without affecting document processors.
+Every resulting chunk preserves the metadata of its originating block together with retrieval metadata such as token ranges and chunk indices.
 
 ---
 
 # Embedding Generation
 
-Each generated chunk is converted into a vector representation.
+Each chunk is converted into a vector representation.
 
 ```
 Chunks
-
-↓
-
+    ↓
 Embedding Model
-
-↓
-
+    ↓
 Embeddings
 ```
 
-Embeddings are stored separately from chunks and power semantic retrieval.
+Embeddings are generated independently from document extraction.
 
-Processors themselves never generate or persist embeddings directly.
+Processors themselves never communicate with embedding providers.
 
 ---
 
 # Persistence Separation
 
-Processors never communicate with the database.
+Processors never communicate directly with the database.
 
-Instead, processors return a normalized processed representation.
+Instead they return a normalized document representation.
 
 ```
 Processor
-
-↓
-
-Processed File
-
-↓
-
+    ↓
+Document Representation
+    ↓
+Document Chunker
+    ↓
 Repositories
-
-↓
-
+    ↓
 Database
 ```
 
-This separation provides several advantages:
-
-* Easier testing
-* Better modularity
-* Clear separation of concerns
-* Reusable processors
-
-Processing logic remains independent from persistence.
+This separation keeps extraction reusable and independently testable.
 
 ---
 
 # Asynchronous Execution
 
-Processing is performed asynchronously using Celery.
-
-This prevents expensive extraction and embedding operations from blocking HTTP requests.
+Processing executes inside Celery workers.
 
 Typical workflow:
 
 ```
 Upload Request
-
-↓
-
+    ↓
 Upload Service
-
-↓
-
+    ↓
 Celery Task
-
-↓
-
-Extraction
-
-↓
-
-Chunking
-
-↓
-
-Embedding
-
-↓
-
+    ↓
+Document Extraction
+    ↓
+Document Chunking
+    ↓
+Embedding Generation
+    ↓
 Persistence
 ```
 
-The client receives immediate feedback while processing continues in the background.
+The upload request returns immediately while processing continues in the background.
 
 ---
 
 # Supported Resource Types
 
-Each processed upload is assigned a resource purpose.
+Current supported sources include:
 
-Current purposes include:
+- Plain Text (.txt)
+- Markdown (.md)
+- Microsoft Word (.docx)
+- PDF
+- CSV
+- Images (OCR)
+- YouTube Videos
 
-- Notes
-- Reference Papers
-
-The processing pipeline itself is identical regardless of purpose. Resource purpose is consumed later during AI context assembly rather than during file extraction.
-
-The current processing pipeline supports:
-
-* Plain Text (.txt)
-* Markdown (.md)
-* Microsoft Word (.docx)
-* PDF Documents
-* CSV Files
-* Images (OCR)
-* YouTube Videos
-
-Every supported source is ultimately converted into the same normalized representation before downstream AI workflows.
+Every supported source ultimately produces the same document representation before entering retrieval.
 
 ---
 
 # Error Handling
 
-Failures during processing are isolated to the affected upload.
+Processing failures remain isolated to the affected upload.
 
 The processing task is responsible for:
 
-* Updating processing status
-* Recording sanitized error messages
-* Rolling back failed transactions
-* Preventing partial persistence
+- updating processing status
+- recording sanitized error messages
+- rolling back failed transactions
+- preventing partial persistence
 
-This ensures processing failures do not leave inconsistent database state.
+This ensures failed processing never leaves inconsistent database state.
 
 ---
 
 # Extensibility
 
-Adding support for a new resource type generally requires:
+Supporting a new document type generally requires:
 
-1. Define a new FileType.
+1. Add a new `FileType`.
 2. Implement a processor.
 3. Register the processor.
-4. Register the upload extension if applicable.
 
-The orchestration pipeline remains unchanged.
-
-This minimizes modifications when introducing additional document sources.
+No changes are required to the chunker, embedding generation, or retrieval pipeline.
 
 ---
 
@@ -411,28 +351,26 @@ This minimizes modifications when introducing additional document sources.
 
 Potential future enhancements include:
 
-* Document-aware chunking
-* Token-aware chunking
-* Advanced OCR
-* Table extraction
-* Presentation parsing
-* Spreadsheet structure understanding
-* Audio transcription
-* Multi-document ingestion
-* Incremental document updates
+- Structure-aware PDF parsing
+- Better OCR pipelines
+- Spreadsheet understanding
+- Presentation parsing
+- Audio transcription
+- Multi-document ingestion
+- Incremental document updates
 
-These improvements extend the processing layer while preserving the existing pipeline.
+These improvements extend the extraction layer without affecting downstream retrieval.
 
 ---
 
 # Guiding Principle
 
-Every supported resource should be transformed into normalized text before entering the retrieval pipeline.
+Processors understand document formats.
 
-Format-specific complexity belongs inside processors.
+The document representation preserves document structure.
 
-Extraction belongs to the processing layer.
+The document chunker prepares content for retrieval.
 
-Persistence belongs to repositories.
+Repositories persist processed chunks.
 
-Retrieval operates only on normalized processed content.
+The retrieval pipeline operates only on normalized document chunks.

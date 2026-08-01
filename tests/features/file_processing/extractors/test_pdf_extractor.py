@@ -11,8 +11,8 @@ def test_extract_pdf(monkeypatch, resource_dir):
 
     processor = PDFProcessor()
 
-    text = processor.extract_text(
+    text = processor.extract(
         resource_dir / "sample.pdf"
-    )
+    ).to_text()
 
     assert "AI Study Assistant" in text

@@ -32,6 +32,12 @@ class Upload(db.Model):
         nullable=False
     )
 
+    author: Mapped[str] = mapped_column(
+        db.String(255),
+        nullable=True,
+        default= lambda: None
+    )
+
     file_path: Mapped[str] = mapped_column(
         db.String,
         nullable=False

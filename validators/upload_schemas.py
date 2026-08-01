@@ -15,6 +15,7 @@ class FileUploadedResponse(BaseModel):
 class FileMetadataResponse(BaseModel):
     id: str = Field(..., description="Unique identifier for the uploaded file")
     filename: str = Field(..., description="Name of the uploaded file")
+    author: str | None = Field(default=None, description="Author of the uploaded file")
     source_type: FileTypes = Field(..., description="Type of the uploaded file")
     upload_purpose: UploadPurpose = Field(..., description="Purpose of the uploaded file")
     processing_status: ProcessingStatus = Field(..., description="Current processing status of the uploaded file")

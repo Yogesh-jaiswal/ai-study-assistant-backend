@@ -5,7 +5,7 @@ def get_testing_overrides() -> dict[str, Any]:
     overrides = {
         "DEBUG": False,
         "LOG_LEVEL": "ERROR",
-        "DATABASE_URL": "sqlite:///test.db",
+        "POSTGRES_DB": "ai_study_assistant_test",
         "USE_PGVECTOR": False,
         "RATELIMIT_ENABLED": False,
         "AI_MODEL": "FAKE",

@@ -4,8 +4,9 @@ try:
 except LookupError:
     import nltk
     nltk.download("punkt_tab")
+from .base_chunker import BaseChunker
 
-class SentenceChunker:
+class SentenceChunker(BaseChunker):
     """Divided the given text into sentence based separate chunks."""
 
     def __init__(self, max_sentences: int = 3, overlap_sentences: int = 1):

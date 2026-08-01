@@ -8,7 +8,7 @@ from app.extensions import db
 logger = logging.getLogger(__name__)
 
 
-def create_chunk(upload_id: str, chunk_content: str, idx: int) -> None:
+def create_chunk(upload_id: str, chunk, idx: int) -> None:
     """
     Persist a chunk to the database.
 
@@ -17,9 +17,11 @@ def create_chunk(upload_id: str, chunk_content: str, idx: int) -> None:
     """
     chunk = DocumentChunk(
         upload_id=upload_id,
-        content=chunk_content,
-        chunk_index=idx
-    )
+        content=chunk.text,
+        chunk_index=idx,
+        block_type=chunk.block.type,
+        chunk_metadata=chunk.metadata
+    ) 
 
     db.session.add(chunk)
 
@@ -30,16 +32,18 @@ def create_chunk(upload_id: str, chunk_content: str, idx: int) -> None:
         db.session.rollback()
         raise DatabaseError("Failed to create chunk")
 
-def bulk_create_chunks(upload_id: str, chunk_contents: list[str]) -> list[DocumentChunk]:
+def bulk_create_chunks(upload_id: str, chunks: list) -> list[DocumentChunk]:
     """
     Persist multiple chunks to the database at once.
     """
     chunks = [
         DocumentChunk(
             upload_id=upload_id,
-            content=chunk_content,
-            chunk_index=idx
-        ) for idx, chunk_content in enumerate(chunk_contents)
+            content=chunk.text,
+            chunk_index=idx,
+            block_type=chunk.block.type,
+            chunk_metadata=chunk.metadata
+        ) for idx, chunk in enumerate(chunks)
     ]
 
     db.session.add_all(chunks)

@@ -67,18 +67,6 @@ jobs:
           done
           "
 
-      - name: Start Celery Worker
-        if: matrix.mode == 'async'
-        run: |
-          celery -A app.worker worker --pool=solo --loglevel=info > celery.log 2>&1 &
-
-          timeout 180 bash -c '
-          until celery -A app.worker inspect ping
-          do
-            sleep 2
-          done
-          '
-
       - name: Run Sync Tests
         if: matrix.mode == 'sync'
         run: |

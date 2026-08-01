@@ -6,6 +6,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.extensions import db
 from typing import TYPE_CHECKING
 
+from .enums import DocumentBlockType
+
 if TYPE_CHECKING:
     from .upload import Upload
     from .chunk_embeddings import ChunkEmbedding
@@ -29,8 +31,18 @@ class DocumentChunk(db.Model):
         nullable=False
     )
 
+    block_type: Mapped[DocumentBlockType] = mapped_column(
+        db.Enum(DocumentBlockType),
+        nullable=False
+    )
+
     content: Mapped[str] = mapped_column(
         db.Text,
+        nullable=False
+    )
+
+    chunk_metadata: Mapped[dict] = mapped_column(
+        db.JSON,
         nullable=False
     )
 

@@ -12,7 +12,7 @@ RESOURCE_DIR = (
     / "uploads"
 )
 
-SAMPLE_FILE = RESOURCE_DIR / "sample.txt"
+SAMPLE_FILE = RESOURCE_DIR / "sample.md"
 ONE_FILE = RESOURCE_DIR / "one.txt"
 TWO_FILE = RESOURCE_DIR / "two.txt"
 MALWARE_FILE = RESOURCE_DIR / "malware.exe"

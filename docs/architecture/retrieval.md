@@ -1,50 +1,49 @@
 # Retrieval Architecture
 
-## Purpose
+## Overview
 
 The retrieval pipeline is responsible for locating the most relevant information from a notebook before sending it to an AI model.
 
-Instead of allowing the language model to answer directly from its own knowledge, the backend first retrieves relevant notebook content and injects that context into the prompt. This improves factual accuracy while grounding responses in the user's uploaded material.
+Instead of allowing the language model to answer directly from its own knowledge, the backend first retrieves relevant notebook content and injects that context into the prompt. This grounds every response in the user's uploaded material and reduces hallucinations.
+The retrieval system is completely independent from the AI generation infrastructure.
 
-The retrieval system is designed as an independent backend capability dedicated to notebook question answering.
-It is responsible for locating the most relevant notebook content before passing that context to the AI generator.
-
-Other AI features such as summaries, flashcards, quizzes, and future learning workflows use the independent AI generation architecture described in [ai.md](ai.md) and do not currently depend on the retrieval pipeline.
+Other AI features such as summaries, flashcards, quizzes, exams, and mind maps use the generic AI generation architecture described in [ai.md](ai.md) and do not depend on retrieval.
 
 ---
 
 # Design Philosophy
 
-The retrieval pipeline follows a staged architecture where each component has a single responsibility.
+The retrieval pipeline follows a staged architecture where every component owns exactly one responsibility.
 
 ```text
 User Query
     ↓
-Generate Query Embedding
+Query Embedding
     ↓
 Similarity Search
     ↓
-Top-K Relevant Chunks
+Retrieved Chunks
     ↓
 Context Assembly
     ↓
-Generator
-    ↓
 Prompt Builder
     ↓
-AI Engine
+AI Generator
+    ↓
+Citation Builder
     ↓
 Final Response
 ```
 
-Each stage only knows about its immediate responsibility.
+Each stage only knows about its own responsibility.
 
 For example:
 
-* Embedding generation does not know how retrieval works.
-* Retrieval does not know how prompts are built.
-* Context assembly does not know how the AI model generates responses.
-* AI generation does not know how vectors were retrieved.
+- Embedding generation does not know how retrieval works.
+- Retrieval does not know how prompts are built.
+- Context assembly does not know how responses are generated.
+- Citation generation does not know how retrieval is implemented.
+- AI generation never receives citation information.
 
 This separation allows every stage to evolve independently.
 
@@ -55,13 +54,14 @@ This separation allows every stage to evolve independently.
 The current implementation performs the following steps:
 
 1. Receive the user's question.
-2. Generate an embedding for the question.
-3. Perform vector similarity search.
-4. Filter results using a minimum similarity threshold.
-5. Return the Top-K most relevant chunks.
-6. Assemble retrieved chunks into a single context block.
-7. Send the context to the AI generator.
-8. Generate the grounded response.
+2. Generate a query embedding.
+3. Perform similarity search.
+4. Filter results using the configured similarity threshold.
+5. Return the Top-K retrieved chunks.
+6. Assemble the retrieved chunks into prompt-ready context.
+7. Generate the AI response.
+8. Build citations from the retrieved chunks.
+9. Return both the response and citations.
 
 Only notebook content participates in retrieval.
 
@@ -69,31 +69,105 @@ No external knowledge sources are currently used.
 
 ---
 
-# Document Chunking
+# Document Processing
 
-Uploaded documents are divided into smaller semantic chunks before embeddings are generated.
+Before retrieval, uploaded resources are converted into a structured document representation.
 
-The current implementation uses sentence-aware chunking based on NLTK.
+```text
+Uploaded File
+        ↓
+Document Processor
+        ↓
+Document Representation
+        ↓
+Document Chunker
+        ↓
+Token Chunker (when required)
+        ↓
+Embedding Generation
+        ↓
+Vector Storage
+```
 
-Configuration:
+Unlike the original implementation, retrieval no longer operates on plain text.
 
-* Sentence tokenizer: `nltk.sent_tokenize`
-* Default maximum sentences per chunk: **3**
-* Default overlap: **1 sentence**
-
-The overlap improves retrieval continuity by preserving context between neighboring chunks.
+Every document processor produces a structured representation that preserves logical document blocks.
 
 ---
 
-# Chunk Metadata
+# Document Representation
 
-Each chunk currently stores only the metadata required for retrieval.
+Every uploaded resource is represented as:
+
+```text
+Document
+│
+├── Metadata
+│
+└── Blocks
+      │
+      ├── Paragraph
+      ├── Heading
+      ├── Table
+      ├── OCR
+      ├── Code
+      ├── List
+      ├── Transcript
+      └── Description
+```
+
+Each block contains:
+
+- Block type
+- Block text
+- Document-specific metadata
+
+The metadata depends on the document source.
+
+Examples include:
+
+| Source | Metadata |
+|---------|----------|
+| PDF | page |
+| CSV | row_range |
+| YouTube | start, end |
+| TXT | none |
+| DOCX | none |
+| Image | none |
+
+The retrieval pipeline preserves this metadata throughout chunking, retrieval, and citation generation.
+
+---
+
+# Chunking
+
+Chunking operates on document blocks instead of raw text.
+
+Small blocks remain unchanged.
+
+Large blocks are split using token-aware chunking while preserving the original block metadata.
+
+Each produced chunk stores:
+
+- chunk index
+- block type
+- block metadata
+- chunk content
+
+This allows retrieval to preserve document structure while remaining compatible with embedding model limits.
+
+---
+
+# Chunk Storage
+
+Every chunk stores only the information required during retrieval.
 
 ```text
 Chunk
-├── chunk_id
 ├── upload_id
 ├── chunk_index
+├── block_type
+├── metadata
 └── content
 ```
 
@@ -105,7 +179,7 @@ Embedding
 └── vector
 ```
 
-Keeping embeddings separate avoids mixing large vector data with document metadata while simplifying future embedding model migrations.
+Separating embeddings from chunk data keeps the document model lightweight while allowing future embedding model migrations.
 
 ---
 
@@ -113,7 +187,7 @@ Keeping embeddings separate avoids mixing large vector data with document metada
 
 Both notebook chunks and user queries use the same embedding model.
 
-Current workflow:
+Document workflow:
 
 ```text
 Document
@@ -125,7 +199,7 @@ Embedding Generation
 Vector Storage
 ```
 
-For user queries:
+Query workflow:
 
 ```text
 Question
@@ -141,24 +215,30 @@ Using the same embedding model for both documents and queries ensures comparable
 
 # Similarity Search
 
-Similarity search is performed against the vector database.
+Similarity search retrieves the most relevant chunks for a user query.
 
-The retrieval service currently receives:
+The retrieval service receives:
 
-* User ID
-* Notebook ID
-* Query
-* Top-K value
+- User ID
+- Notebook ID
+- Query
+- Top-K value
 
-The retrieval layer filters results using a minimum similarity threshold before returning the most relevant chunks.
+The retrieval layer:
 
-Notebook ownership is always enforced before retrieval to prevent cross-user access.
+- generates the query embedding
+- performs vector similarity search
+- filters low-confidence matches
+- enforces notebook ownership
+- returns retrieved chunks together with upload information and similarity scores
+
+The retrieval service itself remains independent of prompt generation.
 
 ---
 
 # Context Assembly
 
-After retrieval, the selected chunks are assembled into a single context block.
+After retrieval, the selected chunks are assembled into prompt-ready context.
 
 Current implementation:
 
@@ -174,32 +254,75 @@ Chunk 2
 Chunk 3
 ```
 
-The current assembler intentionally remains simple.
+The context assembler intentionally performs no ranking or modification.
 
-Its only responsibility is combining retrieved chunks into a prompt-ready context while preserving retrieval order.
+Its only responsibility is converting retrieved chunks into prompt-ready text while preserving retrieval order.
+
+---
+
+# Prompt Generation
+
+The prompt builder combines:
+
+- system instructions
+- user question
+- assembled notebook context
+
+The notebook context is treated as untrusted user content.
+
+Instructions that appear inside uploaded documents are ignored and treated as ordinary notebook text.
+
+---
+
+# Citation Builder
+
+After the AI response is generated, citations are constructed from the retrieved chunks.
+
+Each citation combines:
+
+- upload filename
+- upload author
+- upload source type
+- document-specific metadata
+
+Duplicate citations are removed before returning the response.
+
+Current citation examples include:
+
+```text
+os.pdf
+page: 9
+```
+
+or
+
+```text
+house_prices.csv
+row_range: 0-50
+```
+
+The AI model never receives citation information.
+
+Citation generation is entirely independent from response generation.
 
 ---
 
 # Grounded Responses
 
-The retrieval pipeline is designed to minimize hallucinations.
-
-Rather than allowing unrestricted generation, AI prompts explicitly instruct the model to answer using the supplied notebook context.
-
-If relevant information cannot be found, the AI should acknowledge the absence of supporting context instead of inventing facts.
+The retrieval pipeline minimizes hallucinations by grounding every response in retrieved notebook content. The prompt explicitly instructs the language model to answer only from the supplied context and refuse when the required information is unavailable.
 
 ---
 
 # Future Improvements
 
-The retrieval architecture is intentionally extensible.
+The current retrieval pipeline intentionally remains simple.
 
-Planned improvements include:
+Potential future improvements include:
 
-* Advanced chunk metadata
-* Token-aware chunking
-* Metadata-aware context assembly
-* Source citations
-* Retrieval evaluation metrics
-
-These improvements will enhance retrieval quality without requiring architectural changes to the overall pipeline.
+- Cross-encoder reranking
+- Hybrid keyword + vector search
+- Multi-query retrieval
+- Context compression
+- Parent-document retrieval
+- Retrieval evaluation metrics
+- Adaptive Top-K selection

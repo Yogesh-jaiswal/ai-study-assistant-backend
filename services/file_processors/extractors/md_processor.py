@@ -1,37 +1,77 @@
+import logging
 from pathlib import Path
 
 from markdown_it import MarkdownIt
 
 from .base_processor import BaseProcessor
 
+from models.enums import DocumentBlockType
+
+from services.file_processors.document.doc_representation import (
+    DocumentBlock,
+    DocumentRepresentation
+)
+
+logging.getLogger("markdown_it").setLevel(logging.WARNING)
+logging.getLogger("markdown_it.rules_block").setLevel(logging.WARNING)
+
 class MarkdownProcessor(BaseProcessor):
     """Markdown file processor"""
+
     def __init__(self):
         self.md = MarkdownIt()
-        
-    def extract_text(self, file_path: str | Path) -> str:
+
+    def extract(self, file_path: str | Path) -> DocumentRepresentation:
         with open(file_path, "r", encoding="utf-8") as file:
             tokens = self.md.parse(file.read())
-            return self._extract_text_from_tokens(tokens)
+
+        return DocumentRepresentation(
+            blocks=self._extract_blocks(tokens),
+        )
 
     @staticmethod
-    def _extract_text_from_tokens(tokens):
-        lines = []
+    def _extract_blocks(tokens) -> list[DocumentBlock]:
+        blocks = []
+
+        current_type = DocumentBlockType.PARAGRAPH
+        in_list = False
+
         for token in tokens:
-            if token.type == "inline" and token.content.strip():
-                lines.append(token.content)
+            match token.type:
+                case "heading_open":
+                    current_type = DocumentBlockType.HEADING
 
-            elif token.type in (
-                "paragraph_close",
-                "heading_close",
-                "blockquote_close",
-                "bullet_list_close",
-                "ordered_list_close"
-            ):
-                lines.append("")
+                case "paragraph_open":
+                    current_type = (
+                        DocumentBlockType.LIST
+                        if in_list
+                        else DocumentBlockType.PARAGRAPH
+                    )
 
-            elif token.type in ("code_block", "fence"):
-                lines.append(token.content)
-                lines.append("")
-                
-        return "\n".join(lines).strip()
+                case "bullet_list_open" | "ordered_list_open":
+                    in_list = True
+
+                case "bullet_list_close" | "ordered_list_close":
+                    in_list = False
+
+                case "inline":
+                    text = token.content.strip()
+
+                    if text:
+                        blocks.append(
+                            DocumentBlock(
+                                type=current_type,
+                                text=text,
+                            )
+                        )
+
+                case "code_block" | "fence":
+                    if token.content.strip():
+                        blocks.append(
+                            DocumentBlock(
+                                type=DocumentBlockType.CODE,
+                                text=token.content,
+                            )
+                        )
+
+        return blocks

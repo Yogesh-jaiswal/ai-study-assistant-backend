@@ -1,3 +1,11 @@
+from dataclasses import dataclass
+
+@dataclass
+class FakeChunk:
+    text: str
+    start: float
+    duration: float
+
 class FakeYDL:
     def __enter__(self):
         return self
@@ -10,6 +18,7 @@ class FakeYDL:
             "id": "123",
             "title": "Test Video",
             "description": "Description",
+            "uploader": "Test Channel",
         }
 
 
@@ -17,8 +26,8 @@ class FakeTranscript:
 
     def fetch(self):
         return [
-            type("Chunk", (), {"text": "Hello"})(),
-            type("Chunk", (), {"text": "World"})(),
+            FakeChunk("Hello World", 0.0, 1.5),
+            FakeChunk("This is a fake extractor", 1.5, 2.0),
         ]
 
 

@@ -11,7 +11,7 @@ from .yt_processor import YouTubeProcessor
 
 from exceptions import UnsupportedFileTypeError
 
-class TextExtractor:
+class DocumentProcessorFactory:
     PROCESSORS = {
         FileTypes.TXT: TextProcessor,
         FileTypes.MARKDOWN: MarkdownProcessor,
@@ -28,7 +28,7 @@ class TextExtractor:
         if test_mode:
             time.sleep(0) # Simulate a delay for testing purposes
 
-        processor_class = TextExtractor.PROCESSORS.get(file_type)
+        processor_class = DocumentProcessorFactory.PROCESSORS.get(file_type)
 
         if not processor_class:
             raise UnsupportedFileTypeError(f"Unsupported file type {file_type}")

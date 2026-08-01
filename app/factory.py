@@ -8,6 +8,7 @@ from configs.logging_config import configure_logging
 import app.extensions as ext
 from app.commands.seed_blueprints import seed_exam_blueprints_command
 from configs import get_settings
+from sqlalchemy.engine import URL
 import models
 
 def create_app():

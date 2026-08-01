@@ -26,7 +26,7 @@ def uploaded_file(
     upload = upload_builder.upload(
         notebook_id=created_notebook["notebook_id"],
         access_token=created_notebook["access_token"],
-        file_path=RESOURCE_DIR / "sample.txt",
+        file_path=RESOURCE_DIR / "sample.md",
     )
 
     return {
@@ -44,7 +44,7 @@ def second_uploaded_file(
     upload = upload_builder.upload(
         notebook_id=second_created_notebook["notebook_id"],
         access_token=second_created_notebook["access_token"],
-        file_path=RESOURCE_DIR / "sample.txt",
+        file_path=RESOURCE_DIR / "sample.md",
     )
 
     return {

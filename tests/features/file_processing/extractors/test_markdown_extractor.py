@@ -4,9 +4,9 @@ from services.file_processors.extractors.md_processor import MarkdownProcessor
 def test_extract_markdown(resource_dir):
     processor = MarkdownProcessor()
 
-    text = processor.extract_text(
+    text = processor.extract(
         resource_dir / "sample.md"
-    )
+    ).to_text()
 
     assert isinstance(text, str)
 
