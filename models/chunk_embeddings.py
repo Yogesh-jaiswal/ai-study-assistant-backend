@@ -1,11 +1,8 @@
 import uuid
-import json
 from datetime import datetime
 from sqlalchemy import (
     func,
     Index,
-    TypeDecorator,
-    Text
 )
 from sqlalchemy.orm import Mapped, mapped_column
 from pgvector.sqlalchemy import Vector

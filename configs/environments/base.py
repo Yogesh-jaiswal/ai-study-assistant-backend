@@ -43,11 +43,11 @@ class BaseAppSettings(BaseSettings):
     AI_CONTENT_RATE_LIMIT: str = Field(default="15/minute")
 
     # Database Settings
-    POSTGRES_HOST: str
-    POSTGRES_PORT: int
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
+    POSTGRES_HOST: str = Field(default="localhost")
+    POSTGRES_PORT: int = Field(default=5432)
+    POSTGRES_USER: str = Field(default="postgres")
+    POSTGRES_PASSWORD: str = Field(default="postgres")
+    POSTGRES_DB: str = Field(default="ai_study_assistant")
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = Field(default=False)
     USE_PGVECTOR: bool = Field(default=False)
     HNSW_EF_SEARCH: int = Field(default=100)
