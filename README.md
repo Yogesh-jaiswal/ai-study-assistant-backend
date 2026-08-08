@@ -137,6 +137,12 @@ Example AI-generated summary returned from the retrieval pipeline.
 
 ![AI Summary](assets/screenshots/ai-summary.png)
 
+### Notebook Chat API
+
+Example of chat service with notebook.
+
+![Notebook Chat](assets/screenshots/notebook-chat.png)
+
 ---
 
 ## Technology Stack

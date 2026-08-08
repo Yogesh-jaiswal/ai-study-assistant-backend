@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - phase-5-production-readiness
   pull_request:
 
 jobs:
