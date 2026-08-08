@@ -10,7 +10,8 @@ from polyfactory.factories.pydantic_factory import ModelFactory
 
 
 class FakeProvider:
-
+    """A fake provider that generates fake data based on a given response schema."""
+    
     def generate(
         self,
         prompt: str,

@@ -5,6 +5,7 @@ from services.file_processors.document.doc_representation import DocumentBlock
 
 @dataclass(slots=True)
 class RetrievedChunk:
+    """Represents a chunk of a document that has been retrieved, including its score and associated metadata."""
     score: float
     chunk: DocumentBlock
 
@@ -15,6 +16,7 @@ class RetrievedChunk:
 
 @dataclass
 class ContextBundle:
+    """Represents a bundle of context information, including a list of retrieved chunks."""
     chunks: list[RetrievedChunk]
 
     def to_text(self) -> str:
@@ -25,6 +27,7 @@ class ContextBundle:
 
 @dataclass(frozen=True)
 class Citation:
+    """Represents a citation for a retrieved chunk, including the filename, source type, author, and associated metadata."""
     filename: str
     source_type: FileTypes
     author: str | None

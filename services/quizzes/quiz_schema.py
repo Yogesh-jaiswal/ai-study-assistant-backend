@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 
 class Option(BaseModel):
+    """Schema representing a single answer option for a multiple-choice quiz question."""
     label: str = Field(description="Display label such as A, B, C, D.")
     text: str = Field(description="Text shown to the student.")
 

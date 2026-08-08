@@ -17,6 +17,7 @@ from repositories.refresh_token_repository import (
 logger = logging.getLogger(__name__)
 
 def create_refresh_token(user_id: str) -> str:
+    """Create a new refresh token for the given user ID and store its hash in the database."""
     token = secrets.token_urlsafe(64)
 
     token_hash = hashlib.sha256(
@@ -31,6 +32,7 @@ def create_refresh_token(user_id: str) -> str:
     return token
 
 def verify_refresh_token(token: str | None) -> RefreshToken:
+    """Verify the provided refresh token and return the associated session if valid."""
     if not token:
         logger.warning("Refresh token not found")
         raise AuthenticationError("Authentication failed")
@@ -57,4 +59,5 @@ def verify_refresh_token(token: str | None) -> RefreshToken:
     return session
 
 def revoke_refresh_token(session: RefreshToken) -> None:
+    """Revoke the provided refresh token by deleting it from the database."""
     delete_refresh_token(session)

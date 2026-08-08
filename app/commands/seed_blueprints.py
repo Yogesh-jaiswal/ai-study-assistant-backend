@@ -37,7 +37,7 @@ def load_exam_blueprints() -> tuple[BlueprintSeed]:
         if not exam.is_file():
             continue
 
-        is_system = exam.name.endswith("standard_")
+        is_system = exam.name.startswith("standard_")
         is_public = not is_system
 
         blueprints.append(

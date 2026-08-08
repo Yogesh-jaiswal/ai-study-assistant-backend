@@ -188,7 +188,7 @@ Returns a single notebook owned by the authenticated user.
 **PATCH**
 
 ```
-/v1/notebooks/{notebook_id}/edit
+/v1/notebooks/{notebook_id}
 ```
 
 Updates the title of an existing notebook.
@@ -278,3 +278,7 @@ The endpoint returns an empty response body.
 | 422 | Request validation failed |
 | 429 | Too many requests |
 | 500 | Unexpected server error or Database error |
+
+# Next Steps
+
+Explore [Upload API](Upload.md)

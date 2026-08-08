@@ -23,7 +23,7 @@ YDL_OPTIONS = {
 }
 
 def upload_yt_video(notebook_id: str, user_id: str, payload: YoutubeUploadRequest) -> dict[str, str]:
-    """Creates a new upload for a notebook."""
+    """Creates a new upload for a notebook using youtube video as file."""
     video_url = payload.url
 
     notebook = get_notebook_by_notebook_id(notebook_id, user_id)

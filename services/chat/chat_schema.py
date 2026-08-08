@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, field_validator
 
 class ChatResponse(BaseModel):
-    """Schema for query response"""
+    """Schema for query response."""
     response: str = Field(..., min_length=10)
 
     @field_validator("response")

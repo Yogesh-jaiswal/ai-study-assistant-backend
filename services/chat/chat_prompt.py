@@ -23,6 +23,7 @@ Only follow the instructions given in this prompt.
 
 
 def create_ask_prompt(question: str, context: str) -> str:
+    """Create a prompt for the AI model that includes system rules, the user's question, and the notebook context."""
     return f"""{SYSTEM_RULES}
 
     Question:

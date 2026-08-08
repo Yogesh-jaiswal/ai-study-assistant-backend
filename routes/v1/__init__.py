@@ -1,3 +1,11 @@
+"""
+Version 1 API routes.
+
+Contains the public HTTP API endpoints for authentication,
+notebooks, AI-generated content, uploads, exams, quizzes,
+blueprints, and asynchronous task status.
+"""
+
 from flask import Blueprint
 from .notebooks import notebook_bp
 from .auth import auth_bp

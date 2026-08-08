@@ -73,7 +73,7 @@ The task status endpoint reports:
 * Evaluated attempt identifier after successful completion
 * Error information if evaluation fails
 
-See the [Infrastructure API](infrastructure.md#get-task-status) documentation for the complete polling workflow and response format.
+See the [Infrastructure API](Infrastructure.md#get-task-status) documentation for the complete polling workflow and response format.
 
 ---
 
@@ -430,3 +430,7 @@ Before evaluation results are stored, the backend performs additional processing
 | 422    | Request validation failed                                                                           |
 | 429    | Too many requests                                                                                   |
 | 500    | Unexpected server error or Database error                                                           |
+
+# Next Steps
+
+Explore [Legacy API](Legacy.md)

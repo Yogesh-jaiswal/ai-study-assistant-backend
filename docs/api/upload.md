@@ -76,7 +76,7 @@ The task status endpoint reports:
 - Task result after successful completion
 - Error information if the task fails
 
-See the [Infrastructure API](infrastructure.md#get-task-status) documentation for the complete polling workflow and response format.
+See the [Infrastructure API](Infrastructure.md#get-task-status) documentation for the complete polling workflow and response format.
 
 ---
 
@@ -418,3 +418,7 @@ The endpoint returns an empty response body.
 | 422    | Request validation failed                                                                                       |
 | 429    | Too many requests                                                                                               |
 | 500    | Unexpected server error or Database error                                                                       |
+
+# Next Steps
+
+Explore [Chat API](Chat.md)

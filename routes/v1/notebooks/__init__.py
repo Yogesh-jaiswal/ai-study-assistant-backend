@@ -1,3 +1,11 @@
+"""
+Notebook API routes.
+
+Provides endpoints for creating and managing notebooks,
+uploading source material, interacting with notebook content,
+and requesting AI-powered operations.
+"""
+
 from flask import Blueprint
 from .notebook_file_upload_routes import upload_bp
 from .ai_content import ai_content_bp

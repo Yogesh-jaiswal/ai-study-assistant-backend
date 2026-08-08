@@ -10,35 +10,275 @@
   },
   "sections": [
     {
-      "section_name": "Mathematics Paper",
+      "section_name": "Chinese Language",
+      "total_marks": 150,
+      "question_groups": [
+        {
+          "group_title": "Language and Reading",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "SubjectiveShort",
+            "answer_type": "text",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q01-Q10",
+              "count": 10,
+              "marks": 5
+            }
+          ]
+        },
+        {
+          "group_title": "Written Composition",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Subjective",
+            "answer_type": "essay",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Essay",
+              "count": 1,
+              "marks": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Mathematics",
       "total_marks": 150,
       "question_groups": [
         {
           "group_title": "Part 1: Single-Option MCQs",
-          "selection_rule": { "type": "all" },
-          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 0 },
-          "parts": [{ "label": "Q01-Q08", "count": 8, "marks": 5 }]
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q01-Q08",
+              "count": 8,
+              "marks": 5
+            }
+          ]
         },
         {
           "group_title": "Part 2: Multiple-Option MCQs",
-          "selection_rule": { "type": "all" },
-          "defaults": { "question_type": "MultiSelect", "answer_type": "multiple_choice", "negative_marking": 0 },
-          "parts": [{ "label": "Q09-Q12", "count": 4, "marks": 5 }]
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MultiSelect",
+            "answer_type": "multiple_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q09-Q12",
+              "count": 4,
+              "marks": 5
+            }
+          ]
         },
         {
-          "group_title": "Part 3: Fill-in-the-Blanks (NAT)",
-          "selection_rule": { "type": "all" },
-          "defaults": { "question_type": "FillBlank", "answer_type": "text", "negative_marking": 0 },
-          "parts": [{ "label": "Q13-Q16", "count": 4, "marks": 5 }]
+          "group_title": "Part 3: Fill-in-the-Blanks",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "FillBlank",
+            "answer_type": "text",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q13-Q16",
+              "count": 4,
+              "marks": 5
+            }
+          ]
         },
         {
           "group_title": "Part 4: Comprehensive Subjective Solutions",
-          "selection_rule": { "type": "all" },
-          "defaults": { "question_type": "Subjective", "answer_type": "text", "negative_marking": 0 },
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Subjective",
+            "answer_type": "essay",
+            "negative_marking": 0
+          },
           "parts": [
-            { "label": "Q17", "count": 1, "marks": 10 },
-            { "label": "Q18", "count": 1, "marks": 12 },
-            { "label": "Q19-Q22", "count": 4, "marks": 12 }
+            {
+              "label": "Q17",
+              "count": 1,
+              "marks": 10
+            },
+            {
+              "label": "Q18",
+              "count": 1,
+              "marks": 12
+            },
+            {
+              "label": "Q19-Q22",
+              "count": 4,
+              "marks": 12
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "English Language",
+      "total_marks": 150,
+      "question_groups": [
+        {
+          "group_title": "Reading and Language",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q01-Q10",
+              "count": 10,
+              "marks": 5
+            }
+          ]
+        },
+        {
+          "group_title": "Written Response",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Subjective",
+            "answer_type": "essay",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Writing Tasks",
+              "count": 1,
+              "marks": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Physics",
+      "total_marks": 150,
+      "question_groups": [
+        {
+          "group_title": "Objective Physics Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Q01-Q10",
+              "count": 10,
+              "marks": 5
+            }
+          ]
+        },
+        {
+          "group_title": "Physics Problem Solving",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Subjective",
+            "answer_type": "essay",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Long Problems",
+              "count": 5,
+              "marks": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Chemistry and Biology",
+      "total_marks": 150,
+      "question_groups": [
+        {
+          "group_title": "Chemistry Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Chemistry Questions",
+              "count": 10,
+              "marks": 5
+            }
+          ]
+        },
+        {
+          "group_title": "Biology Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Biology Questions",
+              "count": 10,
+              "marks": 5
+            }
+          ]
+        },
+        {
+          "group_title": "Integrated Science Problems",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Subjective",
+            "answer_type": "essay",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Integrated Problems",
+              "count": 2,
+              "marks": 25
+            }
           ]
         }
       ]

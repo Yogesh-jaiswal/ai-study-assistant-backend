@@ -4,6 +4,7 @@ from tests.fakes.fake_youtube_extractor import FakeYDL, FakeAPI
 
 
 def test_extract_youtube(monkeypatch):
+    """Test extracting text from a YouTube video."""
 
     monkeypatch.setattr(
         yt_processor,

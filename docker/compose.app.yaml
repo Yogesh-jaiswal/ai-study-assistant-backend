@@ -1,0 +1,59 @@
+services:
+  app:
+    image: ai-study-assistant:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+
+    container_name: ai_study_assistant_app
+
+    restart: unless-stopped
+
+    env_file:
+      - ../.env
+
+    ports:
+      - "5000:5000"
+
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    volumes:
+      - ..:/app # Development only volume
+      - ../file_uploads:/app/file_uploads
+      - ../logs:/app/logs
+      - ../keys:/app/keys
+      - huggingface_cache:/root/.cache/huggingface
+
+    command: python run.py
+
+  celery:
+    image: ai-study-assistant:latest
+
+    container_name: ai_study_assistant_celery
+
+    restart: unless-stopped
+
+    env_file:
+      - ../.env
+
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    volumes:
+      - ..:/app # Development only volume
+      - ../file_uploads:/app/file_uploads
+      - ../logs:/app/logs
+      - ../keys:/app/keys
+      - huggingface_cache:/root/.cache/huggingface
+
+    command: celery -A app.worker worker --loglevel=info
+
+volumes:
+  huggingface_cache:

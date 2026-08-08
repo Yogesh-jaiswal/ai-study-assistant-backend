@@ -22,6 +22,7 @@ from repositories.upload_repository import get_upload_by_upload_id
 
 from models.enums import ProcessingStatus, UploadPurpose
 
+# Constants for evaluation setup
 EVALUATION_EMAIL = "Evaluate123@test.com"
 EVALUATION_USERNAME = "evaluate123"
 EVALUATION_PASSWORD = "Evaluate123@"
@@ -30,6 +31,7 @@ STATE_FILE = "rag_evaluation/state.json"
 CORPUS_FILE = "rag_evaluation/corpus.md"
 
 def load_state() -> dict:
+    """Loads the evaluation state from a JSON file if it exists, otherwise returns an empty dictionary."""
     if Path(STATE_FILE).exists():
         with open(STATE_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -37,6 +39,7 @@ def load_state() -> dict:
     return {}
 
 def setup() -> tuple[Flask, dict]:
+    """Sets up the Flask application and ensures that the necessary user, notebook, and upload exist for evaluation. If they do not exist, it creates them and persists the state to a JSON file."""
     app = create_app()
 
     state = load_state()

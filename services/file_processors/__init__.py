@@ -1,7 +1,13 @@
-from typing import Literal
+"""
+Document processing services.
+
+Provides the processing infrastructure used to extract,
+chunk, and transform content from supported document sources
+before downstream AI and retrieval operations.
+"""
+
 from dataclasses import dataclass
 
-from .chunker import ChunkerFactory
 from .embeddings import EmbeddingFactory
 from .extractors import DocumentProcessorFactory
 from .document.document_chunker import DocumentChunker
@@ -9,6 +15,7 @@ from .document.doc_representation import DocumentRepresentation, DocumentBlock
 
 @dataclass
 class ProcessedChunk:
+    """Represents a chunk of a document, including the original block and its corresponding embedding."""
     block: DocumentBlock
     embedding: list[float]
 
@@ -22,10 +29,12 @@ class ProcessedChunk:
 
 @dataclass
 class ProcessedFile:
+    """Represents a processed file, including the original document representation and its corresponding chunks."""
     document: DocumentRepresentation
     chunks: list[ProcessedChunk]
 
 class FileProcessor:
+    """Processes files by extracting text, chunking it, and generating embeddings for each chunk."""
     def __init__(
             self, 
             file_type: str,

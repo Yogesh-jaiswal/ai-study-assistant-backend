@@ -16,7 +16,7 @@ settings = get_settings()
 @auth_bp.get("/logout")
 def logout_endpoint():
     """
-    Endpoint to logout the user and revoke refresh token
+    Endpoint to logout the user and revoke refresh token.
     """
     refresh_token = request.cookies.get("refresh_token")
 

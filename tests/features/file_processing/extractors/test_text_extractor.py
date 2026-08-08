@@ -2,6 +2,7 @@ from services.file_processors.extractors.txt_processor import TextProcessor
 
 
 def test_extract_text(resource_dir):
+    """Test extracting text from a text file."""
     processor = TextProcessor()
 
     text = processor.extract(

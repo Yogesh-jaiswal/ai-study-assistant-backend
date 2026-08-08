@@ -5,6 +5,7 @@ from configs.limiter import limiter
 
 __all__ = ["limiter"]
 
+# Initialize SQLAlchemy and Migrate instances for database operations
 db = SQLAlchemy()
 migrate = Migrate()
 redis_client = None

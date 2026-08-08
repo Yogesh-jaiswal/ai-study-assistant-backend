@@ -16,7 +16,7 @@ from services.auth.password_service import hash_password
 logger = logging.getLogger(__name__)
 
 def register_user(payload: RegistrationRequest) -> User:
-    """Registers a new user"""
+    """Registers a new user."""
     if get_user_by_email(payload.email):
         logger.warning(f"Registration attempt with existing email: {payload.email.lower()}")
         raise ConflictError("Registration failed")

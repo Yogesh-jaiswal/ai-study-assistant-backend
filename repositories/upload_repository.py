@@ -1,5 +1,7 @@
 import logging
 
+from sqlalchemy.orm.exc import StaleDataError
+
 from models import Notebook, Upload
 from models.enums import UploadPurpose
 from exceptions import DatabaseError
@@ -132,6 +134,8 @@ def update_upload(upload: Upload) -> None:
     """
     try:
         db.session.commit()
+    except StaleDataError:
+        raise
     except Exception:
         logger.exception("Failed to update upload")
         db.session.rollback()

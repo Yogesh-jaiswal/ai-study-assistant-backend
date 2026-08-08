@@ -166,3 +166,15 @@ Typical task states include:
 | 404 | Requested task does not exist or is not owned by the authenticated user |
 | 429 | Too many requests |
 | 500 | Unexpected server error |
+
+# Next Steps
+Explore other APIs
+
+- [Authentication API](Authentication.md)
+- [Notebook API](Notebook.md)
+- [Upload API](Upload.md)
+- [Chat API](Chat.md)
+- [Blueprint API](Blueprint.md)
+- [AI Content API](AIContent.md)
+- [User Attempts API](Attempt.md)
+- [Legacy API](Legacy.md)

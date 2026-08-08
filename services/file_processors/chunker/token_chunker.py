@@ -3,7 +3,7 @@ from .base_chunker import BaseChunker
 from services.file_processors.document.doc_representation import DocumentBlock
 
 class TokenChunker(BaseChunker):
-    """Divided the given text into token based separate chunks."""
+    """Divide the given text into token based separate chunks."""
 
     def __init__(self, embeddings_provider):
         self.provider = embeddings_provider
@@ -14,7 +14,7 @@ class TokenChunker(BaseChunker):
     def chunk_text(self, block: DocumentBlock) -> list[DocumentBlock]:
         text = block.text
 
-        offsets = self.provider.offset_mapping(text)
+        offsets = self.provider.offset_mapping(text).offset_mapping
 
         chunks = []
 

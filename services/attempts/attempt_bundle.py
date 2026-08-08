@@ -38,7 +38,7 @@ class EvaluationBundle:
 
             These are the submitted answers with a valid question id.
 
-            {self.submitted_answers.strip()}
+            {self.submitted_answers}
         """.strip()
         )
 

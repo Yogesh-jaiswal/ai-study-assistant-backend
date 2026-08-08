@@ -2,6 +2,7 @@ from services.file_processors.extractors.md_processor import MarkdownProcessor
 
 
 def test_extract_markdown(resource_dir):
+    """Test extracting text from a Markdown file."""
     processor = MarkdownProcessor()
 
     text = processor.extract(

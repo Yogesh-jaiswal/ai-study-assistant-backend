@@ -1,0 +1,1268 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Study Assistant Tester
+meta:
+  id: wrk_604e4ba786134f8b87d5e32677d1bd90
+  created: 1777975898788
+  modified: 1780823241431
+  description: ""
+collection:
+  - url: http://{{ _.host_url }}
+    name: Health Check
+    meta:
+      id: req_90f6849ce1014853a328b1bdd36c1232
+      created: 1777975898804
+      modified: 1786115722546
+      isPrivate: false
+      description: ""
+      sortKey: -1780391341960
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.5.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://{{ _.host_url }}/v1/tasks/:task_id
+    name: Get Task Status
+    meta:
+      id: req_bda56796f9814ff78614ce44a43054f4
+      created: 1782136913633
+      modified: 1786175695696
+      isPrivate: false
+      description: ""
+      sortKey: -1780391341910
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.6.0
+        description: ""
+        disabled: false
+    authentication:
+      type: bearer
+      token: "{{ _.access_token }}"
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: task_id
+        value: <task_id>
+  - name: Legacy
+    meta:
+      id: fld_f63abaceb6c24d3ab50a346dc884f30e
+      created: 1780391341860
+      modified: 1785764515459
+      sortKey: -1780391416932.5
+      description: ""
+    children:
+      - url: http://{{ _.host_url }}/v1/summarize
+        name: Summarize
+        meta:
+          id: req_5c5ae4d6d9164a759a3cbd9dd9e53899
+          created: 1777976124961
+          modified: 1786115769951
+          isPrivate: false
+          description: ""
+          sortKey: -1780391360939
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"topic": "Recursion",
+            	"notes": "Recursion is a function which calls itself either directly or indirectly"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://{{ _.host_url }}/v1/quiz
+        name: Quiz
+        meta:
+          id: req_febe176b0554438f883448cf6effe956
+          created: 1780391360839
+          modified: 1786115745621
+          isPrivate: false
+          description: ""
+          sortKey: -1780391360839
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"topic": "Recursion",
+            	"notes": "Recursion is a function which calls itself either directly or indirectly",
+            	"n": 5,
+            	"level": "medium"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    authentication:
+      type: bearer
+      token: "{{ access_token }}"
+  - name: Notebooks
+    meta:
+      id: fld_cc569549ace84691bb6d5165751a966b
+      created: 1780391491905
+      modified: 1780816391939
+      sortKey: -1780391491905
+      description: ""
+    children:
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id
+        name: Get Notebook
+        meta:
+          id: req_f105d7da8eae480686cd9792d74e68cd
+          created: 1780391550703
+          modified: 1786115790962
+          isPrivate: false
+          description: ""
+          sortKey: -1780391550703
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks
+        name: Get All Notebooks
+        meta:
+          id: req_2b08803412cb4932884b44c6f6961619
+          created: 1780391656175
+          modified: 1786115802611
+          isPrivate: false
+          description: ""
+          sortKey: -1780391656175
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://{{ _.host_url }}/v1/notebooks
+        name: Create Notebook
+        meta:
+          id: req_3d6747db049f42a39d94eef5635ea846
+          created: 1780391738180
+          modified: 1786115838998
+          isPrivate: false
+          description: ""
+          sortKey: -1780391738180
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"title": "First notebook"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:5000/v1/notebooks/:notebook_id
+        name: Delete Notebook
+        meta:
+          id: req_34e425ef24a744a5a9c40c269f56378f
+          created: 1780391824785
+          modified: 1786116440121
+          isPrivate: false
+          description: ""
+          sortKey: -1780391697177.5
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id
+        name: Edit Notebook
+        meta:
+          id: req_b03050186d314f8f9e2a752d6da62b6c
+          created: 1785763479444
+          modified: 1786115857628
+          isPrivate: false
+          description: ""
+          sortKey: -1785763479444
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"title": "Edited notebook"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id/ask
+        name: Chat with Notebook
+        meta:
+          id: req_ac0a201c9bfa4911a80b8b1cfddf8cfc
+          created: 1785764646093
+          modified: 1786175517958
+          isPrivate: false
+          description: ""
+          sortKey: -1785764646093
+        method: GET
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"question": "<question>"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+    authentication:
+      type: bearer
+      token: "{{ access_token }}"
+  - name: Uploads
+    meta:
+      id: fld_285b7ffebfcc465e99b4197acb1d618f
+      created: 1780391888260
+      modified: 1785764591833
+      sortKey: -1780391888260
+      description: ""
+    children:
+      - url: http://{{ _.host_url
+          }}/v1/notebooks/:notebook_id/uploads?purpose=all&limit={{ _.limit
+          }}&page={{ _.page }}
+        name: Get All Uploads
+        meta:
+          id: req_b1468f65a2804f089df66e7c95bdc718
+          created: 1780391904519
+          modified: 1786120443704
+          isPrivate: false
+          description: ""
+          sortKey: -1780391974498
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id/uploads/:upload_id
+        name: Get Upload
+        meta:
+          id: req_9b3bf72114ae4b959e2745809ed98ec9
+          created: 1780391983392
+          modified: 1786115989012
+          isPrivate: false
+          description: ""
+          sortKey: -1780391983392
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+          - name: upload_id
+            value: "{{ _.upload_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id/uploads?purpose=notes
+        name: Upload File
+        meta:
+          id: req_b769dbb9595347cf82b855b239d31c38
+          created: 1780392051548
+          modified: 1786175490064
+          isPrivate: false
+          description: ""
+          sortKey: -1780392051548
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: files
+              value: ""
+              description: ""
+              disabled: false
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+      - url: http://127.0.0.1:5000/v1/notebooks/:notebook_id/uploads/:upload_id
+        name: Delete Upload
+        meta:
+          id: req_1e3f0add22fa4330bdcd513cf69e4107
+          created: 1780392163125
+          modified: 1786115944643
+          isPrivate: false
+          description: ""
+          sortKey: -1780392163125
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+          - name: upload_id
+            value: "{{ _.upload_id }}"
+      - url: http://{{ _.host_url
+          }}/v1/notebooks/:notebook_id/uploads/:upload_id/preview
+        name: Preview Upload
+        meta:
+          id: req_9ca5ea3be6fb4900853d36cc7b33720c
+          created: 1785763649042
+          modified: 1786115918333
+          isPrivate: false
+          description: ""
+          sortKey: -1785763649042
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+          - name: upload_id
+            value: "{{ _.upload_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id/uploads/youtube
+        name: YouTube Video Upload
+        meta:
+          id: req_b0be6d4c3b71445db462e9756ac38267
+          created: 1785763729670
+          modified: 1786115899032
+          isPrivate: false
+          description: ""
+          sortKey: -1785763729670
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+    authentication:
+      type: bearer
+      token: "{{ access_token }}"
+  - name: Auth
+    meta:
+      id: fld_383d8ca954de434aa8b5e701b3efaf13
+      created: 1780459299045
+      modified: 1780822238132
+      sortKey: -1780459299045
+      description: ""
+    children:
+      - url: http://{{ _.host_url }}/v1/auth/register
+        name: Register User
+        meta:
+          id: req_164d4d417af0443d9753d04b41b6ae17
+          created: 1780459305716
+          modified: 1786175374984
+          isPrivate: false
+          description: ""
+          sortKey: -1780459313175
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "john@123.com",
+            	"username": "john123",
+            	"password": "John@123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://{{ _.host_url }}/v1/auth/login
+        name: Login User
+        meta:
+          id: req_a1ef95aac12e4198b4675036eda4e607
+          created: 1780561928685
+          modified: 1786175381829
+          isPrivate: false
+          description: ""
+          sortKey: -1780459313275
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "john@123.com",
+            	"password": "John@123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://{{ _.host_url }}/v1/auth/me
+        name: Get User
+        meta:
+          id: req_7dbf36f09a424c41aa9ffdbbf3c73597
+          created: 1780644352014
+          modified: 1786116031526
+          isPrivate: false
+          description: ""
+          sortKey: -1780644352014
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{ access_token }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://{{ _.host_url }}/v1/auth/logout
+        name: Logout User
+        meta:
+          id: req_af5da6e95f9746eba6f34e1cce4ce0ff
+          created: 1780815132489
+          modified: 1786117323581
+          isPrivate: false
+          description: ""
+          sortKey: -1780815205004
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://{{ _.host_url }}/v1/auth/refresh
+        name: Refresh Login
+        meta:
+          id: req_87b016e05450485387491b5268131f12
+          created: 1780815277519
+          modified: 1786116045731
+          isPrivate: false
+          description: ""
+          sortKey: -1780815277519
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.6.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Blueprints
+    meta:
+      id: fld_ee5412f692324aeca23cefe7a8489b60
+      created: 1785763923504
+      modified: 1785764596400
+      sortKey: -1785763923504
+      description: ""
+    children:
+      - url: http://{{ _.host_url }}/v1/blueprints
+        name: Create Blueprint
+        meta:
+          id: req_67a36a5e5f9d469fb73bec387c11415a
+          created: 1785763928061
+          modified: 1786175589096
+          isPrivate: false
+          description: ""
+          sortKey: -1785763928061
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"is_public": true,
+            	"structure": {
+            		"exam_name": "Test Blueprint",
+            		"description": "Blueprint used exclusively for automated integration tests.",
+            		"total_marks": 10,
+            		"duration": "10 minutes",
+            		"navigation_rules": {
+            			"allow_cross_section_navigation": true,
+            			"has_sectional_timers": false,
+            			"is_computer_adaptive": false
+            		},
+            		"sections": [
+            			{
+            				"section_name": "Test Section",
+            				"total_marks": 10,
+            				"question_groups": [
+            					{
+            						"group_title": "Multiple Choice Questions",
+            						"selection_rule": {
+            							"type": "all"
+            						},
+            						"defaults": {
+            							"question_type": "MCQ",
+            							"answer_type": "single_choice",
+            							"negative_marking": 0
+            						},
+            						"parts": [
+            							{
+            								"label": "Q1-Q5",
+            								"count": 5,
+            								"marks": 2
+            							}
+            						]
+            					}
+            				]
+            			}
+            		]
+            	}
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://{{ _.host_url }}/v1/blueprints/me?keyword=test&limit={{ _.limit
+          }}&page={{ _.page }}
+        name: Get Private Blueprints
+        meta:
+          id: req_7dc06ca6bd664ad38760e30373f3ff73
+          created: 1785764034151
+          modified: 1786120283106
+          isPrivate: false
+          description: ""
+          sortKey: -1785764034151
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://{{ _.host_url }}/v1/blueprints?keyword=test&limit={{ _.limit
+          }}&page={{ _.page }}
+        name: Get Public Blueprints
+        meta:
+          id: req_ccc027e81b4a41e29fb228cf4b1eaa2d
+          created: 1785764106131
+          modified: 1786175177552
+          isPrivate: false
+          description: ""
+          sortKey: -1785764106131
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://{{ _.host_url }}/v1/blueprints/:slug
+        name: Get Blueprint
+        meta:
+          id: req_7b49399ced07438eb9296dd90d17a21f
+          created: 1785764160655
+          modified: 1786175291241
+          isPrivate: false
+          description: ""
+          sortKey: -1785764160655
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: slug
+            value: <blueprint_slug>
+      - url: http://{{ _.host_url }}/v1/blueprints/:slug/save
+        name: Save Public Blueprint
+        meta:
+          id: req_a5ac5ec7f2d1415a972d27333e57c9db
+          created: 1785764195918
+          modified: 1786175298765
+          isPrivate: false
+          description: ""
+          sortKey: -1785764195918
+        method: POST
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: slug
+            value: <blueprint_slug>
+      - url: http://{{ _.host_url }}/v1/blueprints/:slug
+        name: Edit Blueprint
+        meta:
+          id: req_aee0c03e827b4ea6bef26272335b6eaf
+          created: 1785764280279
+          modified: 1786175616981
+          isPrivate: false
+          description: ""
+          sortKey: -1785764280279
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"is_public": true,
+            	"structure": {
+            		"exam_name": "Test Blueprint",
+            		"description": "Blueprint used exclusively for automated integration tests.",
+            		"total_marks": 10,
+            		"duration": "10 minutes",
+            		"navigation_rules": {
+            			"allow_cross_section_navigation": true,
+            			"has_sectional_timers": false,
+            			"is_computer_adaptive": false
+            		},
+            		"sections": [
+            			{
+            				"section_name": "Test Section",
+            				"total_marks": 10,
+            				"question_groups": [
+            					{
+            						"group_title": "Multiple Choice Questions",
+            						"selection_rule": {
+            							"type": "all"
+            						},
+            						"defaults": {
+            							"question_type": "MCQ",
+            							"answer_type": "single_choice",
+            							"negative_marking": 0
+            						},
+            						"parts": [
+            							{
+            								"label": "Q1-Q5",
+            								"count": 5,
+            								"marks": 2
+            							}
+            						]
+            					}
+            				]
+            			}
+            		]
+            	}
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: slug
+            value: <blueprint_slug>
+      - url: http://{{ _.host_url }}/v1/blueprints/:slug
+        name: Delete Blueprint
+        meta:
+          id: req_d0b73a18b15e4e45859b903775508a28
+          created: 1785764455238
+          modified: 1786175304468
+          isPrivate: false
+          description: ""
+          sortKey: -1785764455238
+        method: DELETE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: slug
+            value: <blueprint_slug>
+    authentication:
+      type: bearer
+      token: "{{ access_token }}"
+  - name: AI Content
+    meta:
+      id: fld_08418c0cf0894fafa3a39a27c6337d96
+      created: 1785764893356
+      modified: 1785765124208
+      sortKey: -1785764893356
+      description: ""
+    children:
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id/contents/:content_id
+        name: Get AI Content
+        meta:
+          id: req_7f57590ad32d4b5aa5129ee974628668
+          created: 1785764902040
+          modified: 1786116134956
+          isPrivate: false
+          description: ""
+          sortKey: -1785764902040
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+          - name: content_id
+            value: "{{ _.content_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_ id/contents?limit={{
+          _.limit }}&page={{ _.page }}
+        name: Get All AI Content
+        meta:
+          id: req_36e47df8fa334847820a2f67e026b701
+          created: 1785765028033
+          modified: 1786120511285
+          isPrivate: false
+          description: ""
+          sortKey: -1785765028033
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_ id
+            value: "{{ _.notebook_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id/contents/:content_id
+        name: Delete AI Content
+        meta:
+          id: req_a7e0df4d965c4b56b43d8ddcf495657e
+          created: 1785765055930
+          modified: 1786116171496
+          isPrivate: false
+          description: ""
+          sortKey: -1785765055930
+        method: DELETE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+          - name: content_id
+            value: "{{ _.content_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id/summaries
+        name: Generate Summary
+        meta:
+          id: req_b6a6168b4cb14f2d98d6196474e071b2
+          created: 1785765134103
+          modified: 1786116314881
+          isPrivate: false
+          description: ""
+          sortKey: -1785765134103
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"upload_ids": [
+            		"{{ _.upload_id }}"
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id/quizzes
+        name: Generate Quiz
+        meta:
+          id: req_3b8f5c8c6b2741f1b811f0a2b043ea45
+          created: 1785765229329
+          modified: 1786116309666
+          isPrivate: false
+          description: ""
+          sortKey: -1785765229329
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"upload_ids": [
+            		"{{ _.upload_id }}"
+            	],
+            	"question_count": 5,
+            	"difficulty": "medium",
+            	"marks": 1,
+            	"negative_marking": 0
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id/flashcards
+        name: Generate Flashcards
+        meta:
+          id: req_99e5d4db312a47c69c84edd1d5f1bfa8
+          created: 1785765372231
+          modified: 1786116298650
+          isPrivate: false
+          description: ""
+          sortKey: -1785765372231
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"upload_ids": [
+            		"{{ _.upload_id }}"
+            	],
+            	"total_cards": 5
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+      - url: http://{{ _.host_url }}/v1/notebooks/:notebook_id/mind-maps
+        name: Generate Mind Maps
+        meta:
+          id: req_f2cc5cde1bf04e37b18a6d577a1a4671
+          created: 1785765458215
+          modified: 1786116320416
+          isPrivate: false
+          description: ""
+          sortKey: -1785765458215
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"upload_ids": [
+            		"{{ _.upload_id }}"
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+      - url: http://127.0.0.1:5000/v1/notebooks/:notebook_id/exams
+        name: Generate Exam
+        meta:
+          id: req_e5283606604d47f4bba99299fedda764
+          created: 1785765532115
+          modified: 1786116326764
+          isPrivate: false
+          description: ""
+          sortKey: -1785765532115
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"upload_ids": [
+            		"{{ _.upload_id }}"
+            	],
+            	"difficulty": "easy",
+            	"exam_type": "quiz"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+    authentication:
+      type: bearer
+      token: "{{ access_token }}"
+  - name: User Attempts
+    meta:
+      id: fld_bf195965373548d99c34164af6cbb53a
+      created: 1785765665359
+      modified: 1785765682234
+      sortKey: -1785765665359
+      description: ""
+    children:
+      - url: http://{{ _.host_url
+          }}/v1/notebooks/:notebook_id/contents/:content_id/attempts?limit={{
+          _.limit }}&page={{ _.page }}
+        name: Get All Attempt for Content
+        meta:
+          id: req_98dccc672b544737af62304212ec9e75
+          created: 1785765684419
+          modified: 1786120560777
+          isPrivate: false
+          description: ""
+          sortKey: -1785765684419
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+          - name: content_id
+            value: "{{ _.content_id }}"
+      - url: http://{{ _.host_url
+          }}/v1/notebooks/:notebook_id/contents/:content_id/attempts
+        name: Create New Attempt
+        meta:
+          id: req_6b7d995b5d914d6eb9db615c7a228c7d
+          created: 1785765771031
+          modified: 1786175676459
+          isPrivate: false
+          description: ""
+          sortKey: -1785765771031
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "answers": ["enter your answers list"]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+          - name: content_id
+            value: "{{ _.content_id }}"
+      - url: http://{{ _.host_url
+          }}/v1/notebooks/:notebook_id/contents/:content_id/attempts/:attempt_id
+        name: Get Attempt for Content
+        meta:
+          id: req_5743bc9dd62546dc80dd39e2090d52b5
+          created: 1785765854736
+          modified: 1786116405805
+          isPrivate: false
+          description: ""
+          sortKey: -1785765854736
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: notebook_id
+            value: "{{ _.notebook_id }}"
+          - name: content_id
+            value: "{{ _.content_id }}"
+          - name: attempt_id
+            value: "{{ _.evaluation_id }}"
+    authentication:
+      type: bearer
+      token: "{{ access_token }}"
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_1b801bef4d16d9dfdfc5409854d7530f98b9dcae
+    created: 1777975898795
+    modified: 1786175080724
+  cookies:
+    - id: 0e495f12-012e-4686-b18e-c15a825d3374
+      key: refresh_token
+      value: UopnEt4By0BLUGvX1G9ihz7n9LsRA9Sjhl82jkZfhaI8DwxmxZVg6oihLGkCENyBuXJDe3Eljf8ITLUM0cmAaw
+      domain: 127.0.0.1
+      path: /
+      secure: false
+      httpOnly: true
+      hostOnly: true
+    - id: 40973ae7-e6f9-4af1-8794-62336427f5fa
+      key: refresh_token
+      value: Nd45JHPt-KxWxpNFE4L36zDmol096CD-E0tx4totJ3OkwbQ4BAtcX5ToTDAdfvWBCPFRX9AXeFpywulKq1NDbQ
+      domain: localhost
+      path: /
+      secure: false
+      httpOnly: true
+      hostOnly: true
+environments:
+  name: Base Environment
+  meta:
+    id: env_1b801bef4d16d9dfdfc5409854d7530f98b9dcae
+    created: 1777975898792
+    modified: 1786175263697
+    isPrivate: false
+  data:
+    host_url: localhost:5000
+    access_token: <access_token>
+    access_token_exp: "1780823138097"
+    notebook_id: <notebook_id>
+    upload_id: <upload_id>
+    content_id: <content_id
+    evaluation_id: <evaluation_id>
+    limit: 20
+    page: 1

@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - phase-4-ai-features
+      - phase-5-production-readiness
   pull_request:
 
 jobs:
@@ -17,6 +17,7 @@ jobs:
 
     env:
       ENVIRONMENT: testing
+      HF_HOME: ~/.cache/huggingface
 
     steps:
       - name: Checkout repository
@@ -28,6 +29,14 @@ jobs:
           python-version: "3.13"
           cache: pip
 
+      - name: Cache Hugging Face models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: ${{ runner.os }}-hf-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-hf-
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -36,36 +45,30 @@ jobs:
       - name: Copy testing environment
         run: cp .env.testing .env
 
-      - name: Generate temporary JWT keys
-        run: |
-          mkdir -p keys
-          openssl genrsa -out keys/private.pem 2048
-          openssl rsa -in keys/private.pem -pubout -out keys/public.pem
-
       - name: Start Docker services
-        run: docker compose up -d
+        run: docker compose -f docker/compose.yaml up -d
 
       - name: Wait for Redis
         run: |
-          REDIS_CONTAINER=$(docker compose ps -q redis)
+          REDIS_CONTAINER=$(docker compose -f docker/compose.yaml ps -q redis)
 
-          timeout 60 bash -c "
-          until [ \"\$(docker inspect -f '{{.State.Health.Status}}' $REDIS_CONTAINER)\" = \"healthy\" ]
+          timeout 60 bash -c '
+          until [ "$(docker inspect -f "{{.State.Health.Status}}" '"$REDIS_CONTAINER"')" = "healthy" ]
           do
             sleep 1
           done
-          "
+          '
 
       - name: Wait for PostgreSQL
         run: |
-          DB_CONTAINER=$(docker compose ps -q db)
+          DB_CONTAINER=$(docker compose -f docker/compose.yaml ps -q db)
 
-          timeout 60 bash -c "
-          until [ \"\$(docker inspect -f '{{.State.Health.Status}}' $DB_CONTAINER)\" = \"healthy\" ]
+          timeout 60 bash -c '
+          until [ "$(docker inspect -f "{{.State.Health.Status}}" '"$DB_CONTAINER"')" = "healthy" ]
           do
             sleep 1
           done
-          "
+          '
 
       - name: Run Sync Tests
         if: matrix.mode == 'sync'
@@ -79,21 +82,20 @@ jobs:
 
       - name: Save Docker logs
         if: failure()
-        run: docker compose logs > docker.log
+        run: docker compose -f docker/compose.yaml logs > docker.log
 
       - name: Upload logs
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: test-logs-${{ matrix.mode }}
-          path: |
-            docker.log
-            celery.log
+          path: docker.log
 
       - name: Stop Docker
         if: always()
-        run: docker compose down -v
+        run: docker compose -f docker/compose.yaml down -v
 
 defaults:
   run:
     shell: bash
+    

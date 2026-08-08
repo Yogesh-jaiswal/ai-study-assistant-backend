@@ -30,6 +30,7 @@ QUESTION_LIMIT = 1
 
 judge = DeepEvalJudge()
 
+# Define the metrics to be used for evaluation
 metrics = [
     AnswerRelevancyMetric(
         threshold=0.7,
@@ -53,6 +54,7 @@ metrics = [
 
 
 def load_dataset(limit: int | None = None) -> list[dict]:
+    """Loads the dataset from a JSON file and optionally limits the number of samples returned."""
     with open(DATASET_FILE, "r", encoding="utf-8") as f:
         dataset = json.load(f)
 
@@ -67,6 +69,7 @@ def build_test_cases(
     user_id: str,
     dataset: list[dict],
 ) -> list[LLMTestCase]:
+    """Builds test cases by retrieving relevant context for each question in the dataset and generating answers using the chat generator."""
 
     search_engine = SimilaritySearchService()
     generator = ChatGenerator()
@@ -133,6 +136,7 @@ def build_test_cases(
 def write_report(
     test_cases: list[LLMTestCase],
 ):
+    """Evaluates the test cases using the defined metrics and writes a report to a JSON file."""
 
     report: list[dict] = []
 
@@ -228,6 +232,7 @@ def write_report(
 
         report.append(case_result)
 
+    # Summarize the results and write to a report file
     summary = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "questions": len(test_cases),
@@ -265,6 +270,7 @@ def write_report(
 
 
 def evaluate():
+    """Main evaluation function that sets up the application, loads the dataset, builds test cases, and writes the evaluation report."""
 
     print("Running setup...")
 

@@ -206,10 +206,32 @@ These metrics represent the commonly used **RAG Triad** for evaluating retrieval
 
 # Running the Evaluation
 
-The evaluation pipeline can be executed using:
+Run the evaluation pipeline using the following steps.
+
+1. Start the required Docker services.
+
+```bash
+docker compose -f docker/compose.yaml up -d
+```
+
+2. Run the evaluation.
 
 ```bash
 python -m rag_evaluation.evaluate
+```
+
+3. Stop the Docker services.
+
+Remove containers and volumes:
+
+```bash
+docker compose -f docker/compose.yaml down -v
+```
+
+Or keep the database and Redis volumes:
+
+```bash
+docker compose -f docker/compose.yaml down
 ```
 
 The command performs:

@@ -9,6 +9,7 @@ class QueryRequest(UpdatedBaseModel):
     question: str = Field(..., min_length=10, max_length=500)
 
 class CitationResponse(BaseModel):
+    """Schema for citation response"""
     filename: str
     source_type: FileTypes
     author: str | None

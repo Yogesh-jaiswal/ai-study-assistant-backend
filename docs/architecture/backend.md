@@ -318,12 +318,14 @@ The emphasis is on writing maintainable software rather than optimizing prematur
 
 ---
 
-## Related Architecture Documents
+# Next Steps
 
-* [Authentication Architecture](authentication.md)
-* [AI Architecture](ai.md)
-* [Attempt Architecture](attempts.md)
-* [Retrieval Architecture](retrieval.md)
-* [Database Architecture](database.md)
-* [Celery Architecture](celery.md)
-* [File Processing Architecture](file_processing.md)
+Explore other backend details
+
+* [Authentication Architecture](Authentication.md)
+* [AI Architecture](AI.md)
+* [Attempt Architecture](Attempts.md)
+* [Retrieval Architecture](Retrieval.md)
+* [Database Architecture](Database.md)
+* [Celery Architecture](Celery.md)
+* [File Processing Architecture](FileProcessing.md)

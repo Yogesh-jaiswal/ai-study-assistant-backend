@@ -1,11 +1,12 @@
 import logging
 from pathlib import Path
 
+from sqlalchemy import text
 from sqlalchemy.orm.exc import StaleDataError
 
 from app.celery_app import celery_app as celery
 from app.extensions import db
-from models.enums import ProcessingStatus
+from models.enums import ProcessingStatus, FileTypes
 from services.file_processors import FileProcessor
 from repositories.upload_repository import update_upload, get_upload_by_upload_id
 from repositories.chunk_repository import bulk_create_chunks
@@ -46,6 +47,11 @@ def get_safe_error_message(exc):
     retry_kwargs={"max_retries": 3}
 )
 def process_file(self, notebook_id: str, user_id: str, upload_id: str):
+    """
+    Celery task to process an uploaded file. 
+    It retrieves the upload, checks its existence, processes the file, 
+    creates chunks and embeddings, and updates the processing status accordingly.
+    """
     logger.info(
         "Processing upload %s in %s mode",
         upload_id,
@@ -63,8 +69,12 @@ def process_file(self, notebook_id: str, user_id: str, upload_id: str):
         return
 
     # Save values we need later
-    file_path = upload.file_path
     source_type = upload.source_type
+    file_path = (
+        Path(settings.UPLOAD_FOLDER) / upload.file_path
+        if upload.source_type != FileTypes.YOUTUBE
+        else upload.file_path
+    )
 
     # Update processing status to processing
     try:
@@ -73,9 +83,9 @@ def process_file(self, notebook_id: str, user_id: str, upload_id: str):
     except StaleDataError:
         safe_rollback()
         logger.warning("Upload deleted before processing started")
-        return
+        return {}
 
-    if not Path(file_path).exists():
+    if not Path(file_path).exists() and source_type != FileTypes.YOUTUBE:
 
         fresh_upload = get_upload_by_upload_id(
             notebook_id,
@@ -84,7 +94,7 @@ def process_file(self, notebook_id: str, user_id: str, upload_id: str):
         )
 
         if not fresh_upload:
-            return
+            return {}
 
         # If file doesn't exists set processing status to failed
         try:
@@ -117,7 +127,7 @@ def process_file(self, notebook_id: str, user_id: str, upload_id: str):
 
         if not fresh_upload:
             logger.warning("Upload deleted during processing")
-            return
+            return {}
         
         # Save chunks into the database
         created_chunks = bulk_create_chunks(fresh_upload.id, processed_file.chunks)
@@ -156,7 +166,7 @@ def process_file(self, notebook_id: str, user_id: str, upload_id: str):
 
         if not fresh_upload:
             logger.warning("Upload deleted during processing")
-            return
+            return {}
 
         # Set file processing status to failed
         try:
@@ -166,3 +176,5 @@ def process_file(self, notebook_id: str, user_id: str, upload_id: str):
         except StaleDataError:
             safe_rollback()
             logger.warning("Upload deleted while reporting failure")
+
+        return {}

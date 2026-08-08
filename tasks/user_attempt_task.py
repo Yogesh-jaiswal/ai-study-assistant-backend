@@ -1,4 +1,6 @@
 import logging
+from datetime import datetime
+
 from redis.exceptions import ConnectionError, TimeoutError
 
 from app.celery_app import celery_app as celery
@@ -25,7 +27,12 @@ def evaluate_user_attempt(
     content_id: str,
     notebook_id: str, 
     user_id: str,
-    evaluation_context: dict) -> dict:
+    evaluation_context: dict
+) -> dict:
+    """
+    Celery task to evaluate a user's attempt based on the specified evaluation type and context. 
+    It retrieves the attempt, updates its status, executes the appropriate evaluation job, and updates the attempt with the results.
+    """
     attempt = get_user_attempt_by_attempt_id(attempt_id, content_id, notebook_id, user_id)
 
     evaluation_context = AttemptContext(**evaluation_context)
@@ -46,7 +53,7 @@ def evaluate_user_attempt(
     
     try:
         evaluation = job.execute(bundle)
-    except Exception as e:
+    except Exception:
         attempt.status = ProcessingStatus.FAILED
         update_attempt(attempt)
 

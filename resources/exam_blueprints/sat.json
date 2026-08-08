@@ -1,7 +1,7 @@
 {
   "exam_name": "Digital SAT",
-  "description": "An internationally recognized digital university entrance exam that implements an adaptive testing engine to dynamically alter the question group difficulty mid-test.",
-  "total_marks": 1600,
+  "description": "An adaptive university entrance examination blueprint with separate Reading and Writing and Mathematics modules.",
+  "total_marks": 160,
   "duration": "2 hours 14 minutes",
   "navigation_rules": {
     "allow_cross_section_navigation": false,
@@ -10,20 +10,70 @@
   },
   "sections": [
     {
-      "section_name": "Reading and Writing Module",
-      "sectional_duration": "64 minutes",
+      "section_name": "Reading and Writing",
+      "total_marks": 80,
+      "section_duration": "64 minutes",
       "question_groups": [
         {
-          "group_title": "Stage 1: Routing Module",
-          "selection_rule": { "type": "all" },
-          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 0 },
-          "parts": [{ "label": "M1-Questions", "count": 27, "marks": 0 }] 
+          "group_title": "Routing Module",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "M1 Questions",
+              "count": 27,
+              "marks": 1
+            }
+          ]
         },
         {
-          "group_title": "Stage 2: Adaptive Module (Determined at Runtime)",
-          "selection_rule": { "type": "all" },
-          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 0 },
-          "parts": [{ "label": "M2-Questions-Dynamic", "count": 27, "marks": 0 }]
+          "group_title": "Adaptive Module",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "M2 Questions",
+              "count": 53,
+              "marks": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Mathematics",
+      "total_marks": 80,
+      "section_duration": "70 minutes",
+      "question_groups": [
+        {
+          "group_title": "Adaptive Mathematics Module",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "Mathematics Questions",
+              "count": 80,
+              "marks": 1
+            }
+          ]
         }
       ]
     }

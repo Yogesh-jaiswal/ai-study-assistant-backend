@@ -3,11 +3,13 @@ from sentence_transformers import SentenceTransformer
 from configs import get_settings
 from .base_embeddings_generator import BaseEmbeddingProvider, TokenEncoding
 
+# Initialize the embedding model using the specified model from settings
 MODEL = SentenceTransformer(
     get_settings().EMBEDDINGS_MODEL
 )
 
 class EmbeddingGenerator(BaseEmbeddingProvider):
+    """Generates embeddings for text using a specified model and provides tokenization utilities."""
 
     def embed(self, text: str) -> list[float]:
         return MODEL.encode(text).tolist()

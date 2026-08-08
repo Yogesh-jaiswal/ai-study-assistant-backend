@@ -15,7 +15,7 @@ from exceptions import ResourceNotFoundError
 from utils.slug_creator import generate_unique_slug
 
 def create_blueprint(user_id: str, payload: BlueprintCreationRequest) -> str:
-    """Creates a new blueprint"""
+    """Creates a new blueprint."""
     slug = slugify(payload.structure.exam_name)
 
     blueprint = ExamBlueprint(
@@ -32,7 +32,7 @@ def create_blueprint(user_id: str, payload: BlueprintCreationRequest) -> str:
     return blueprint.slug
 
 def list_public_blueprints(keyword: str | None = None, limit: int = 20, offset: int = 0) -> dict[str, Any]:
-    """Get public blueprints by keyword"""
+    """Get public blueprints by keyword."""
     blueprints = list_blueprints(
         public_only=True,
         keyword=keyword,
@@ -53,7 +53,7 @@ def list_public_blueprints(keyword: str | None = None, limit: int = 20, offset: 
     ]
 
 def list_user_blueprints(user_id: str, keyword:str | None = None, limit: int = 20, offset: int = 0) -> dict[str, Any]:
-    """Get user blueprints by keywrord"""
+    """Get user blueprints by keywrord."""
     blueprints = list_blueprints(
         owner_id=user_id,
         keyword=keyword,
@@ -74,7 +74,7 @@ def list_user_blueprints(user_id: str, keyword:str | None = None, limit: int = 2
     ]
 
 def get_blueprint_by_slug(slug: str, user_id: str):
-    """Get the blueprint using slug"""
+    """Get the blueprint using slug."""
     blueprint = get_blueprint_by_blueprint_slug(slug, user_id)
 
     if blueprint is None or (not blueprint.is_public and blueprint.created_by != user_id):
@@ -92,15 +92,17 @@ def get_blueprint_by_slug(slug: str, user_id: str):
     }
 
 def copy_blueprint(slug: str, user_id: str) -> str:
-    """Copy public blueprint to user's collection"""
+    """Copy public blueprint to user's collection."""
     old_blueprint = get_blueprint_by_blueprint_slug(slug, user_id)
 
     if old_blueprint is None or old_blueprint.is_system:
         raise ResourceNotFoundError("Blueprint not found!")
 
+    # If already owned by user than return
     if old_blueprint.created_by == user_id:
         return old_blueprint.slug
-    
+
+    # Creating a new blueprint
     new_slug = slugify(old_blueprint.name)
     
     new_blueprint = ExamBlueprint(
@@ -116,18 +118,20 @@ def copy_blueprint(slug: str, user_id: str) -> str:
     return new_blueprint.slug
 
 def edit_blueprint(slug: str, user_id: str, payload: BlueprintCreationRequest) -> None:
-    """Edit the old blueprint with the new data"""
+    """Edit the old blueprint with the new data."""
     blueprint = get_blueprint_by_blueprint_slug(slug, user_id)
 
-    if blueprint is None:
+    if blueprint is None or blueprint.is_system:
         raise ResourceNotFoundError("Blueprint not found!")
-    
-    if blueprint.is_public and blueprint.created_by != user_id:
-        new_blueprint_id = copy_blueprint(slug, user_id)
-        blueprint = get_blueprint_by_blueprint_slug(slug, user_id)
-    
-    new_slug = slugify(payload.structure.exam_name)
 
+    # Copying the public blueprint
+    if blueprint.is_public and blueprint.created_by != user_id:
+        new_slug = copy_blueprint(slug, user_id)
+        blueprint = get_blueprint_by_blueprint_slug(new_slug, user_id)
+    
+    new_slug = slugify(payload.structure.exam_name) # Creating a new slug
+
+    # Updating the blueprint values
     blueprint.slug = generate_unique_slug(payload.structure.exam_name, list_matching_slugs(new_slug))
     blueprint.name = payload.structure.exam_name
     blueprint.description = payload.structure.description
@@ -139,7 +143,7 @@ def edit_blueprint(slug: str, user_id: str, payload: BlueprintCreationRequest) -
     return blueprint.slug
 
 def delete_blueprint(slug: str, user_id: str) -> None:
-    """Deletes a specific blueprint owned by user"""
+    """Deletes a specific blueprint owned by user."""
     blueprint = get_blueprint_by_blueprint_slug(slug, user_id)
 
     if blueprint is None or blueprint.created_by != user_id:

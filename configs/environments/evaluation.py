@@ -5,7 +5,9 @@ def get_evaluation_overrides() -> dict[str, Any]:
     overrides = {
         "CELERY_TASK_ALWAYS_EAGER": True,
         "CELERY_TASK_EAGER_PROPAGATES": True,
-        "LOG_LEVEL": "WARNING"
+        "LOG_LEVEL": "WARNING",
+        "REDIS_HOST": "localhost",
+        "POSTGRES_HOST": "localhost"
     }
 
     return overrides

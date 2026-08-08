@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 # Helper function to create a consistent error response
 def create_error_msg(error_type: str, message: str, status_code: int) -> Response:
+    """Create a structured error response with a consistent format."""
     return jsonify(
         create_error_envelope(
             {
@@ -34,6 +35,7 @@ def create_error_msg(error_type: str, message: str, status_code: int) -> Respons
 
 # Function to reconstruct validation errors into a more user-friendly format
 def reconstruct_validation_errors(errors: dict) -> list[dict[str, Any]]:
+    """Reconstruct Pydantic validation errors into a more user-friendly format."""
     error_list = []
     for error in errors:
         current_level = {}
@@ -47,6 +49,8 @@ def reconstruct_validation_errors(errors: dict) -> list[dict[str, Any]]:
 
 # Function to register all error handlers with the Flask app
 def register_error_handlers(app: Flask):
+    """Register all error handlers with the Flask app."""
+
     @app.errorhandler(ValidationError)
     def handle_validation_errors(e):
         """Handle Pydantic validation errors and return a structured error response."""

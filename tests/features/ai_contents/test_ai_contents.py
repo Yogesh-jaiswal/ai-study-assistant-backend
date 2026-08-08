@@ -34,29 +34,6 @@ def test_generate_summary(client, completed_upload):
 
     assert "task_id" in data
 
-
-def test_generate_summary_invalid_uploads(
-    client,
-    created_notebook,
-):
-    """
-    Unknown uploads should return 404.
-    """
-    response = client.post(
-        f"/v1/notebooks/{created_notebook['notebook_id']}/summaries",
-        json={
-            "upload_ids": [fake_id]
-        },
-        headers={
-            "Authorization": (
-                f"Bearer {created_notebook['access_token']}"
-            )
-        },
-    )
-
-    assert response.status_code == 404
-
-
 @pytest.mark.async_test
 def test_generate_summary_with_unprocessed_uploads(
     client,
@@ -124,6 +101,28 @@ def test_generate_summary_without_auth(
     )
 
     assert response.status_code == 401
+
+
+def test_generate_summary_invalid_uploads(
+    client,
+    created_notebook,
+):
+    """
+    Unknown uploads should return 404.
+    """
+    response = client.post(
+        f"/v1/notebooks/{created_notebook['notebook_id']}/summaries",
+        json={
+            "upload_ids": [fake_id]
+        },
+        headers={
+            "Authorization": (
+                f"Bearer {created_notebook['access_token']}"
+            )
+        },
+    )
+
+    assert response.status_code == 404
 
 
 # ---------------------------------------------------------------------

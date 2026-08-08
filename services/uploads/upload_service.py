@@ -66,9 +66,14 @@ def upload_file(notebook_id: str, user_id: str, file, upload_purpose: UploadPurp
     # Ensure upload folder exists
     os.makedirs(upload_dir, exist_ok=True)
 
-    file_path = os.path.join(upload_dir, f"{uuid4()}_{filename}")
+    relative_path = os.path.join(
+        str(notebook.id),
+        f"{uuid4()}_{filename}"
+    )
 
-    file.save(file_path)
+    absolute_path = os.path.join(settings.UPLOAD_FOLDER, relative_path)
+
+    file.save(absolute_path)
 
     upload = Upload(
         notebook_id=notebook_id, 
@@ -76,13 +81,16 @@ def upload_file(notebook_id: str, user_id: str, file, upload_purpose: UploadPurp
         upload_purpose=upload_purpose,
         source_type=source_type, 
         processing_status=ProcessingStatus.PENDING, 
-        file_path=file_path
+        file_path=relative_path # Store relative paths instead of absolute ones so uploads remain portable across local development, Docker, and production deployments.
     )
 
     save_upload(upload)
 
     task = process_file.delay(notebook_id, user_id, upload.id)
 
+    # Celery runs outside the request context.
+    # Store task ownership in Redis so polling endpoints can
+    # later verify task ownership without Flask's g object.
     set_key(
         f"task:{task.id}:owner",
         user_id,
@@ -152,8 +160,11 @@ def preview_file(notebook_id: str, user_id: str, upload_id: str) -> Path:
     )
     if not upload:
         raise ResourceNotFoundError(f"Upload with id {upload_id} not found in notebook {notebook_id}")
+
+    if upload.source_type == FileTypes.YOUTUBE:
+        raise BadRequestError("YouTube videos cannot be previewed as files.")
     
-    path = Path(upload.file_path)
+    path = Path(settings.UPLOAD_FOLDER).resolve() / upload.file_path
 
     if not path.exists():
         raise ResourceNotFoundError(f"File not found")
@@ -170,7 +181,9 @@ def delete_upload(notebook_id: str, user_id: str, upload_id: str) -> None:
     if not upload:
         raise ResourceNotFoundError(f"Upload with id {upload_id} not found in notebook {notebook_id}")
     
-    if Path(upload.file_path).exists():
-       os.remove(upload.file_path)
+    path = Path(settings.UPLOAD_FOLDER).resolve() / upload.file_path
+
+    if path.exists():
+        os.remove(path)
 
     remove_upload(upload)

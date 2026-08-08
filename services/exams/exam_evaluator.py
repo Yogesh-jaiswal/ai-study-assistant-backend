@@ -9,6 +9,7 @@ from services.attempts.attempt_bundle import EvaluationBundle
 
 
 class ExamEvaluator:
+    """Evaluates student answers for an exam using the AI engine based on the provided resources and answers."""
 
     def __init__(self):
         self.model = AIEngine(get_settings().AI_MODEL)

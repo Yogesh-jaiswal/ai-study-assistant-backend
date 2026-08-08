@@ -1,11 +1,19 @@
 from pydantic import BaseModel, Field
 
 class MindMapNode(BaseModel):
-    """Schema representing a single min map node."""
-    label: str = Field(..., description="The main content of the mind map node.")
-    children: list["MindMapNode"] = Field(default_factory=list, description="List of childrens of the node using the recursive structure.")
+    id: str = Field(description="Unique identifier of each node.")
+    label: str = Field(description="Content of the node.")
+    parent_id: str | None = Field(
+        default=None,
+        description="Parent node's id to create heirarchical structure (Optional for the root node)."
+    )
+
 
 class MindMapResponse(BaseModel):
-    """Schema representing generated mind map."""
-    title: str = Field(..., description="A short descriptive title summarizing the quiz topic.")
-    root: MindMapNode = Field(..., description="The root node of the generated mind map.")
+    title: str = Field(
+        description="A short descriptive title summarizing the topic."
+    )
+    nodes: list[MindMapNode] = Field(
+        description="List of all the nodes.",
+        max_length=50
+    )

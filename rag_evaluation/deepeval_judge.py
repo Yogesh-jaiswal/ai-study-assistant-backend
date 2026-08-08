@@ -8,6 +8,7 @@ from configs import get_settings
 settings = get_settings()
 
 class DeepEvalJudge(DeepEvalBaseLLM):
+    """DeepEvalJudge is a specialized class for interacting with the Gemini model via the GenAI client. It provides methods to generate content and structured output based on prompts, leveraging the specified model and schema configurations."""
     def __init__(self):
         self.client = None
 

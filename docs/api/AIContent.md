@@ -76,7 +76,7 @@ The task status endpoint reports:
 - Generated resource identifier after successful completion
 - Error information if generation fails
 
-See the [Infrastructure API](infrastructure.md#get-task-status) documentation for the complete polling workflow and response format.
+See the [Infrastructure API](Infrastructure.md#get-task-status) documentation for the complete polling workflow and response format.
 
 ---
 
@@ -742,35 +742,47 @@ Flashcards are generated for quick revision.
 
 ## Mind Maps
 
-Mind maps organize concepts into a hierarchical tree.
+## Mind Maps
+
+Mind maps organize concepts into a hierarchical tree using parent-child relationships between nodes.
 
 ### JSON example
 
 ```json
 {
     "title": "How AI agents work",
-    "root": {
-        "label": "...",
-        "children": [
-            {
-                "label": "...",
-                "children": [
-                    {
-                        "label": "...",
-                        "children": []
-                    }
-                ]
-            },
-            {
-                "label": "...",
-                "children": []
-            }
-        ]
-    }
+    "nodes": [
+        {
+            "id": "node_1",
+            "label": "AI Agents",
+            "parent_id": null
+        },
+        {
+            "id": "node_2",
+            "label": "Perception",
+            "parent_id": "node_1"
+        },
+        {
+            "id": "node_3",
+            "label": "Decision Making",
+            "parent_id": "node_1"
+        },
+        {
+            "id": "node_4",
+            "label": "Planning",
+            "parent_id": "node_3"
+        }
+    ]
 }
 ```
 
-The structure is recursive until leaf nodes are reached.
+Each node contains:
+
+* `id` — A unique identifier for the node.
+* `label` — The concept represented by the node.
+* `parent_id` — The ID of the parent node. The root node has `null` as its `parent_id`.
+
+The hierarchy is reconstructed from the `parent_id` relationships rather than nested child objects.
 
 ---
 
@@ -977,3 +989,7 @@ Before AI content is stored, the backend performs additional processing dependin
 | 422 | Request validation failed |
 | 429 | Too many requests |
 | 500 | Unexpected server error or Database errors |
+
+# Next Steps
+
+Explore [User Attempt API](Attempt.md)

@@ -6,7 +6,7 @@ from services.exams.exam_evaluator import ExamEvaluator
 from services.attempts.attempt_bundle import EvaluationBundle
 
 class ExamAttemptJob(BaseJob):
-    """Orchestrates quiz evaluation task as a celery job"""
+    """Orchestrates quiz evaluation task as a celery job."""
     def execute(self, bundle: EvaluationBundle) -> dict:
 
         if get_settings().ENVIRONMENT == "testing":

@@ -13,7 +13,10 @@ fake = Faker()
 
 
 class ExamGenerationJob(BaseJob):
-    """Orchestrates exam generation."""
+    """
+    Orchestrates exam generation task as a celery job
+    and completes post processing of the content.
+    """
 
     def execute(
         self,

@@ -11,22 +11,136 @@
   "sections": [
     {
       "section_name": "Verbal Ability and Reading Comprehension (VARC)",
-      "sectional_duration": "40 minutes",
+      "total_marks": 66,
+      "section_duration": "40 minutes",
       "question_groups": [
         {
           "group_title": "Reading Comprehension Passages",
-          "selection_rule": { "type": "all" },
+          "selection_rule": {
+            "type": "all"
+          },
           "shared_material": {
             "type": "passage"
           },
-          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
-          "parts": [{ "label": "RC-Questions", "count": 16, "marks": 3 }]
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "RC-Questions",
+              "count": 16,
+              "marks": 3
+            }
+          ]
         },
         {
-          "group_title": "Verbal Ability TITA (Type In The Answer)",
-          "selection_rule": { "type": "all" },
-          "defaults": { "question_type": "SubjectiveShort", "answer_type": "text", "negative_marking": 0 },
-          "parts": [{ "label": "TITA-Questions", "count": 8, "marks": 3 }]
+          "group_title": "Verbal Ability TITA",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "SubjectiveShort",
+            "answer_type": "text",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "TITA-Questions",
+              "count": 6,
+              "marks": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Data Interpretation and Logical Reasoning (DILR)",
+      "total_marks": 66,
+      "section_duration": "40 minutes",
+      "question_groups": [
+        {
+          "group_title": "Data Interpretation Sets",
+          "selection_rule": {
+            "type": "all"
+          },
+          "shared_material": {
+            "type": "passage"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "DI-Questions",
+              "count": 14,
+              "marks": 3
+            }
+          ]
+        },
+        {
+          "group_title": "Logical Reasoning Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "LR-Questions",
+              "count": 8,
+              "marks": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Quantitative Aptitude (QA)",
+      "total_marks": 66,
+      "section_duration": "40 minutes",
+      "question_groups": [
+        {
+          "group_title": "Multiple Choice Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "MCQ-Questions",
+              "count": 14,
+              "marks": 3
+            }
+          ]
+        },
+        {
+          "group_title": "Numerical Answer Questions",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "Numerical",
+            "answer_type": "numeric",
+            "negative_marking": 0
+          },
+          "parts": [
+            {
+              "label": "TITA-Questions",
+              "count": 8,
+              "marks": 3
+            }
+          ]
         }
       ]
     }

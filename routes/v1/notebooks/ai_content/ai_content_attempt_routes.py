@@ -26,6 +26,9 @@ attempt_bp = Blueprint("attempts", __name__, url_prefix="<uuid:content_id>/attem
 @json_required
 @login_required
 def create_attempt_endpoint(notebook_id: UUID, content_id: UUID):
+    """
+    Endpoint to create an attempt for an ai content.
+    """
     payload = EvaluationRequest(**g.json_data)
 
     context = AttemptContext(
@@ -66,7 +69,7 @@ def get_all_attempts_endpoint(notebook_id: UUID, content_id: UUID):
 # Retreive a specific attempt route
 @attempt_bp.get("/<uuid:attempt_id>")
 @login_required
-def get_ai_content_endpoint(notebook_id: UUID, content_id: UUID, attempt_id: UUID):
+def get_attempt_endpoint(notebook_id: UUID, content_id: UUID, attempt_id: UUID):
     """
     Endpoint to retrieve a specific attempt
     """

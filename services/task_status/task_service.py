@@ -7,6 +7,7 @@ from services.integrations.redis_service import get_key
 from exceptions import ResourceNotFoundError
 
 def task_status(task_id: str, user_id: str) -> dict[str, Any]:
+    """Fetch the status of a Celery task by its ID and verify ownership."""
     owner = get_key(f"task:{task_id}:owner")
     task_type = get_key(f"task:{task_id}:type")
     

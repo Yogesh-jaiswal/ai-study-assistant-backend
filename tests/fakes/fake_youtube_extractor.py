@@ -7,6 +7,7 @@ class FakeChunk:
     duration: float
 
 class FakeYDL:
+    """Fake YouTubeDL class for testing purposes."""
     def __enter__(self):
         return self
 
@@ -23,6 +24,7 @@ class FakeYDL:
 
 
 class FakeTranscript:
+    """Fake Transcript class for testing purposes."""
 
     def fetch(self):
         return [
@@ -32,12 +34,14 @@ class FakeTranscript:
 
 
 class FakeTranscriptList:
+    """Fake TranscriptList class for testing purposes."""
 
     def find_transcript(self, *_):
         return FakeTranscript()
 
 
 class FakeAPI:
+    """Fake API class for testing purposes."""
 
     def list(self, *_):
         return FakeTranscriptList()

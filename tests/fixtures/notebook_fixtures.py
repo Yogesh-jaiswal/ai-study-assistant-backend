@@ -11,6 +11,7 @@ def created_notebook(
     notebook_builder,
     logged_in_user
 ):
+    """Fixture to create a notebook for a logged-in user."""
     notebook = notebook_builder.create(
         access_token=logged_in_user["access_token"],
         title="My first notebook"
@@ -27,6 +28,7 @@ def second_created_notebook(
     notebook_builder,
     second_logged_in_user
 ):
+    """Fixture to create a notebook for a second logged-in user."""
     notebook = notebook_builder.create(
         access_token=second_logged_in_user["access_token"],
         title="My first notebook"

@@ -208,3 +208,7 @@ These improvements extend the chat layer without changing the overall retrieval 
 | 422 | Request validation failed |
 | 429 | Too many requests |
 | 500 | Unexpected server error or database error |
+
+# Next Steps
+
+Explore [Blueprint API](Blueprint.md)

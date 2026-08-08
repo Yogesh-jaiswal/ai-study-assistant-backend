@@ -3,6 +3,7 @@ from services.integrations.ocr_service import OCR
 
 
 def test_extract_image(monkeypatch, resource_dir):
+    """Test extracting text from a image file."""
     monkeypatch.setattr(
         OCR,
         "extract_text",

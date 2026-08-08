@@ -19,7 +19,7 @@ settings = get_settings()
 @auth_bp.get("/refresh")
 def refresh_endpoint():
     """
-    Endpoint to re login the user and rotate refresh token
+    Endpoint to re login the user and rotate refresh token.
     """
     refresh_token = request.cookies.get("refresh_token")
 

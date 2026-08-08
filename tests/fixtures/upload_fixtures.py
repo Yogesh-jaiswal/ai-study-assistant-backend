@@ -22,6 +22,7 @@ def uploaded_file(
     upload_builder,
     created_notebook,
 ):
+    """Fixture to upload a file for a created notebook."""
 
     upload = upload_builder.upload(
         notebook_id=created_notebook["notebook_id"],
@@ -40,6 +41,7 @@ def second_uploaded_file(
     upload_builder,
     second_created_notebook,
 ):
+    """Fixture to upload a file for a second created notebook."""
 
     upload = upload_builder.upload(
         notebook_id=second_created_notebook["notebook_id"],
@@ -58,6 +60,7 @@ def completed_upload(
     upload_builder,
     uploaded_file,
 ):
+    """Fixture to wait for the completion of an uploaded file."""
 
     upload_builder.wait(
         access_token=uploaded_file["access_token"],
@@ -72,6 +75,7 @@ def second_completed_upload(
     upload_builder,
     second_uploaded_file,
 ):
+    """Fixture to wait for the completion of a second uploaded file."""
 
     upload_builder.wait(
         access_token=second_uploaded_file["access_token"],

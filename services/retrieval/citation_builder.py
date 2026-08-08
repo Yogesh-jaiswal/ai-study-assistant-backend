@@ -1,6 +1,7 @@
 from .retrieval_dataclasses import Citation, RetrievedChunk
 
 class CitationBuilder:
+    """Builds a list of unique citations from a list of retrieved chunks."""
 
     @staticmethod
     def build(

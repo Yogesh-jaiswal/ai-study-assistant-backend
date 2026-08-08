@@ -1,8 +1,13 @@
+from typing import Any
+
 from models.enums import EvaluationTypes
 
 class QuestionNormalizer:
+    """Normalizes quiz and exam questions into a common question format."""
+
     @classmethod
-    def build(cls, content: dict, evaluation_type: EvaluationTypes):
+    def build(cls, content: dict, evaluation_type: EvaluationTypes) -> dict[str, Any]:
+        """Builds a normalized question map for the given evaluation type."""
         NORMALIZER = {
             EvaluationTypes.QUIZ: cls._quiz_normalizer,
             EvaluationTypes.EXAM: cls._exam_normalizer
@@ -11,7 +16,8 @@ class QuestionNormalizer:
         return NORMALIZER[evaluation_type](content)
     
     @staticmethod
-    def _quiz_normalizer(content: dict):
+    def _quiz_normalizer(content: dict) -> dict[str, Any]:
+        """Normalizes quiz questions into the common question format."""
         question_map = {}
 
         for question in content["questions"]:
@@ -19,14 +25,16 @@ class QuestionNormalizer:
 
             question_map[question_id] = {
                 **question,
-                "answer_type": "MCQ",
-                "question_type": "single_choice",
+                "answer_type": "single_choice",
+                "question_type": "MCQ",
             }
 
         return question_map
     
     @staticmethod
-    def _exam_normalizer(content: dict):
+    def _exam_normalizer(content: dict) -> dict[str, Any]:
+        """Normalizes exam questions using their group's question and answer types."""
+        
         question_map = {}
 
         for section in content["sections"]:
@@ -55,4 +63,4 @@ class QuestionNormalizer:
                                 "question_type": question_type,
                             }
 
-            return question_map
+        return question_map

@@ -21,7 +21,10 @@ def create_attempt(
         user_id: str, 
         evaluation_context: AttemptContext
     ) -> dict[str, str]:
-    """Runs a background task to evaluate ai content for the specified ai content based on the provided attempt context and save it."""
+    """
+    Runs a background task to evaluate ai content for the specified 
+    ai content based on the provided attempt context and save it.
+    """
     content = get_ai_content_by_content_id(notebook_id, user_id, evaluation_context.content_id)
     if not content:
         raise ResourceNotFoundError("Content not found")
@@ -44,6 +47,9 @@ def create_attempt(
 
     task = evaluate_user_attempt.delay(evaluation_type, attempt.id, evaluation_context.content_id, notebook_id, user_id, asdict(evaluation_context))
 
+    # Celery runs outside the request context.
+    # Store task ownership in Redis so polling endpoints can
+    # later verify task ownership without Flask's g object.
     set_key(
         f"task:{task.id}:owner",
         user_id,

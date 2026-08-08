@@ -17,7 +17,7 @@ from configs import get_settings
 settings = get_settings()
 
 # Chat route
-@notebook_bp.post("<uuid:notebook_id>/ask")
+@notebook_bp.get("<uuid:notebook_id>/ask")
 @limiter.limit(settings.ASK_RATE_LIMIT, override_defaults=False)
 @json_required
 @login_required

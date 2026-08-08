@@ -6,6 +6,7 @@ from .models.fake_provider import FakeProvider
 from .models.gemini_provider import GeminiProvider
 
 class AIEngine:
+    """A class that provides an interface to different AI providers for generating content based on a given response schema."""
     AI_PROVIDERS = {
         "FAKE": FakeProvider,
         "GEMINI": GeminiProvider
@@ -15,6 +16,7 @@ class AIEngine:
         self.provider = provider
 
     def complete(self, prompt: str, response_schema: type[BaseModel], generation_options: dict | None = None) -> dict[str, Any]:
+        """Generate content using the specified AI provider."""
         model = self.AI_PROVIDERS.get(self.provider)
 
         if not model:

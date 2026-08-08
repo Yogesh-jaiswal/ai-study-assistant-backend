@@ -3,9 +3,11 @@ from dataclasses import dataclass
 
 @dataclass
 class TokenEncoding:
+    """Represents the tokenization of a text, including the tokens and their corresponding offset mappings."""
     offset_mapping: list[tuple[int, int]]
 
 class BaseEmbeddingProvider(ABC):
+    """Abstract base class for embedding providers, defining the interface for generating embeddings and tokenization."""
 
     @abstractmethod
     def embed(self, text: str) -> list[float]:

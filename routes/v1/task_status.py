@@ -11,7 +11,7 @@ from decorators.login_required import login_required
 @v1_bp.get("/tasks/<uuid:task_id>")
 @login_required
 def get_tasks_status(task_id: UUID):
-    """Endpoint to get the task status"""
+    """Endpoint to track the task status of a running celery task."""
     response = task_status(str(task_id), g.user_id)
 
     return jsonify(create_success_response(response))

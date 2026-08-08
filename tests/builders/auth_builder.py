@@ -1,5 +1,5 @@
 class AuthBuilder:
-    """Build Authenticated user"""
+    """Build Authenticated user."""
 
     def __init__(self, client):
         self.client = client

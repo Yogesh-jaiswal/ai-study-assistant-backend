@@ -43,47 +43,6 @@ def bulk_create_embeddings(chunk_ids: list[str], vectors: list[list[float]]) -> 
 
     db.session.add_all(embeddings)
 
-def get_embeddings_by_notebook(notebook_id: str, user_id: str) -> list[ChunkEmbedding]:
-    """
-    Retrieve all the embeddings of a certain notebook while enforcing user ownership.
-
-    Returns:
-        The embeddings if found owned by the user, otherwise empty list.
-    """
-    embeddings = (
-        db.session.scalars(
-            db.select(ChunkEmbedding)
-            .join(DocumentChunk)
-            .join(Upload)
-            .join(Notebook)
-            .where(
-                Upload.notebook_id == notebook_id,
-                Notebook.user_id == user_id,
-            )
-            .options(
-                db.load_only(
-                    ChunkEmbedding.id,
-                    ChunkEmbedding.vector,
-                ),
-                db.joinedload(ChunkEmbedding.chunk)
-                    .load_only(
-                        DocumentChunk.content,
-                        DocumentChunk.block_type,
-                        DocumentChunk.chunk_metadata,
-                    )
-                    .joinedload(DocumentChunk.upload)
-                    .load_only(
-                        Upload.filename,
-                        Upload.author,
-                        Upload.source_type,
-                    )
-            )
-        )
-        .all()
-    )
-
-    return embeddings
-
 def get_embeddings_by_upload(upload_id: str, notebook_id: str, user_id: str) -> list[ChunkEmbedding]:
     """
     Retrieve all the embeddings of a certain upload while enforcing notebook ownership.
@@ -105,34 +64,12 @@ def get_embeddings_by_upload(upload_id: str, notebook_id: str, user_id: str) -> 
 
     return embeddings
 
-def get_embedding_by_chunk(chunk_id: str, upload_id: str, notebook_id: str, user_id: str) -> ChunkEmbedding | None:
-    """
-    Retrieve the embedding of a certain upload chunk while enforcing notebook ownership.
-
-    Returns:
-        The embedding if found owned by the notebook, otherwise none.
-    """
-    embeddings = db.session.scalar(
-        db.select(ChunkEmbedding)
-        .join(DocumentChunk)
-        .join(Upload)
-        .join(Notebook)
-        .where(
-            ChunkEmbedding.chunk_id == chunk_id,
-            DocumentChunk.upload_id == upload_id,
-            Upload.notebook_id == notebook_id,
-            Notebook.user_id == user_id
-        )
-    )
-
-    return embeddings
-
 def retrieve_similar_chunks(
     notebook_id: str,
     user_id: str,
     query_embedding: list[float],
     k: int = 5,
-) -> list[tuple[float, DocumentChunk, Upload]] | None:
+) -> list[tuple[float, DocumentChunk, Upload]]:
     """
     Retrieve the top-k most similar chunks together with their upload.
 
@@ -143,14 +80,9 @@ def retrieve_similar_chunks(
                 DocumentChunk ORM,
                 Upload ORM
             )
-
-        Returns None when pgvector is disabled.
     """
 
     settings = get_settings()
-
-    if not settings.USE_PGVECTOR:
-        return None
 
     db.session.execute(
         db.text(

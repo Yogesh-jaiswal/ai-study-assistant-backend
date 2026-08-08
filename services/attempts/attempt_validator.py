@@ -15,7 +15,7 @@ from .attempt_context import AttemptContext
 ANSWER_TYPE_MAPPING = {
     "MCQ": str,
     "TrueFalse": bool,
-    "Subjective_Short": str,
+    "SubjectiveShort": str,
     "Subjective": str,
     "FillBlank": str,
     "Numerical": (int, float),
@@ -187,7 +187,7 @@ class AttemptValidator:
                 )
 
         elif question_type in {
-            "Subjective_Short",
+            "SubjectiveShort",
             "Subjective",
             "FillBlank",
             "DiagramQuestion"

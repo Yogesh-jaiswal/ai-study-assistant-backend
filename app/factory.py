@@ -8,7 +8,7 @@ from configs.logging_config import configure_logging
 import app.extensions as ext
 from app.commands.seed_blueprints import seed_exam_blueprints_command
 from configs import get_settings
-from sqlalchemy.engine import URL
+from app.security.jwt_keys import ensure_jwt_keys
 import models
 
 def create_app():
@@ -23,6 +23,9 @@ def create_app():
     
     # Configure root logger
     configure_logging()
+
+    # Ensure JWT keys exist
+    ensure_jwt_keys(settings)
 
     # Create main flask app object
     app = Flask(__name__)

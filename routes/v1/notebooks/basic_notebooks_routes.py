@@ -71,7 +71,8 @@ def get_notebook_endpoint(id: UUID):
 
 
 # Notebook edit route
-@notebook_bp.patch("/<uuid:id>/edit")
+@notebook_bp.patch("/<uuid:id>")
+@json_required
 @login_required
 def edit_notebook_endpoint(id: UUID):
     """
@@ -86,7 +87,7 @@ def edit_notebook_endpoint(id: UUID):
         create_success_response(
             NotebookCreatedResponse(
                 id=notebook_id,
-                message="notebook created"
+                message="notebook edited"
             ).model_dump()
         )
     ), 200

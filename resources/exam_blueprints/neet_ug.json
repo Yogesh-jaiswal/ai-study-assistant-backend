@@ -15,15 +15,169 @@
       "question_groups": [
         {
           "group_title": "Section A",
-          "selection_rule": { "type": "all" },
-          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
-          "parts": [{ "label": "Q01-Q35", "count": 35, "marks": 4 }]
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "Q01-Q35",
+              "count": 35,
+              "marks": 4
+            }
+          ]
         },
         {
           "group_title": "Section B",
-          "selection_rule": { "type": "choose_n", "count": 10 },
-          "defaults": { "question_type": "MCQ", "answer_type": "single_choice", "negative_marking": 1 },
-          "parts": [{ "label": "Q36-Q50", "count": 15, "marks": 4 }]
+          "selection_rule": {
+            "type": "choose_n",
+            "count": 10
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "Q36-Q50",
+              "count": 15,
+              "marks": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Chemistry",
+      "total_marks": 180,
+      "question_groups": [
+        {
+          "group_title": "Section A",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "Q01-Q35",
+              "count": 35,
+              "marks": 4
+            }
+          ]
+        },
+        {
+          "group_title": "Section B",
+          "selection_rule": {
+            "type": "choose_n",
+            "count": 10
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "Q36-Q50",
+              "count": 15,
+              "marks": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Botany",
+      "total_marks": 180,
+      "question_groups": [
+        {
+          "group_title": "Section A",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "Q01-Q35",
+              "count": 35,
+              "marks": 4
+            }
+          ]
+        },
+        {
+          "group_title": "Section B",
+          "selection_rule": {
+            "type": "choose_n",
+            "count": 10
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "Q36-Q50",
+              "count": 15,
+              "marks": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section_name": "Zoology",
+      "total_marks": 180,
+      "question_groups": [
+        {
+          "group_title": "Section A",
+          "selection_rule": {
+            "type": "all"
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "Q01-Q35",
+              "count": 35,
+              "marks": 4
+            }
+          ]
+        },
+        {
+          "group_title": "Section B",
+          "selection_rule": {
+            "type": "choose_n",
+            "count": 10
+          },
+          "defaults": {
+            "question_type": "MCQ",
+            "answer_type": "single_choice",
+            "negative_marking": 1
+          },
+          "parts": [
+            {
+              "label": "Q36-Q50",
+              "count": 15,
+              "marks": 4
+            }
+          ]
         }
       ]
     }

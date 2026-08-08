@@ -1,5 +1,6 @@
 """
-Shared pytest infrastructure.
+Shared test infrastructure.
 
-Contains reusable fixtures used across the entire test suite.
+Provides application, database, Celery, session, cleanup,
+and testing-profile utilities used to support the test suite.
 """

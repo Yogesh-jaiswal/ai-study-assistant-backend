@@ -13,6 +13,7 @@ def created_attempt(
     attempt_builder,
     generated_exam
 ):
+    """Fixture to create an attempt for a generated exam."""
     
     exam  = client.get(
         (

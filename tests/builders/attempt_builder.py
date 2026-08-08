@@ -1,6 +1,7 @@
 from .task_builder import TaskBuilder
 
 class AttemptBuilder(TaskBuilder):
+    """Build user attempts."""
 
     def __init__(self, client):
         super().__init__(client)

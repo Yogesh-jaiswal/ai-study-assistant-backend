@@ -73,7 +73,7 @@
             "type": "all"
           },
           "defaults": {
-            "question_type": "Subjective_Short",
+            "question_type": "SubjectiveShort",
             "answer_type": "text",
             "negative_marking": 0
           },
@@ -97,8 +97,8 @@
           },
           "parts": [
             {
-              "label": "Q31-Q34",
-              "count": 4,
+              "label": "Q31-Q33",
+              "count": 3,
               "marks": 10
             }
           ]

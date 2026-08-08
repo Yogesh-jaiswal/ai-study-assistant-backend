@@ -5,7 +5,10 @@ from services.quizzes.quiz_generator import QuizGenerator
 from services.ai_generation.generation_bundle import GenerationBundle
 
 class QuizGenerationJob(BaseJob):
-    """Orchestrates quiz generation task as a celery job"""
+    """
+    Orchestrates quiz generation task as a celery job
+    and completes post processing of the content.
+    """
     def execute(self, generation_options: dict, bundle: GenerationBundle) -> dict:
         resources = bundle.to_prompt()
 

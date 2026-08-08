@@ -1,3 +1,10 @@
+"""
+Document extraction services.
+
+Provides processors for extracting usable content from
+supported file and external content sources.
+"""
+
 import time
 from models.enums import FileTypes
 
@@ -12,6 +19,7 @@ from .yt_processor import YouTubeProcessor
 from exceptions import UnsupportedFileTypeError
 
 class DocumentProcessorFactory:
+    """A factory class to create different types of document processors based on the specified file type."""
     PROCESSORS = {
         FileTypes.TXT: TextProcessor,
         FileTypes.MARKDOWN: MarkdownProcessor,

@@ -66,6 +66,10 @@ def list_blueprints(
 
     query = db.select(ExamBlueprint)
 
+    query = query.where(
+        ExamBlueprint.is_system.is_(False)
+    )
+
     if owner_id is not None:
         query = query.where(
             ExamBlueprint.created_by == owner_id

@@ -1,5 +1,6 @@
+import os
 from uuid import UUID
-from flask import g, jsonify, Blueprint, request, send_file
+from flask import g, jsonify, Blueprint, request, send_file, current_app
 
 from services.uploads.upload_service import (
     upload_file,
@@ -126,7 +127,7 @@ def upload_yt_video_endpoint(notebook_id: UUID):
     """
     payload = YoutubeUploadRequest(**g.json_data)
     
-    upload = upload_yt_video(notebook_id, g.user_id, payload)
+    upload = upload_yt_video(str(notebook_id), g.user_id, payload)
 
     return jsonify(
         create_success_response(

@@ -21,7 +21,10 @@ def enqueue_ai_content_generation(
         content_type: AIContentTypes,
         generation_options: dict
     ) -> str:
-    """Runs a background task to generate ai content for the specified notebook based on the provided ai generation context and save it."""
+    """
+    Runs a background task to generate ai content for the specified 
+    notebook based on the provided ai generation context and save it.
+    """
     notebook = get_notebook_by_notebook_id(notebook_id, user_id)
     if not notebook:
         raise ResourceNotFoundError("Notebook not found")
@@ -30,6 +33,9 @@ def enqueue_ai_content_generation(
 
     task = create_ai_content.delay(content_type, generation_options, notebook.id, asdict(generation_context), user_id)
 
+    # Celery runs outside the request context.
+    # Store task ownership in Redis so polling endpoints can
+    # later verify task ownership without Flask's g object.
     set_key(
         f"task:{task.id}:owner",
         user_id,

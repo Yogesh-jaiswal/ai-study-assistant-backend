@@ -1,6 +1,7 @@
 from .base_embeddings_generator import BaseEmbeddingProvider, TokenEncoding
 
 class FakeEmbeddingGenerator(BaseEmbeddingProvider):
+    """A mock embedding generator that provides fake embeddings and tokenization for testing purposes."""
 
     def embed(self, text: str):
         return [0.1, 0.2, 0.3]

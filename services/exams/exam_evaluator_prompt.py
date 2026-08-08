@@ -1,4 +1,5 @@
 def create_exam_evaluator_prompt(resources: str):
+    """Create a prompt for the AI model to evaluate student answers based on the provided resources."""
     return f"""
         You are an experienced examiner.
 

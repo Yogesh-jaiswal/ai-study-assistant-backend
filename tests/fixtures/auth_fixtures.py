@@ -9,6 +9,7 @@ def auth_builder(client):
 
 @fixture
 def registered_user(auth_builder):
+    """Fixture to register a user for testing purposes."""
     return auth_builder.register(
         email="john@test.com",
         username="John123",
@@ -18,6 +19,7 @@ def registered_user(auth_builder):
 
 @fixture()
 def second_registered_user(auth_builder):
+    """Fixture to register a second user for testing purposes."""
     return auth_builder.register(
         email="alice@test.com",
         username="Alice123",
@@ -27,6 +29,7 @@ def second_registered_user(auth_builder):
 
 @fixture
 def logged_in_user(auth_builder, registered_user):
+    """Fixture to log in a registered user and provide their authentication details."""
 
     login = auth_builder.login(
         email=registered_user["email"],
@@ -41,6 +44,8 @@ def logged_in_user(auth_builder, registered_user):
 
 @fixture()
 def second_logged_in_user(auth_builder, second_registered_user):
+    """Fixture to log in a second registered user and provide their authentication details."""
+    
     login = auth_builder.login(
         email=second_registered_user["email"],
         password=second_registered_user["password"],

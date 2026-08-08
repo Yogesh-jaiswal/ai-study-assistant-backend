@@ -29,4 +29,8 @@ if __name__ == "__main__":
             "if multilingual search is required."
             "\n You can change it by changing the app settings."
         )
-    app.run(debug=settings.DEBUG)
+    app.run(
+        host=settings.HOST,
+        port=settings.PORT,
+        debug=settings.DEBUG
+    )

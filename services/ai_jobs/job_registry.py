@@ -1,3 +1,7 @@
+"""
+Module for registering AI jobs with their corresponding content types.
+"""
+
 from models.enums import AIContentTypes
 
 from .summary_job import SummaryGenerationJob

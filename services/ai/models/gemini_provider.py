@@ -13,6 +13,7 @@ def get_gemini_client(api_key: str) -> Client:
     return genai.Client(api_key=api_key)
 
 class GeminiProvider:
+    """A provider that uses the Gemini API to generate content based on a given response schema."""
 
     def __init__(self):
         self.client = get_gemini_client(get_settings().MODEL_API_KEY)

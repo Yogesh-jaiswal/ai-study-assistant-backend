@@ -9,10 +9,12 @@ from . import UpdatedBaseModel
 from models.enums import FileTypes, ProcessingStatus, UploadPurpose
 
 class FileUploadedResponse(BaseModel):
+    """Response model for a successful file upload."""
     upload_id: str = Field(..., description="Unique identifier for the uploaded file")
     task_id: str = Field(..., description="Unique identifier for the file processing background task")
 
 class FileMetadataResponse(BaseModel):
+    """Response model for file metadata."""
     id: str = Field(..., description="Unique identifier for the uploaded file")
     filename: str = Field(..., description="Name of the uploaded file")
     author: str | None = Field(default=None, description="Author of the uploaded file")
@@ -22,12 +24,15 @@ class FileMetadataResponse(BaseModel):
     uploaded_at: datetime = Field(..., description="Timestamp of when the file was uploaded")
 
 class GetUploadResponse(FileMetadataResponse):
+    """Response model for retrieving a specific uploaded file's metadata."""
     raw_text: str = Field(..., description="Extracted raw text content from the uploaded file")
 
 class GetAllUploadsResponse(BaseModel):
+    """Response model for retrieving all uploaded files' metadata."""
     uploads: List[FileMetadataResponse] = Field(..., description="List of all uploads for the notebook")
 
 class YoutubeUploadRequest(UpdatedBaseModel):
+    """Request model for uploading a YouTube video."""
     url: str = Field(..., description="YouTube video url")
 
     @field_validator("url")

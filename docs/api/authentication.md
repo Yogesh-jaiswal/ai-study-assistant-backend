@@ -330,3 +330,7 @@ Requires a valid refresh token cookie.
 | 422 | Request validation failed |
 | 429 | Too many requests |
 | 500 | Unexpected server error or Database error |
+
+# Next Steps
+
+Explore [Notebook API](Notebook.md)

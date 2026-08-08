@@ -356,7 +356,7 @@ The following example demonstrates every major blueprint feature supported by th
               "type": "all"
             },
             "defaults": {
-              "question_type": "Subjective_Short",
+              "question_type": "SubjectiveShort",
               "answer_type": "text",
               "negative_marking": 0
             },
@@ -845,3 +845,7 @@ with detailed validation errors.
 | 422    | Request validation failed                                               |
 | 429    | Too many requests                                                       |
 | 500    | Unexpected server error or Database error                               |
+
+# Next Steps
+
+Explore [AI Content API](AIContent.md)

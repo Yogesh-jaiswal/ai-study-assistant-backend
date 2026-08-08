@@ -6,6 +6,7 @@ from .chat_schema import ChatResponse
 
 
 class ChatGenerator:
+    """Generates chat responses using the AI engine based on a given question and context."""
 
     def __init__(self):
 

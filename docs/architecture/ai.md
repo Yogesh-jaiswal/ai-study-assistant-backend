@@ -101,6 +101,7 @@ Responsibilities:
 * Return normalized AI content
 
 Generation Jobs act as the execution boundary between Celery and individual AI features. They encapsulate feature-specific generation options while keeping Celery unaware of business logic.
+
 ---
 
 ### Feature-specific Post-processing
@@ -269,7 +270,7 @@ Future providers may include:
 
 Providers may optionally consume provider-specific job options. Unknown options should be ignored, allowing feature-specific testing behavior without affecting production providers.
 
--> Current registration is static. A provider registration system may be introduced during a future architecture refactor.
+AI model registration is config driven. To change the model requires change in configurations and server restart.
 
 ---
 

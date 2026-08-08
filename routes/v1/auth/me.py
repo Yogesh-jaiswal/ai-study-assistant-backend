@@ -8,6 +8,9 @@ from . import auth_bp
 @auth_bp.get("/me")
 @login_required
 def get_me():
+    """
+    Endpoint to get the current logged in user's information.
+    """
     user = get_user(g.user_id)
 
     return jsonify(

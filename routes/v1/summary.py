@@ -12,6 +12,7 @@ from . import v1_bp
 # Get the settings object
 settings = get_settings()
 
+# Generate the summary endpoint with rate limiting and required decorators
 @v1_bp.post("/summarize")
 @limiter.limit(settings.SUMMARY_RATE_LIMIT, override_defaults=False)
 @json_required

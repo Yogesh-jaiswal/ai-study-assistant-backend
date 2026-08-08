@@ -46,7 +46,7 @@ class Alternative(BaseModel):
     )
 
     questions: list[Question] = Field (
-        ge=2,
+        min_length=2,
         description="Questions inside the alteranatives."
     )
 

@@ -59,7 +59,7 @@ def upgrade():
     sa.Column('notebook_id', sa.String(length=36), nullable=False),
     sa.Column('filename', sa.String(length=255), nullable=False),
     sa.Column('file_path', sa.String(), nullable=False),
-    sa.Column('source_type', sa.Enum('PDF', 'DOCX', 'TXT', 'CSV', 'XLSX', 'PPTX', 'MARKDOWN', name='filetypes'), nullable=False),
+    sa.Column('source_type', sa.Enum('PDF', 'DOCX', 'TXT', 'CSV', 'MARKDOWN', 'IMAGE', 'YOUTUBE', name='filetypes'), nullable=False),
     sa.Column('processing_status', sa.Enum('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', name='processingstatus'), server_default='PENDING', nullable=False),
     sa.Column('raw_text', sa.Text(), nullable=True),
     sa.Column('error_message', sa.Text(), nullable=True),

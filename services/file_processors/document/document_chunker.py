@@ -7,6 +7,7 @@ from .doc_representation import (
 
 from models.enums import DocumentBlockType
 
+# Blocks that should not be split into smaller chunks, regardless of their token count
 NON_SPLITTABLE_BLOCKS = {
     DocumentBlockType.TABLE,
     DocumentBlockType.HEADING,

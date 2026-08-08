@@ -16,7 +16,7 @@ settings = get_settings()
 logger = logging.getLogger(__name__)
 
 def login_user(payload: LoginRequest) -> User:
-    """Check credententials and generate access token for user"""
+    """Check credententials and generate access token for user."""
     user = get_user_by_email(payload.email)
 
     if user:

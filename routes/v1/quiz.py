@@ -12,6 +12,7 @@ from . import v1_bp
 # Get the settings object
 settings = get_settings()
 
+# Generate the quiz endpoint with rate limiting and required decorators
 @v1_bp.post("/quiz")
 @limiter.limit(settings.QUIZ_RATE_LIMIT, override_defaults=False)
 @json_required

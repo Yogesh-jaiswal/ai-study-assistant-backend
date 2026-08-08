@@ -3,6 +3,7 @@ os.environ["ENVIRONMENT"] = "testing"
 
 from pytest import mark
 
+# pytest hooks for enabling/disabling async tests and setting up test profiles
 def pytest_addoption(parser):
     parser.addoption(
         "--async-tasks",
@@ -17,6 +18,7 @@ def pytest_addoption(parser):
         default="testing",
     )
 
+# pytest hook to skip async tests if the --async-tasks option is not provided
 def pytest_collection_modifyitems(config, items):
     if config.getoption("--async-tasks"):
         return

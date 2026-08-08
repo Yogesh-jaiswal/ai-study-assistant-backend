@@ -11,7 +11,7 @@ settings = get_settings()
 
 def create_access_token(user_id: str) -> str:
     """
-    Function to generate a new JWT access token
+    Function to generate a new JWT access token.
     """
     now = datetime.now(timezone.utc)
 
@@ -31,7 +31,7 @@ def create_access_token(user_id: str) -> str:
 
 def decode_access_token(token: str) -> dict[str, Any]:
     """
-    Function to decode the existing JWT token
+    Function to decode the existing JWT token.
     """
     return jwt.decode(
         token,

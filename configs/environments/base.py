@@ -7,6 +7,8 @@ class BaseAppSettings(BaseSettings):
     """Application settings object."""
     # App Settings
     DEBUG: bool = Field(default=True)
+    HOST: str = Field(default="0.0.0.0")
+    PORT: int = Field(default=5000)
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = Field(default="DEBUG")
     ENVIRONMENT: Literal["development", "testing", "production", "evaluation"] = Field(default="development")
 
@@ -23,12 +25,12 @@ class BaseAppSettings(BaseSettings):
             )
         return self
 
-    # Quiz Settings
+    # Legacy Quiz Settings
     DEFAULT_QUIZ_COUNT: int = Field(default = 5, ge = 1, le = 20)
     MAX_QUIZ_QUESTIONS: int = Field(default = 20, ge = 1)
     DEFAULT_QUIZ_LEVEL: Literal["easy", "medium", "hard"] = Field(default="medium")
 
-    # Notes Settings
+    # Legacy Notes Settings
     MAX_NOTES_LENGTH: int = Field(default=1000)
 
     # Rate Limiter Settings
@@ -43,13 +45,12 @@ class BaseAppSettings(BaseSettings):
     AI_CONTENT_RATE_LIMIT: str = Field(default="15/minute")
 
     # Database Settings
-    POSTGRES_HOST: str = Field(default="localhost")
+    POSTGRES_HOST: str = Field(default="db")
     POSTGRES_PORT: int = Field(default=5432)
     POSTGRES_USER: str = Field(default="postgres")
     POSTGRES_PASSWORD: str = Field(default="postgres")
     POSTGRES_DB: str = Field(default="ai_study_assistant")
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = Field(default=False)
-    USE_PGVECTOR: bool = Field(default=False)
     HNSW_EF_SEARCH: int = Field(default=100)
 
     @computed_field
@@ -85,18 +86,31 @@ class BaseAppSettings(BaseSettings):
         return self.JWT_PUBLIC_KEY_PATH.read_text()
     
     # Login Settings
-    DUMMY_HASH: str
+    DUMMY_HASH_RAW: str = Field(alias="DUMMY_HASH")
+
+    # Docker Compose requires '$' to be escaped as '$$' inside
+    # environment values. Normalize the value so the application
+    # always receives a valid Argon2 hash.
+    @computed_field
+    @property
+    def DUMMY_HASH(self) -> str:
+        return self.DUMMY_HASH_RAW.replace("$$", "$")
 
     # Redis Settings
-    REDIS_HOST: str = Field(default="localhost")
+    REDIS_HOST: str = Field(default="redis")
     REDIS_PORT: int = Field(default=6379)
     REDIS_DB: int = Field(default=0)
+
+    @computed_field
+    @property
+    def REDIS_URL(self) -> str:
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
 
     # Celery Settings
     CELERY_TASK_ALWAYS_EAGER: bool = Field(default=False)
     CELERY_TASK_EAGER_PROPAGATES: bool = Field(default=False)
 
-    # Embedding Settings
+    # Embeddings Settings
     EMBEDDINGS_MODEL: str = Field(default="all-MiniLM-L6-v2") # <- Consider changing it to this multilingual model "paraphrase-multilingual-MiniLM-L12-v2" for multi language support
 
     # Database Query Settings

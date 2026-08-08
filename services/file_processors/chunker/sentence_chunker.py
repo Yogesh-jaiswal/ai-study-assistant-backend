@@ -7,7 +7,7 @@ except LookupError:
 from .base_chunker import BaseChunker
 
 class SentenceChunker(BaseChunker):
-    """Divided the given text into sentence based separate chunks."""
+    """Divide the given text into sentence based separate chunks."""
 
     def __init__(self, max_sentences: int = 3, overlap_sentences: int = 1):
         if overlap_sentences >= max_sentences:

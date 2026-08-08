@@ -1,4 +1,5 @@
 def build_answers(exam):
+    """Build a list of answers for the given exam."""
     answers = []
 
     for section in exam["sections"]:
