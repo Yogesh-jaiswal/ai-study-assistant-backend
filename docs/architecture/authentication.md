@@ -55,27 +55,27 @@ Passwords are never stored directly.
 ```text
 Registration Request
 
-↓
+    ↓
 
 Validate payload
 
-↓
+    ↓
 
 Check existing email
 
-↓
+    ↓
 
 Hash password (Argon2)
 
-↓
+    ↓
 
 Create user
 
-↓
+    ↓
 
 Save user
 
-↓
+    ↓
 
 Return success response
 ```
@@ -98,31 +98,31 @@ The refresh token is hashed before storage.
 ```text
 Login Request
 
-↓
+    ↓
 
 Lookup user
 
-↓
+    ↓
 
 Verify password
 
-↓
+    ↓
 
 Issue access token
 
-↓
+    ↓
 
 Generate refresh token
 
-↓
+    ↓
 
 Hash refresh token
 
-↓
+    ↓
 
 Store refresh token
 
-↓
+    ↓
 
 Return login response
 ```
@@ -196,43 +196,43 @@ Raw refresh tokens are never persisted.
 ```text
 Refresh Request
 
-↓
+    ↓
 
 Verify refresh token
 
-↓
+    ↓
 
 Lookup stored token hash
 
-↓
+    ↓
 
 Check expiration
 
-↓
+    ↓
 
 Delete expired token (if expired)
 
-↓
+    ↓
 
 Revoke old refresh token
 
-↓
+    ↓
 
 Issue new access token
 
-↓
+    ↓
 
 Generate new refresh token
 
-↓
+    ↓
 
 Hash refresh token
 
-↓
+    ↓
 
 Store new refresh token
 
-↓
+    ↓
 
 Return login response
 ```
@@ -254,15 +254,15 @@ Instead, they naturally expire after their short lifetime.
 ```text
 Logout Request
 
-↓
+    ↓
 
 Verify refresh token
 
-↓
+    ↓
 
 Delete refresh token
 
-↓
+    ↓
 
 Return success response
 ```
@@ -298,23 +298,23 @@ The decorator performs authentication before the route executes.
 ```text
 Protected Request
 
-↓
+    ↓
 
 Extract Bearer token
 
-↓
+    ↓
 
 Verify JWT signature
 
-↓
+    ↓
 
 Validate claims
 
-↓
+    ↓
 
 Extract current user
 
-↓
+    ↓
 
 Execute route
 ```

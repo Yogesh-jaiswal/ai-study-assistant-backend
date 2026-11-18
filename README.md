@@ -328,16 +328,6 @@ Additional documentation is available for deployment, architecture, APIs, and de
 
 ---
 
-## Screenshots / Demo
-
-> **Placeholder**
-
-- GIF demonstrating the API workflow
-- Screenshots of request/response examples
-- Architecture diagrams
-
----
-
 ## 🤝 Contributing
 
 Contributions are welcome!
